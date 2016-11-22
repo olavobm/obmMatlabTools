@@ -19,8 +19,6 @@ function [colsets, rnansets] = sepColsNanPos(x)
 allcols = 1:size(x, 2);
 
 indnan = find(isnan(x));
-% indok = find(~isnan(x));    % maybe I could change if
-                              % it increases efficiency.
             
 [rnan, cnan] = ind2sub(size(x), indnan);
              
