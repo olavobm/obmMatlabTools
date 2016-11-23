@@ -1,5 +1,5 @@
-function [xfit, m] = myleastsqrs(t, x, imf)
-% [xfit, m] = MYLEASTSQRS(t, x, imf)
+function [xfit, m, G] = myleastsqrs(t, x, imf)
+% [xfit, m, G] = MYLEASTSQRS(t, x, imf)
 %
 %  inputs:
 %    - t: vector with independent variable (i.e. where x is specified)
@@ -9,7 +9,9 @@ function [xfit, m] = myleastsqrs(t, x, imf)
 %
 %  output:
 %    - xfit: fit to the data. specified at t.
-%    - m: model parameters (SHOULD THIS BE A STRUCT VARIABLE???)
+%    - m: model parameters.
+%    - G: the one that gives the fit (which may different than the one
+%         used to compute m).
 %
 % The function MYLEASTSQRS uses standard least squares
 % to fit user-specified models to the data x, whose
@@ -66,8 +68,6 @@ function [xfit, m] = myleastsqrs(t, x, imf)
 %           09/02/2016: included an option to fit a model specified
 %                       by user (e.g. vertical modes).
 
-% WHEN DOMAIN IS SPECIFIED, DO WE USE LESS POINTS TO CONSTRUCT THE LEAST
-% SQUARES???????? MAKE SURE, BUT THIS SHOULD NOT/NEVER HAPPEN!!!!!
 
 %% We first check if the input "imf" specifies a domain where the fit will
 %  be computed at. This requires another G-like matrix, which does not go
@@ -174,31 +174,16 @@ m = ( G' * G) \ ( G' * xgd);
 % the curve at points different than just the locations
 % where we have non-NaN data:
 
-% -------------------------------------------------------------------------
-% -------------------------------------------------------------------------
-% IT SEEMS THE IF BELOW INSIDE THE CASE WHEN THERE IS NO DOMAIN IS USELESS!
-% -------------------------------------------------------------------------
-% -------------------------------------------------------------------------
-
 % On the same location as the data (if domain not specified):
 if ~exist('domain', 'var')
     
-    if all(lgd)         % No NaN in the data input:
-        xfit = G * m;
-
-    else                % There are gaps in the data:
-%         tnan = t;
-%         tnan(~lgd) = NaN;
-%         [Ggappy] = makeG(imf, allfields, npar, ncols_G, tnan); % with or
-        tgp = t(lgd);
-        [Ggappy] = makeG(imf, allfields, npar, ncols_G, tgp);      % without gaps
-        xfit = Ggappy * m;
-    end
+    % Computes the fit:
+    xfit = G * m;
 
 % On the domain specified in "imf":
 else
-    [Gdm] = makeG(imf, allfields, npar, ncols_G, domain);   % G-domain
-    xfit = Gdm * m;
+    G = makeG(imf, allfields, npar, ncols_G, domain);   % G-domain
+    xfit = G * m;
 end
 
 end   % ends the main function.
