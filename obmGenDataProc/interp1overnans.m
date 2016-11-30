@@ -1,5 +1,5 @@
 function yinterp = interp1overnans(x, y, xgrid)
-%% [yinterp] = interp1overnans(x, y, xgrid)
+%% [yinterp] = INTERP1OVERNANS(x, y, xgrid)
 %
 %  inputs:
 %    - x: location of data points of y along the interpolation dimension.
