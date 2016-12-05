@@ -41,6 +41,10 @@ if ~iscell(lpartfit)
         lpartfit = lpartfit';
     end
     
+    if length(lpartfit)~=length(m)
+        error('Vector lpartfit have the same length as m!')
+    end
+    
 else
     
     nfits = length(lpartfit);
@@ -48,6 +52,11 @@ else
     lpartfitaux = NaN(nfits, length(m));
     
     for i = 1:nfits
+        
+        if length(lpartfit{i})~=length(m)
+            error('Each element of lpartfit have the same length as m!')
+        end
+        
         lpartfitaux(i, :) = lpartfit{i};
     end
     
@@ -74,7 +83,7 @@ for i = 1:nfits
     
     mout(lkeep, i) = m(lkeep);
     Gout{i} = G(:, lkeep);
-    
+    keyboard
     xfit(:, i) = Gout{i} * mout(lkeep, i);
     
 end
