@@ -83,7 +83,7 @@ for i = 1:nfits
     
     mout(lkeep, i) = m(lkeep);
     Gout{i} = G(:, lkeep);
-    keyboard
+
     xfit(:, i) = Gout{i} * mout(lkeep, i);
     
 end

@@ -1,5 +1,5 @@
 function stackedShading(y, x, lnorm)
-% STACKEDSHADING(y, x)
+% STACKEDSHADING(y, x, lnorm)
 %
 %	inputs:
 %       - y: array number of columns
