@@ -17,19 +17,19 @@ function setFigSize(lenhgt, units)
 % Olavo Badaro Marques, 09/Dec/2016.
 
 
-%%
+%% Get current figure handle:
 
 hFig = gcf;
 
 
-%%
+%% Check whether units input was specified:
 
 if ~isempty(units)
     units = 'centimeters';
 end
 
 
-%%
+%% Make sure input lenhgt was specified appropriately:
 
 if length(lenhgt)~=2
     error('Input lenhgt must have 2 elements only.')
