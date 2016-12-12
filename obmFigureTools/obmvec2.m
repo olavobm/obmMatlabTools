@@ -225,14 +225,13 @@ end
 
 % Create zero vector (such that we can create a constant vector
 % by simply adding a constant to the zero vector):
-nvec = length(arrowpltlen);
-zerovec = zeros(nvec, 1);
+narrows = length(arrowpltlen);
+zerovec = zeros(narrows, 1);
 
 % Normal arrow dimensions:
 HL = zerovec + HeadLength;
 HW = zerovec + HeadWidth;
 W =  zerovec + Width;
-
 
 
 %% Distinguish zero-length vectors from non-zero:
@@ -247,6 +246,10 @@ if ~isempty(i_zero)
    HW(i_zero) = NaN;
    W(i_zero) = NaN;
 end
+
+
+%% Take into account arrows that (1) do not have arrow heads
+% or (2) are too small such that it is better to not include a shaft:
 
 if ~isempty(i_nonzero)
     ii = i_nonzero;
@@ -266,6 +269,7 @@ if ~isempty(i_nonzero)
 end
 
 
+%%
 % Just a change of variable names for historical reasons:
 Y = ys;
 X = xs;
@@ -276,60 +280,83 @@ X = xs;
 % as a stack of vectors at appropriate heights above the topog.
 Z = z(:);
 
-keyboard
 
+%% Create the matrix (Vert) that contains the coordinates of the arrows
+% vertices. Vert is a (7*narrows by 3) array, where columns 1, 2 and 3
+% are for the x, y and z coordinates, respectively, and each set of 7
+% subsequent rows gives the 7 vertices of an arrow. Vert is first created
+% for arrows with 0 angle and starting from the origin (translation and
+% rotation are applied later). Since an arrow is a symmetric object, the
+% "bottom" of the (horizontal) arrow (i.e. the last 3 rows of each 7-row
+% set) are the symmetric counterpart of the first 3 rows (the arrow "top"):
+
+% An option I'm not particularly interested...
 Xzero = zerovec;
-if centered,
+if centered
    Xzero = -arrowpltlen/2;
 end
 
+% Pre-allocate space for the vertices matrix:
+nV = 7*narrows;  % 7 vertices per arrow
+Vert = zeros(narrows, 3);
 
-nV = 7*nvec;  % number of Vertices: 7 per arrow.
-Vert = zeros(nvec,3);
+% Back corner of shaft (arrow tail's corner):
+Vert(1:7:nV, :) = [Xzero,  W/2, Z];
 
-Vert(1:7:nV,:) =  [Xzero,  W/2, Z ];       % back corner of shaft
-Vert(2:7:nV,:) = Vert(1:7:nV,:) + ...
-                 [(arrowpltlen-HL), zerovec,  zerovec];    % shaft-head junction
-Vert(3:7:nV,:) = Vert(2:7:nV,:) + ...
-                 [zerovec, (HW-W)/2,  zerovec];  % point of barb
-Vert(4:7:nV,:) = [Xzero + arrowpltlen, zerovec, Z];     % tip of arrow
+% Shaft-head junction:
+Vert(2:7:nV, :) = Vert(1:7:nV, :) + ...
+                  [(arrowpltlen-HL), zerovec,  zerovec];
+              
+% "Shoulder" point of the arrow head:
+Vert(3:7:nV, :) = Vert(2:7:nV,:) + ...
+                  [zerovec, (HW-W)/2,  zerovec];
+              
+% Tip of arrow:
+Vert(4:7:nV, :) = [Xzero + arrowpltlen, zerovec, Z];
 
 
-
-%% This could be done more efficiently with fancier indexing, but
-% it is probably not a bottleneck, hence not worth the trouble:
-
-% Reflect the top half to get the bottom half.
-% First replicate:
-Vert(5:7:nV,:) = Vert(3:7:nV,:);
-Vert(6:7:nV,:) = Vert(2:7:nV,:);
-Vert(7:7:nV,:) = Vert(1:7:nV,:);
-% Then negate y to reflect:
-Vert(5:7:nV,2) = -Vert(5:7:nV,2);
-Vert(6:7:nV,2) = -Vert(6:7:nV,2);
-Vert(7:7:nV,2) = -Vert(7:7:nV,2);
+% Now create the symmetric vertices of the arrow:
+%
+% First replicate all coordinates:
+Vert(5:7:nV, :) = Vert(3:7:nV, :);
+Vert(6:7:nV, :) = Vert(2:7:nV, :);
+Vert(7:7:nV, :) = Vert(1:7:nV, :);
+%
+% Take the negative of the y coordinate to reflect about the x axis:
+Vert(5:7:nV, 2) = -Vert(5:7:nV, 2);
+Vert(6:7:nV, 2) = -Vert(6:7:nV, 2);
+Vert(7:7:nV, 2) = -Vert(7:7:nV, 2);
 
 % Make an index array for operating on all vertices of each vector:
-ii = (1:nvec);
-ii = ii(ones(7,1),:);
+ii = (1:narrows);
+ii = ii(ones(7, 1), :);
 ii = ii(:);
 
 
-%% Rotate:
-Vxy = exp(1i*Ang(ii)).*(Vert(:,1) + 1i*Vert(:,2));
+%% Rotate and translate in complex form and split the coordinates:
 
+% Rotate
+Vxy = exp(1i*Ang(ii)) .* (Vert(:,1) + 1i*Vert(:,2));
 
-%% Translate:
+% Translate:
 Vxy = Vxy + X(ii) + 1i*Y(ii);
 
+% Assign to vertice array:
+Vert(:, 1) = real(Vxy);
+Vert(:, 2) = imag(Vxy);
 
-%%
-Vert(:,1) = real(Vxy);
-Vert(:,2) = imag(Vxy);
+
+%% Create an array that goes as the "Faces" input of the patch
+% function. It is a (narrows by 7) array, with numbers 1:nV:
+
+Faces = 1:nV;
+Faces = Faces';
+
+Faces = reshape(Faces, 7, narrows);
+Faces = Faces';
 
 
-Faces = [1:nV].';            %Top
-Faces = reshape(Faces, 7, nvec).';
+%% Finally plot the arrows:
 
 % Extremely narrow patches don't show up on the screen (although they seem
 % to be printed OK) when EdgeColor is 'none', so when the arrows are all
@@ -338,32 +365,37 @@ Faces = reshape(Faces, 7, nvec).';
 
 % Request to clip arrows at the plot edge.
 
-% m_vec as an input below. It pairs with tag, such that
-% you can do findobj('tag', 'm_vec'):
 
 
-if strcmp(edgeclip,'off')
-    % This is the "default" case:
-%     hp = patch('Faces', Faces, 'Vertices', Vert, 'tag', 'm_vec','clipping','off');
-    hp = patch('Faces', Faces, 'Vertices', Vert, 'tag', 'm_vec');
+if strcmp(edgeclip, 'off')
+
+    hp = patch('Faces', Faces, 'Vertices', Vert, ...
+                                        'tag', 'm_vec', 'clipping', 'off');
+                                    
 else
 % %   [LG,LN]=m_xy2ll(reshape(Vert(:,1),7,nvec),reshape(Vert(:,2),7,nvec)); % Converts vertices in 7 point lines (i.e. columns) in lat/long
 % %   [X,Y]=m_ll2xy(LG,LN  ,'clip','patch');                                % Converts back to x/y, but does clipping on for each column
-    hp = patch('Faces', Faces, 'Vertices', [X(:) Y(:)], 'tag', 'm_vec','clipping','off');
+    hp = patch('Faces', Faces, 'Vertices', [X(:) Y(:)], ...
+                                        'tag', 'm_vec');
+                                    
+	% m_vec has a clipping/off in the else case, but it
+    % seems unnecessary to me.
 end;
 
 
+% Set color of the arrows:
 if ischar(c) || (size(c,1) == 1 && size(c,2) == 3),
-    % This is the "default" case:
     set(hp, 'EdgeColor', c, 'FaceColor', c, 'LineWidth', 0.1);
 else
     set(hp, 'EdgeColor', 'none', 'FaceColor','Flat', ...
                                         'FaceVertexCdata', c);
 end
 
+% Set other properties of the arrow:
 if ~isempty(keyvars)
     set(hp, keyvars{:});
 end
+
 
 if ~isempty(key)
     ht = text(X(1), Y(1)-0.5*HW, Z(1), key, ...
@@ -374,33 +406,10 @@ else
     ht = [];
 end
 
+
+%% Clear outputs (basically, this is only useful because it does not
+% print to screen when you call this function without ;
 if nargout==0
     clear hp ht
 end
 
-
-%%  -----------------------------------------------------------------------
-% I HAVE TO MAKE SURE THE SCALING OF THE PLOT IS RIGHT! -------------------
-%  ------------------------------------------------------------------------
-
-% Call the following to fix the plot box aspect ratio. The only thing is
-% that I have to figure out what is a good aspect ratio, based on
-% "standard scales" (that I have to choose, based on aesthetics I like)
-% for the axes
-%
-% What has to be set is the data aspect ratio, not really the plotbox
-% pbaspect([1 1 1])
-
-% daspect([1 1 1])
-
-% 1 - I have to create the axes before patching so the scaling is fixed.
-% Make it possible to input up to 3D axes limits/vectors, or get the
-% locations from the data.
-
-% 2 - But I also want to make it possible to plot more arrows in a
-% different call, changing the domain. Can I do that or should I give up on
-% this?
-
-% 3 - Then I'll have to fix the magnitude scale.
-
-% 4 - Why it seems the patching has a hold on?
