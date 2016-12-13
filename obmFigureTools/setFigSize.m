@@ -24,7 +24,7 @@ hFig = gcf;
 
 %% Check whether units input was specified:
 
-if ~isempty(units)
+if ~exist('units', 'var') || isempty(units)
     units = 'centimeters';
 end
 
