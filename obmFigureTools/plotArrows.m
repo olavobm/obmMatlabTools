@@ -1,9 +1,51 @@
-function [hp, ht] = obmvec2(s, x, y, u, v, varargin)
+function [hp, ht] = plotArrows(s, x, y, u, v, varargin)
+% PLOTARROWS(s, x, y, u, v, varargin)
 %
-%      VARARGIN can consist of any of the following:
-%        U,V   U,V,C   Z,U,V,C
-%      followed by optional arrow parameters,
-%      followed by optional patch parameters.
+%   inputs:
+%       - s:
+%       - x:
+%       - y:
+%       - u:
+%       - v:
+%       - varargin (optional): Parameters to control the
+%                              appearance of the arrows
+%
+% Function PLOTARROWS plots a two-dimensional vector field (u, v) given
+% at (x, y). The input s sets the scale of the arrows: larger values make
+% smaller arrows (relative to the axes).
+% 
+% When plotting a vector field, we often plot the vectors on a (x, y)
+% coordinate system, which is different than the (u, v) coordinate system.
+% Because of that, we need to specify make the plot for a particular aspect
+% ratio (before calling this function, call initAxesFreezeAspectRatio.m).
+% Function PLOTARROWS, only deals with cartesian coordinate systems, so
+% the planes (x, y) and (u, v) differ only by a translation/stretching.
+% 
+%
+%      optional arrow parameters: keyword-value pairs, shown
+%                 here with default values:
+%         'headangle',60     degrees: angle of arrow tip
+%         'headwidth',NaN    points: direct specification of
+%                                width, instead of headangle
+%         'headlength',5     points: length of tip; set to 0
+%                                to omit arrowhead entirely
+%         'shaftwidth',1     points: width of arrow shaft
+%         'centered', 'no'   'yes' to make x,y the arrow
+%                                center instead of its tail
+%         'key', ''          make a labelled horizontal arrow
+%                                if the string is not empty;
+%                                then the string labels the
+%                                arrow, and the second argument
+%                                returned, ht, is the handle of
+%                                the string.
+%          'edgeclip', 'off'  If 'on' then arrows IN the axes
+%                             are clipped if their heads are
+%                             OUT of the axes.
+%
+%      optional patch parameters: any valid patch properties
+%         may be specified here; they are passed directly
+%         to the patch function.
+%
 %        U,V are vectors containing the east and north components
 %                 of the arrows.
 %        C is an optional colorspec for all arrows, or an
@@ -13,7 +55,11 @@ function [hp, ht] = obmvec2(s, x, y, u, v, varargin)
 %      optional arrow parameters: keyword-value pairs, shown
 %                 here with default values:
 %
-%           etc ...............
+% - It would be nice to make the scale input more intuitive, but I can
+%   still try a few values for a specfic plot to look good.
+% - zooming in the figure is a problem (that I may not want to tackle)!
+%
+% Olavo Badaro Marques, 12/Dec/2016.
 
 
 %% Demo:
@@ -364,7 +410,6 @@ Faces = Faces';
 % Set clip off here so arrows are complete - RP 7/Jun/06
 
 % Request to clip arrows at the plot edge.
-
 
 
 if strcmp(edgeclip, 'off')
