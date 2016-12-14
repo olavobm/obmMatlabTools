@@ -96,7 +96,10 @@ if nargin < 5,   % Minimum: s,x,y,u,v
     error('not enough input arguments');
 end
 
-UVperIn = s;     % THIS IS WHERE THE INPUT SCALE COMES INTO PLAY.
+% Here is where the scale input comes into play. UVperInc is the
+% magnitude of vector (u, v) per inch (the bigger the value, the
+% smaller the vector):
+UVperIn = s;     
 
 % Make sure the variables are column vectors:
 x = x(:);
@@ -172,6 +175,7 @@ end
 %%
 z = zeros(size(u));
 
+
 %%
 [nr,nc] = size(c);
 if nr == 1 && nc == length(u) && (nc ~= 3 || (any(c<=1) || any(c>=0))),
@@ -188,8 +192,6 @@ end
 headwidth = max([headwidth; shaftwidth]);
 
 
-
-
 %% Replicate x/y if there is lots of u/v specified at only one x/y:
 if (length(x) == 1 && length(y) == 1 && length(u) > 1)
     x = x(ones(size(u)));
@@ -197,7 +199,8 @@ if (length(x) == 1 && length(y) == 1 && length(u) > 1)
 end
 
 
-%% Take care of the data scaling according to the axes aspect ratio:
+%% Take care of the data scaling
+% according to the axes aspect ratio (I DON'T THINK SO ANYMORE):
 
 
 OrigAxUnits = get(gca,'Units');  % THIS IS WHERE THE FIGURE IS CREATED (IF
@@ -335,6 +338,10 @@ Z = z(:);
 % rotation are applied later). Since an arrow is a symmetric object, the
 % "bottom" of the (horizontal) arrow (i.e. the last 3 rows of each 7-row
 % set) are the symmetric counterpart of the first 3 rows (the arrow "top"):
+
+% ------------------------------------------------------------
+% I THINK THIS PART DEPENDS ON AXIS EQUAL ......
+% ------------------------------------------------------------
 
 % An option I'm not particularly interested...
 Xzero = zerovec;

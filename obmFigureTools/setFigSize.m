@@ -48,8 +48,8 @@ set(hFig, 'PaperPosition', [0 0 lenhgt])
 
 
 %% Resize Matlab's figure window function 
-% wysiwyg.m
-% 
+wysiwyg
+
 %     unis = get(gcf,'units');
 %     ppos = get(gcf,'paperposition');
 %     set(gcf,'units',get(gcf,'paperunits'));
