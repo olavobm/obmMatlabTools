@@ -376,23 +376,50 @@ Vert(5:7:nV, 2) = -Vert(5:7:nV, 2);
 Vert(6:7:nV, 2) = -Vert(6:7:nV, 2);
 Vert(7:7:nV, 2) = -Vert(7:7:nV, 2);
 
-% Make an index array for operating on all vertices of each vector:
-ii = (1:narrows);
-ii = ii(ones(7, 1), :);
-ii = ii(:);
+
+%% Calls arrowPlotTransform, which rotates and translates the
+% arrows according to the current axes limits and aspect ratio:
+
+% Aspect ratio:
+asprtoaux = pbaspect;  % maybe it must be normalized (???)
+lenhei = asprtoaux(1:2);
+
+% Must transform Vert to 2xN array:
+%
+% % uv is a 2xN array, first (second) row is u (v):
+% uv = [u'; v'];
+uv = Vert(:, 1:2);
+uv = uv';
+
+% Axes limits:
+xylims = axis;
+xyran = [xylims(2)-xylims(1), xylims(4)-xylims(3)];
+
+% Vector tail position:
+xaux = x';
+yaux = y';
+
+xaux2 = xaux(ones(7, 1), :);  % same as repmat(xaux, 7, 1)
+yaux2 = yaux(ones(7, 1), :);
+
+xy0 = [xaux2(:), yaux2(:)];
+xy0 = xy0';
+
+%
+uvdir = atan2(v', u');
+uvdirvert = uvdir(ones(7, 1), :);
+uvdirvert = uvdirvert(:);
+uvdirvert = uvdirvert';
+
+%
+[uvtrans] = arrowPlotTransform(uv, lenhei, xyran, xy0, uvdirvert);
 
 
-%% Rotate and translate in complex form and split the coordinates:
+%% Assign trasnformed vertices to the Vert array:
 
-% Rotate
-Vxy = exp(1i*Ang(ii)) .* (Vert(:,1) + 1i*Vert(:,2));
+Vert(:, 1) = uvtrans(1, :)';
+Vert(:, 2) = uvtrans(2, :)';
 
-% Translate:
-Vxy = Vxy + X(ii) + 1i*Y(ii);
-
-% Assign to vertice array:
-Vert(:, 1) = real(Vxy);
-Vert(:, 2) = imag(Vxy);
 
 
 %% Create an array that goes as the "Faces" input of the patch
@@ -414,17 +441,15 @@ Faces = Faces';
 
 % Request to clip arrows at the plot edge.
 
-
 if strcmp(edgeclip, 'off')
 
-    hp = patch('Faces', Faces, 'Vertices', Vert, ...
-                                        'tag', 'm_vec', 'clipping', 'off');
+    hp = patch('Faces', Faces, 'Vertices', Vert, 'clipping', 'off');
                                     
 else
 % %   [LG,LN]=m_xy2ll(reshape(Vert(:,1),7,nvec),reshape(Vert(:,2),7,nvec)); % Converts vertices in 7 point lines (i.e. columns) in lat/long
 % %   [X,Y]=m_ll2xy(LG,LN  ,'clip','patch');                                % Converts back to x/y, but does clipping on for each column
-    hp = patch('Faces', Faces, 'Vertices', [X(:) Y(:)], ...
-                                        'tag', 'm_vec');
+%     hp = patch('Faces', Faces, 'Vertices', [X(:) Y(:)], ...
+%                                         'tag', 'm_vec');
                                     
 	% m_vec has a clipping/off in the else case, but it
     % seems unnecessary to me.
@@ -453,6 +478,7 @@ if ~isempty(key)
 else
     ht = [];
 end
+
 
 
 %% Clear outputs (basically, this is only useful because it does not
