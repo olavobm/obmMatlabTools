@@ -339,10 +339,6 @@ Z = z(:);
 % "bottom" of the (horizontal) arrow (i.e. the last 3 rows of each 7-row
 % set) are the symmetric counterpart of the first 3 rows (the arrow "top"):
 
-% ------------------------------------------------------------
-% I THINK THIS PART DEPENDS ON AXIS EQUAL ......
-% ------------------------------------------------------------
-
 % An option I'm not particularly interested...
 Xzero = zerovec;
 if centered
