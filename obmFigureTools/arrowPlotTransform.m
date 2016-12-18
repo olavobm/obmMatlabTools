@@ -2,11 +2,22 @@ function [uvtrans] = arrowPlotTransform(uv, lenhei, xyran, xy0, rotang)
 % [uvtrans] = ARROWPLOTTRANSFORM(uv, lenhei, xyran, xy0)
 % 
 %   inputs:
-%       - uv:
-%       - lenhei:
-%       - xyran:
-%       - xy0:
-%       - rotang:
+%       - uv: 2xN array of 2D vectors.
+%       - lenhei: 1x2 array with horizontal/vertical lengths
+%                 lenhei(1)/lenhei(2) in centimeters.
+%       - xyran: 1x4 array with the x/y axes limits of a plot.
+%       - xy0: 2xN array with vector tail positions, in the
+%              coordinate system of xyran.
+%       - rotang: 1xN rotation angle, in radians, for an additional
+%                 counterclockwise rotation of the vectors uv.
+%
+% Transform the vectors uv from their coordinate system to the coordinate
+% system of xyran taking into account the aspect ratio defined by lenhei.
+% In other words, the argument of a vector uv is the same as the appearance
+% of uvtrans in a plot with aspect ratio defined by the length lenhei(1)
+% and height lenhei(2).
+%
+% Function ARROWPLOTTRANSFORM is called by plotArrows
 %
 % Olavo Badaro Marques, 13/Dec/2016.
 
