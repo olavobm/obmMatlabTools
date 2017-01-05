@@ -2,9 +2,9 @@ function [hp, ht] = plotArrows(s, x, y, u, v, varargin)
 % PLOTARROWS(s, x, y, u, v, varargin)
 %
 %   inputs:
-%       - s:
-%       - x:
-%       - y:
+%       - s: scale (should it be the same as m_map? arrows per inch?)
+%       - x: MxN position of the vector tails.
+%       - y: x position of the vector tails.
 %       - u:
 %       - v:
 %       - varargin (optional): Parameters to control the
@@ -79,12 +79,21 @@ end
 
 %%
 
+% % % Default arrow parameters:
+% % centered = 0;
+% % headlength = 5/72;
+% % headwidth  = NaN;
+% % headangle = 40;
+% % shaftwidth = 1/72;
+% % c = 'k';
+% % key = '';
+
 % Default arrow parameters:
 centered = 0;
-headlength = 5/72;
+headlength = 5/3200;
 headwidth  = NaN;
 headangle = 40;
-shaftwidth = 1/72;
+shaftwidth = 1/1500;
 c = 'k';
 key = '';
 
@@ -107,6 +116,7 @@ y = y(:);
 
 u = u(:);
 v = v(:);
+
 
 %% Begin the slightly complicated parsing of arguments.
 % One cause of complexity is that the optional argument c
@@ -171,6 +181,7 @@ if istr0 > 0     % There are strings.
 else
     n_numeric = nvarargin;
 end
+
 
 %%
 z = zeros(size(u));
