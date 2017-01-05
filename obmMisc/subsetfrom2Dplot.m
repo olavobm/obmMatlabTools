@@ -19,10 +19,6 @@ function [zpts, xygpts, xypts] = subsetfrom2Dplot(axishandle, surfacehandle)
 %
 % Olavo Badaro Marques, 04/Jan/2017.
 
-% IF THERE ARE MULTIPLE PLOTS OVERLAYED, THIS FUNCTION WON'T WORK.
-% I SHOULD COME UP WITH A WAY TO FIX IT. I COULD ADD AN OPTIONAL INPUT
-% TO SPECIFY THE HANDLE OF THE PLOT...SOUNDS GOOD TO ME.
-
 
 %% Bring forward the window of the
 % figure that cointains axishandle:
