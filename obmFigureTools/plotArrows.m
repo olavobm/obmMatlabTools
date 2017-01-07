@@ -90,10 +90,12 @@ end
 
 % Default arrow parameters:
 centered = 0;
-headlength = 5/3200;
+headlength = 30/3200;
+% headlength = 5/3200;
 headwidth  = NaN;
 headangle = 40;
-shaftwidth = 1/1500;
+% shaftwidth = 1/1500;
+shaftwidth = 1/3000;
 c = 'k';
 key = '';
 

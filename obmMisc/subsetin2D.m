@@ -1,5 +1,5 @@
 function [zpts, xygpts] = subsetin2D(xypts, x, y, z, rlim)
-% [zpts, xypts] = subsetin2D(xypts, x, y, z, rlim)
+% [zpts, xygpts] = subsetin2D(xypts, x, y, z, rlim)
 %
 %   inputs:
 %       - xypts: Nx2 array.

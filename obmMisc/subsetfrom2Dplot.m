@@ -1,5 +1,5 @@
 function [zpts, xygpts, xypts] = subsetfrom2Dplot(axishandle, surfacehandle)
-% [zpts, xygpts, xypts] = SUBSETFROM2DPLOT(axishandle)
+% [zpts, xygpts, xypts] = SUBSETFROM2DPLOT(axishandle, surfacehandle)
 %
 %   inputs:
 %       - axishandle: axes handle of the figure you want to subset.
