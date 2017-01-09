@@ -1,5 +1,5 @@
-function StructVar = trimNaNsin2D(StructVar, DimsTrim, StructFields)
-% StructVar = TRIMNANSIN2D(StructVar, DimsTrim, StructFields)
+function StructVar = trimNaNs(StructVar, DimsTrim, StructFields)
+% StructVar = TRIMNANS(StructVar, DimsTrim, StructFields)
 %
 %   inputs:
 %       - StructVar: structure variable, whose fields are the
