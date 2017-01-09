@@ -16,12 +16,10 @@ function StructVar = trimNaNs(StructVar, DimsTrim, StructFields)
 %   outputs:
 %       - StructVar: StructVar with trimmed variable fields.
 %
-% Function TRIMNANVECTORS
+% Function TRIMNANS
 % The variables must have the same size,
 %                    such that rows/columns are only trimmed if they have
 %                    NaNs only for all the variables
-%
-% WHAT ABOUT THE INDEPENDENT VARIABLES????
 %
 % Olavo Badaro Marques, 06/Jan/2017.
 
@@ -53,6 +51,33 @@ if ~exist('StructFields', 'var')
 end
 
 
+%%
+
+indloop = 1:length(StructFields);
+
+lmat = ~structfun(@isvector, StructVar);
+
+if any(lmat)
+    indloop = indloop(lmat);
+end
+
+
+%% Should check if size of all StructVar.(StructFields{indloop})
+% are the same:
+
+[nrows, ncols] = size(StructVar.(StructFields{indloop(1)}));
+
+for i = 2:length(indloop)
+    
+    [nraux, ncaux] = size(StructVar.(StructFields{indloop(i)}));
+    
+    if nraux~=nrows || ncaux~=ncols
+        error('Size of trimmed variables are different!')
+    end
+    
+end
+
+
 %% Loop through dimensions to trim and variables
 % to get the rows and columns to be kept (in the
 % updated logical array lgoodarray):
@@ -63,9 +88,6 @@ dimacton(DimsTrim==1) = 2;
 dimacton(DimsTrim==2) = 1;
 
 % Pre-allocate:
-nrows = size(StructVar.(StructFields{1}), 1);
-ncols = size(StructVar.(StructFields{1}), 2);
-
 lgoodarray = {true(nrows, 1), true(1, ncols)};
 
 
@@ -75,12 +97,13 @@ for i1 = 1:length(DimsTrim)
     lgood = lgoodarray{DimsTrim(i1)};
     
     % Loop through all variables:
-    for i2 = 1:length(StructFields)
+%     for i2 = 1:length(StructFields)
+    for i2 = 1:length(indloop)
         
         % Logical array, where true is for the row/columns
         % of field StructFields{i2} that have at least one
         % non-NaN data points:
-        laux = any(~isnan(StructVar.(StructFields{i2})), dimacton(i1));
+        laux = any(~isnan(StructVar.(StructFields{indloop(i2)})), dimacton(i1));
         
         % Update lgood:
         lgood = lgood & laux; 
@@ -95,9 +118,21 @@ end
 
 for i = 1:length(StructFields)
 
-    StructVar.(StructFields{i}) = ...
-    StructVar.(StructFields{i})(lgoodarray{1}, lgoodarray{2});
-    
+    if isrow(StructVar.(StructFields{i}))
+        
+        StructVar.(StructFields{i}) = ...
+        StructVar.(StructFields{i})(:, lgoodarray{2});
+        
+    elseif iscolumn(StructVar.(StructFields{i}))
+        
+        StructVar.(StructFields{i}) = ...
+        StructVar.(StructFields{i})(lgoodarray{1}, :);
+        
+    else
+        StructVar.(StructFields{i}) = ...
+        StructVar.(StructFields{i})(lgoodarray{1}, lgoodarray{2});
+    end
+   
 end
 
 
