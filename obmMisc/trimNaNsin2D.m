@@ -1,5 +1,5 @@
-function StructVar = trimNaNs(StructVar, DimsTrim, StructFields)
-% StructVar = TRIMNANVECTORS(StructVar, DimsTrim, StructFields)
+function StructVar = trimNaNsin2D(StructVar, DimsTrim, StructFields)
+% StructVar = TRIMNANSIN2D(StructVar, DimsTrim, StructFields)
 %
 %   inputs:
 %       - StructVar: structure variable, whose fields are the
@@ -21,8 +21,7 @@ function StructVar = trimNaNs(StructVar, DimsTrim, StructFields)
 %                    such that rows/columns are only trimmed if they have
 %                    NaNs only for all the variables
 %
-% SHOULD THEY HAVE THE SAME SIZE???? WHAT ABOUT THE INDEPENDENT
-% VARIABLES????
+% WHAT ABOUT THE INDEPENDENT VARIABLES????
 %
 % Olavo Badaro Marques, 06/Jan/2017.
 
