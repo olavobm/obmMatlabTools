@@ -1,18 +1,22 @@
 function [pwspec] = obmPSpec(x, dt, np, nchk, ovrlap, winkind)
 % [pwspec] = obmPSpec(x, dt, np, nchk, ovrlap, winkind)
 %
-%  inputs:
-%    - x: vector with evenly spaced data. No NaNs allowed.
-%    - dt: sampling period.
-%    - np: number of data points per chunk.
-%    - nchk: number of chuncks to chop the data.
-%    - ovrlap: overlap between chuncks (number between 0-1, default is 0.5).
-%    - winkind: string with the kind of window you want.
+%   inputs:
+%       - x: vector with evenly spaced data. No NaNs allowed.
+%       - dt: sampling period.
+%       - np: number of data points per chunk.
+%       - nchk: number of chuncks to chop the data.
+%       - ovrlap: overlap between chuncks (number
+%                 between 0-1, default is 0.5).
+%       - winkind: string with the kind of window you want.
 %
-%  output:
-%    - pwspec: struct variable with computed power spectrum. Fields are
-%              the power spectrum density and the associated frequency
-%              vector.
+%   output:
+%       - pwspec: struct variable with power spectrum info. The fields
+%                 of the structure array are:
+%                       -
+%                       -
+%                       -
+%                       -
 %
 % OBMPSPEC makes an estimate of the power spectrum using the Welch
 % method, i.e. averaging the periodogram of overlapping data subsets.
@@ -31,8 +35,17 @@ function [pwspec] = obmPSpec(x, dt, np, nchk, ovrlap, winkind)
 % Olavo Badaro Marques, 02/Sep/2015.
 
 
-% TEST INPUT ARGUMENT, IF IT IS A VECTOR, MAKE SURE IT IS A COLUMN
-% INCLUDE IN THE FINAL STRUCTURE ONE FIELD WITH, RESOLUTION
+%% Check x is a column vector:
+
+if ~isvector(x)
+    error(['Input ' inputname(1) ' is not a vector. It must be.'])
+else
+    if ~iscolumn(x)
+        x = x(:);   % transpose, with this notation, which
+                    % also works if x is complex
+    end
+end
+
 
 
 %% Length of data:
@@ -102,8 +115,8 @@ for i = 1:nchk
     
     % Subset chunks:
     xchk = x(chunk_frst_ind(i):chunk_last_ind(i));
+    
     % Call nested function to compute Fourier coefficients:
-
     [fcoef, ~] = fftaux(xchk, np);
     
     % Choose only the appropriate coefficients
@@ -150,7 +163,7 @@ pwspec.err = [err_low err_high];
 % -------------------------------------------------------------------------
 % -------------------------------------------------------------------------
 % -------------------------------------------------------------------------
-%% Additional functions:
+%% Nested functions:
 
     function [fcoef, xaux] = fftaux(xaux, naux)
         % Computing Fourier coefficients via fft, but first remove
