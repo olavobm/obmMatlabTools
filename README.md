@@ -6,6 +6,6 @@ Though these functions were mostly designed with oceanographic data analysis in 
 
 ## Examples
 
--
--
--
+*
+*
+*
