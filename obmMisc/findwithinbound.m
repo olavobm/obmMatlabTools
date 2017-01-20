@@ -2,27 +2,35 @@ function indy = findwithinbound(x, y, r)
 % indy = FINDWITHINBOUND(x, y, r)
 %
 %   inputs:
-%       - x:
-%       - y:
-%       - r:
+%       - x: vector.
+%       - y: vector.
+%       - r: number greater than 0.
 %
 %   outputs:
-%       - indy:
+%       - indy: indices of the elements of y that are
+%               either equal or in between the elements
+%               of x. In the second case, keep indices
+%               only if the adjacent values of x to y
+%               are separated by, at most, a distance r.
 %
-% Function FINDWITHINBOUND .......
+% Function FINDWITHINBOUND does what the description of
+% the output above says. I wrote this function so I could
+% interpolate over small gaps, but not large gaps (small
+% and large relative to r). Look at my other function
+% interp1overnans where FINDWITHINBOUND is implemented.
 %
 % Olavo Badaro Marques, 19/Jan/2017.
 
 
-%%
+%% Deal separately with elements of
+% y that are found or not in x:
 
 lydiffx = ~ismember(y, x);
 
-ydiffx = y(lydiffx);
-
-indy = find(~lydiffx);
-
+indysamex = find(~lydiffx);
 indydiffx = find(lydiffx);
+
+ydiffx = y(lydiffx);
 
 
 %% Get indices of the bins of x that
@@ -41,12 +49,10 @@ indclosedists = find(xdists<=r);
 
 %% Get indices of y that are in bins shorter or equal than r:
 
-% indywithin = find(ismember(indywhichbin, indclosedists));
 indywithin = indydiffx(ismember(indywhichbin, indclosedists));
 
 
-%%
+%% Concatenate the array of indices and sort in ascending order:
 
-indy = [indy, indywithin];
-
+indy = [indysamex, indywithin];
 indy = sort(indy);
