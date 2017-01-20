@@ -20,7 +20,9 @@ lydiffx = ~ismember(y, x);
 
 ydiffx = y(lydiffx);
 
-indy = y(~lydiffx);
+indy = find(~lydiffx);
+
+indydiffx = find(lydiffx);
 
 
 %% Get indices of the bins of x that
@@ -34,14 +36,17 @@ indclosedists = find(xdists<=r);
 %% Get indices of the bins of x where
 % each elements of y is found:
 
-[~, indywhichbin] = histc(y, x);
+[~, indywhichbin] = histc(ydiffx, x);
 
 
 %% Get indices of y that are in bins shorter or equal than r:
 
-indywithin = find(ismember(indywhichbin, indclosedists));
+% indywithin = find(ismember(indywhichbin, indclosedists));
+indywithin = indydiffx(ismember(indywhichbin, indclosedists));
 
 
 %%
 
 indy = [indy, indywithin];
+
+indy = sort(indy);
