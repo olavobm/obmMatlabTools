@@ -1,20 +1,23 @@
-function yinterp = interp1overnans(x, y, xgrid)
+function yinterp = interp1overnans(x, y, xgrid, maxgap)
 %% [yinterp] = INTERP1OVERNANS(x, y, xgrid)
 %
-%  inputs:
-%    - x: location of data points of y along the interpolation dimension.
-%    - y: vector or matrix.
-%    - xgrid (optional): locations where we want to interpolate data.
+%   inputs:
+%       - x: location of data points of y along the
+%            interpolation dimension.
+%       - y: vector or matrix.
+%       - xgrid (optional): locations where we want to interpolate data.
+%       - maxgap (optional): the maximum distance between data points that
+%                            will be interpolated through.
 %
 % THINK ABOUT THE XGRID INPUT!!! XGRID OR ROW INDICES????? OR BOTH????
 %
-%  outputs:
-%    - yinterp: 
+%   outputs:
+%       - yinterp: 
 %
-%  This function uses Matlab's interp1 function to interpolate
-%  a vector, or each column of a matrix, when NaNs are present.
-%  The default behavior is to don't extrapolate (the extrapolation
-%  option is commented below for "backwards compatibility"). 
+% This function uses Matlab's interp1 function to interpolate
+% a vector, or each column of a matrix, when NaNs are present.
+% The default behavior is to don't extrapolate (the extrapolation
+% option is commented below for "backwards compatibility"). 
 %
 %  Olavo Badaro Marques -- 07/Oct/2015, created.
 %                          25/Oct/2016, updated, implemented different grid 
@@ -49,8 +52,8 @@ end
 if exist('maxgap', 'var')
     
     indycolsOK = find(~isnan(nanmean(y, 1)));
-    lycol1NaNrows = isnan(y(:, indycolsOK(1)));
-    lNaNblock = isnan(y(lycol1NaNrows, indycolsOK));
+    lyNaNrowsoncol1 = isnan(y(:, indycolsOK(1)));
+    lNaNblock = isnan(y(lyNaNrowsoncol1, indycolsOK));
 
     if all(lNaNblock(:))
         lregularNaN = true;
@@ -61,7 +64,7 @@ if exist('maxgap', 'var')
     if lregularNaN
 
         allNaNinycolsOK = length(find(isnan(y(:, indycolsOK))));
-        allNaNinyNaNblock = (length(indycolsOK) * length(lycol1NaNrows));
+        allNaNinyNaNblock = (length(indycolsOK) * length(lyNaNrowsoncol1));
 
         if allNaNinycolsOK == allNaNinyNaNblock
         else
@@ -71,6 +74,24 @@ if exist('maxgap', 'var')
 
 else
     
+    % I could create a indycolsOK = 1:cy BEFORE THIS if block,
+    % such that the interpolation for loop does not have to
+    % go over NaN-only columns
+    
+end
+
+
+%% If there is a maxgap and the NaNs are distributed on the
+% same rows for every column (except for NaN-only columns),
+% then define which indices of xgrid are between and close
+% enough to the good data locations:
+
+
+if exist('maxgap', 'var') && lregularNaN
+        
+    lyOK = ~lyNaNrowsoncol1;
+
+    ind2interp = findwithinbound(x(lyOK), xgrid, maxgap);
     
 end
 
@@ -91,9 +112,19 @@ for i = 1:cy
     % data point (this is particularly necessary if the input
     % is a matrix and has columns with NaN only):
     if length(idat)>1
-            
+        
+        if ~exist('maxgap', 'var')
+            ind2interp = 1:length(xgrid);
+        elseif exist('maxgap', 'var') && ~lregularNaN
+            ind2interp = findwithinbound(x(idat), xgrid, maxgap);
+        else
+            % in this case, ind2interp is defined before the loop.
+            % The other case, ~exist('maxgap', 'var') & lregularNaN
+            % never exists.
+        end
+        
         % Now do the interpolation:
-        yinterp(:, i) = interp1(x(idat), y(idat, i), xgrid);
+        yinterp(ind2interp, i) = interp1(x(idat), y(idat, i), xgrid(ind2interp));
     
     end
     
