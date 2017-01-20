@@ -1,5 +1,5 @@
 function yinterp = interp1overnans(x, y, xgrid, maxgap)
-%% [yinterp] = INTERP1OVERNANS(x, y, xgrid)
+%% [yinterp] = INTERP1OVERNANS(x, y, xgrid, maxgap)
 %
 %   inputs:
 %       - x: location of data points of y along the
@@ -7,32 +7,38 @@ function yinterp = interp1overnans(x, y, xgrid, maxgap)
 %       - y: vector or matrix.
 %       - xgrid (optional): locations where we want to interpolate data.
 %       - maxgap (optional): the maximum distance between data points that
-%                            will be interpolated through.
+%                            will be interpolated through. If you give this
+%                            input, then xgrid input must be specified.
 %
 % THINK ABOUT THE XGRID INPUT!!! XGRID OR ROW INDICES????? OR BOTH????
 %
 %   outputs:
-%       - yinterp: 
+%       - yinterp: y interpolated on x/xgrid.
 %
-% This function uses Matlab's interp1 function to interpolate
-% a vector, or each column of a matrix, when NaNs are present.
-% The default behavior is to don't extrapolate (the extrapolation
-% option is commented below for "backwards compatibility"). 
+% This function uses Matlab's interp1 function to interpolate a
+% vector, or each column of a matrix, when NaNs are present. No
+% extrapolation is done.
 %
-%  Olavo Badaro Marques -- 07/Oct/2015, created.
-%                          25/Oct/2016, updated, implemented different grid 
-%                                       recheck old scripts that call older
-%                                       version. I also removed an extra
-%                                       useless output
+% The interpolation for a maximum gap is achieved thanks to my other
+% function findwithinbound.m, which identifies whether a grid point
+% is within a bound (maxgap) from the closest data points.
+%
+% Olavo Badaro Marques, 07/Oct/2015, created.
+%                       25/Oct/2016, updated, implemented different grid 
+%                                    recheck old scripts that call older
+%                                    version. I also removed an extra
+%                                    useless output
+
 
 %% Get size of the variable to be interpolated:
+
 [ry, cy] = size(y);
 
 % If y was specified as a row vector, then
 % transpose it and update the size of it:
 if ry == 1 && cy > 1
     y = y(:);
-%     ry = cy;
+%     ry = cy;   % ry is not used anymore, so it does not matter
     cy = 1;
 end
 
@@ -64,7 +70,7 @@ if exist('maxgap', 'var')
     if lregularNaN
 
         allNaNinycolsOK = length(find(isnan(y(:, indycolsOK))));
-        allNaNinyNaNblock = (length(indycolsOK) * length(lyNaNrowsoncol1));
+        allNaNinyNaNblock = (length(indycolsOK) * length(find(lyNaNrowsoncol1)));
 
         if allNaNinycolsOK == allNaNinyNaNblock
         else
@@ -100,7 +106,7 @@ end
 %% Interpolate each column of y:
 
 % Create yinterp for filling it:
-yinterp = NaN(length(xgrid), cy);  % MAKE SURE THIS WORKS!
+yinterp = NaN(length(xgrid), cy);
 
 % Loop through columns:
 for i = 1:cy
