@@ -12,7 +12,7 @@ function yinterp = interp1overnans(x, y, xgrid)
 %    - yinterp: 
 %
 %  This function uses Matlab's interp1 function to interpolate
-%  a vector, or each column of matrix, when NaNs are present.
+%  a vector, or each column of a matrix, when NaNs are present.
 %  The default behavior is to don't extrapolate (the extrapolation
 %  option is commented below for "backwards compatibility"). 
 %
@@ -41,6 +41,41 @@ if ~exist('xgrid', 'var')
 end
 
 
+%% If input for interpolating up to a maximum gap was specified,
+% then check whether all NaNs (in columns that are not NaN-only)
+% are on the same rows. If they are, then we can run findwithinbound
+% only once rather than every time inside the loop:
+
+if exist('maxgap', 'var')
+    
+    indycolsOK = find(~isnan(nanmean(y, 1)));
+    lycol1NaNrows = isnan(y(:, indycolsOK(1)));
+    lNaNblock = isnan(y(lycol1NaNrows, indycolsOK));
+
+    if all(lNaNblock(:))
+        lregularNaN = true;
+    else
+        lregularNaN = false;
+    end
+
+    if lregularNaN
+
+        allNaNinycolsOK = length(find(isnan(y(:, indycolsOK))));
+        allNaNinyNaNblock = (length(indycolsOK) * length(lycol1NaNrows));
+
+        if allNaNinycolsOK == allNaNinyNaNblock
+        else
+            lregularNaN = false;
+        end
+    end
+
+else
+    
+    
+end
+
+
+
 %% Interpolate each column of y:
 
 % Create yinterp for filling it:
@@ -54,7 +89,7 @@ for i = 1:cy
     
     % Proceed with interpolation only if there is more than one
     % data point (this is particularly necessary if the input
-    % is a matrix  and has columns with NaN only:
+    % is a matrix and has columns with NaN only):
     if length(idat)>1
             
         % Now do the interpolation:
