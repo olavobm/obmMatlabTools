@@ -1,5 +1,5 @@
 function [xnew] = obmRunMean(x, npt, fracwndw, wndwtype)
-% [xnew] = OBMRUNMEAN(x, npt, wndwtype)
+% [xnew] = OBMRUNMEAN(x, npt, fracwndw, wndwtype)
 %
 %   input:
 %       - x: vector or matrix, regularly spaced across the rows (the
