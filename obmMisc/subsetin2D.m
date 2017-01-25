@@ -20,6 +20,9 @@ function [zpts, xygpts] = subsetin2D(xypts, x, y, z, rlim)
 % If you have a plot of z, you may as well call the function
 % subsetfrom2Dplot.m which uses ginput to get the point xypts.
 %
+% I SHOULD ADD ANOTHER OPTION: ALLOWING XYPTS TO BE A 1X4 VECTOR, SUCH THAT
+% I SUBSET A RECTANGLE FROM Z AND NO DSEARCHN IS USED.
+%
 % Olavo Badaro Marques, 04/Jan/2017.
 
 % SUGGESTIONS of things to do:
