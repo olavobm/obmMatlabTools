@@ -5,8 +5,8 @@ function [pwspec] = obmPSpec(x, dt, np, nchk, ovrlap, winkind)
 %       - x: vector with evenly spaced data. No NaNs allowed.
 %       - dt: sampling period.
 %       - np: number of data points per chunk.
-%       - nchk: number of chuncks to chop the data.
-%       - ovrlap: overlap between chuncks (number
+%       - nchk: number of chunks to chop the data.
+%       - ovrlap: overlap between chunks (number
 %                 between 0-1, default is 0.5).
 %       - winkind: string with the kind of window you want.
 %
@@ -67,13 +67,13 @@ N  = length(x);
 % Lowest frequency that can be resolved:
 df = (1/(N*dt));
 
-% % %% Get indices of beginning and end of each chunck - IS THIS WORTH DOING?:
+% % %% Get indices of beginning and end of each chunk - IS THIS WORTH DOING?:
 % % 
 % % inda = linspace(1, N, nchk+1);
 % % 
 % % stp = inda(2) - inda(1);
 % % 
-% % % Initialize chunck indices matrix:
+% % % Initialize chunk indices matrix:
 % % chkind = NaN(nchk, 2);
 % % for i = 1:nchk
 % %     chkind(i, 1) = inda(i);
@@ -99,9 +99,62 @@ if novrlp==0
     novrlp = 1;   % should have a different (less abitrary number)
 end
     
-% Get possible first and last indices of all chunks:
-chunk_frst_ind = 1:novrlp:N;
-chunk_last_ind = chunk_frst_ind + np - 1;
+
+% If there are no NaNs:
+if ~any(isnan(x))
+    
+    % Get possible first and last indices of all chunks:
+    chunk_frst_ind = 1:novrlp:N;
+    chunk_last_ind = chunk_frst_ind + np - 1;
+
+    
+% But if NaNs are present, create indices iteratively
+% guaranteeing there are no NaNs in any chunk:
+else     
+    
+    chunk_frst_ind = NaN(1, length(1:novrlp:N));
+    chunk_last_ind = NaN(1, length(1:novrlp:N));
+    
+    % 
+    chunk_frst_ind(1) = 1;
+    chunk_last_ind(1) = 1 + np - 1;
+    
+    indbegaux = 1;
+    
+    ind4chunk = 1;
+    while (indbegaux + novrlp + np - 1)<=N
+        
+        indbegaux = indbegaux + novrlp;
+        indendaux = indbegaux + np - 1;
+        
+        auxchunk = x(indbegaux:indendaux);
+        
+        if any(isnan(auxchunk))
+            
+            % Do not keep this chunk and assign a new
+            % value for the first index of a chunk:
+            
+            auxlastNaN = find(isnan(x(1:indendaux)), 1, 'last');
+            aux_first_ind = find(~isnan(x(auxlastNaN:end)), 1, 'first');
+            indbegaux = auxlastNaN + aux_first_ind - 1;
+            
+            indbegaux = indbegaux - novrlp;
+        else
+            
+            ind4chunk = ind4chunk + 1;
+        
+            chunk_frst_ind(ind4chunk) = indbegaux;
+            chunk_last_ind(ind4chunk) = indendaux;  
+        end
+        
+    end
+    
+    chunk_frst_ind = chunk_frst_ind(~isnan(chunk_frst_ind));
+    chunk_last_ind = chunk_last_ind(~isnan(chunk_last_ind));
+    
+   
+end
+
 
 % Now get only those that don't exceed the data:
 lchk = chunk_last_ind <= N;
@@ -114,6 +167,7 @@ chunk_last_ind = chunk_last_ind(lchk);
 nchk = length(find(lchk));
 
 
+
 %% Now loop through all chunks and make spectral estimates:
 
 % Lowest frequency that can be resolved at each chunk:
@@ -123,7 +177,7 @@ df = (1/(np*dt));
 lenspec = length(2 : ceil(np/2)); % WHAT IS THIS LENGTH FOR EVEN/ODD np????
 allpsd = NaN(lenspec, nchk);
 
-% Loop through chosen chuncks:
+% Loop through chosen chunks:
 for i = 1:nchk
     
     % Subset chunks:
@@ -188,10 +242,10 @@ pwspec.err = [err_low err_high];
             % Remove the mean:
             xaux = xaux - mean(xaux);
 
-            % Detrend the chunck:
+            % Detrend the chunk:
             xaux = detrend(xaux, 'linear');
 
-            % Multiplying chunck values by window:
+            % Multiplying chunk values by window:
             xaux = xaux .* window(@hann, naux);
 
             % Compute Fourier coefficients with FFT:
