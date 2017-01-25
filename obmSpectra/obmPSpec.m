@@ -13,10 +13,11 @@ function [pwspec] = obmPSpec(x, dt, np, nchk, ovrlap, winkind)
 %   output:
 %       - pwspec: struct variable with power spectrum info. The fields
 %                 of the structure array are:
-%                       -
-%                       -
-%                       -
-%                       -
+%                       - allpsd:
+%                       - psd:
+%                       - freq:
+%                       - dof:
+%                       - err:
 %
 % OBMPSPEC makes an estimate of the power spectrum using the Welch
 % method, i.e. averaging the periodogram of overlapping data subsets.
@@ -46,6 +47,18 @@ else
     end
 end
 
+
+%% Remove continuous NaNs at the beginning and end of x only:
+
+if isnan(x(1))
+    indfirstx = find(~isnan(x), 1, 'first');
+    x = x(indfirstx:end);
+end
+
+if isnan(x(end))
+    indlastx = find(~isnan(x), 1, 'last');
+    x = x(1:indlastx);
+end
 
 
 %% Length of data:
