@@ -133,7 +133,7 @@ for i = 1:Nframes
     title(svar.dintitle{i}, 'FontSize', 14)
 
     drawnow
-    F(i) = getframe;
+    F(i) = getframe(gcf);
     pause(1/48)
 end
 
