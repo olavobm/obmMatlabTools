@@ -96,7 +96,7 @@ novrlp = floor(np*(1-ovrlap));
 % as 100% overlap, giving an infinite number of realizations,
 % change novrlp to get the largest possible overlap:
 if novrlp==0
-    novrlp = 1;
+    novrlp = 1;   % should have a different (less abitrary number)
 end
     
 % Get possible first and last indices of all chunks:
