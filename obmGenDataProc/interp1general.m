@@ -80,7 +80,9 @@ classdef interp1general
             
             obj.ybase = NaN(1, Nx);
             for i = 1:Nx
-                obj.ybase(i) = nanmedian(obj.yarrays{i}(indsubset(i, :)));
+                indaux = indsubset(i, 1) : 1 : indsubset(i, 2);
+                
+                obj.ybase(i) = nanmedian(obj.yarrays{i}(indaux));
             end
             
         end
