@@ -52,7 +52,7 @@ end
 
 try
     % groot was implemented in Matlab2014b
-    colorsets.set1 = get(groot,'DefaultAxesColorOrder');  
+    colorsets.set1 = get(groot,'DefaultAxesColorOrder');
 catch
     warning(['Your Matlab version is probably older than 2014b. ' ...
              'Default colors of the plot may be different than '  ...
