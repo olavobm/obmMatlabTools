@@ -20,7 +20,7 @@ function [StructVar, lgoodarray] = trimNaNs(StructVar, DimsTrim, StructFields)
 %                     that have been kept.
 %
 % Function TRIMNANS removes NaN-only rows and/or columns from variables
-% specified by StructVar. For a multiple variables given by the fields
+% specified by StructVar. For multiple variables given by the fields
 % of StructVar, the rows/columns that are removed are the ones that are
 % NaN-only for all the variables.
 % 

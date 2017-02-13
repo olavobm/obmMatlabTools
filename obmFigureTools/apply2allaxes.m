@@ -26,7 +26,10 @@ for i = 1:length(hfig)
 
     % if there are other objects in allAxes that are not axes, legend or
     % Colorbar, than I might have problems. I could add a check.
-
+    %
+    % I might want to look at the class name of the variables
+    % matlab.graphics.axis.Axes
+    
     N = length(onlyAxes);
 
 
