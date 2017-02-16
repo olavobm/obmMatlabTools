@@ -6,5 +6,12 @@ Though these functions were mostly designed with oceanographic data analysis in 
 
 ## Examples
 
-* datainterp = interp1overnans(t, data, tinterp, maxgap)
+1. Interpolation:
+
+Let’s say you want to linearly interpolate (in 1D) a variable (data). You can use do:
+
+```matlab
+datainterp = interp1overnans(t, data, tinterp, maxgap)
+```
+
 
