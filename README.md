@@ -6,12 +6,14 @@ Though these functions were mostly designed with oceanographic data analysis in 
 
 ## Examples
 
-1. Interpolation:
+### Interpolation:
 
-Let’s say you want to linearly interpolate (in 1D) a variable (data). You can use do:
+Let’s say you want to linearly interpolate (in 1D) a variable (*data*) whose values are specified at *t*. You can do:
 
 ```matlab
 datainterp = interp1overnans(t, data, tinterp, maxgap)
 ```
+
+The variable data can be a vector or a matrix, in which case, each column is interpolated separately. The function takes care of NaNs, such that it fills the gaps (NaN locations) with interpolated values. The last 2 inputs of the function above are optional. Input *tinterp* explicitly defines where you want to interpolate and *maxgap* defines an upper bound for the length of the gap that can be interpolated over.
 
 
