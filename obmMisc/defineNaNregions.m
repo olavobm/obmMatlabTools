@@ -130,15 +130,18 @@ for i1 = 1:length(indRowsUniq)
 
         nActiveR = length(seti1thRow);
         
-	keyboard
+	
     else
         
         checkActive = false(1, length(~isnan(activeRegionsLims(2, :))));
         
         for i2 = 1:length(seti1thRow)
 
-            sameSet = seti1thRow{i2}(1, 2)   >= (activeRegionsLims(2, :)-1) | ...
-                      seti1thRow{i2}(end, 2) <= (activeRegionsLims(4, :)+1);
+            % sameSet is true when the largest column is greater than min
+            % and smallest is less than max:
+            sameSet = seti1thRow{i2}(end, 2) >= (activeRegionsLims(2, :)-1) & ...
+                      seti1thRow{i2}(1, 2) <= (activeRegionsLims(4, :)+1);
+            
 
             nMatch = length(sameSet(sameSet));
             
