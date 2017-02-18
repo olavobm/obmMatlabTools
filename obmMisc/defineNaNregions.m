@@ -65,10 +65,6 @@ for i1 = 1:length(indRowsUniq)
         previouRow = rowi1;
     end
     
-    
-    % ----------------------------------------------------------------
-    % if i1 jumps more than 1, then I have closed active regions
-    % ----------------------------------------------------------------
 
     %% Get all column indices of NaNs on row rowi1:
     alli1NaNcols = subNaN(subNaN(:, 1) == indRowsUniq(i1), 2);
@@ -77,29 +73,31 @@ for i1 = 1:length(indRowsUniq)
 
     colsDiff = diff(alli1NaNcols);
 
-%     seti1thRow = cell(1, length(xvec)/2);
+%     seti1thRow = cell(1, length(xvec)/2);   % pre-allocation???
 
-%     % In the case of only one NaN:
-%     if isempty(colsDiff)
-%         colsDiff = 1;   % just so it matches (for sure the if case below)
-%     end
 
     %% Check whether there is a continuous sequence or
     % multiple sets of NaNs on this row:
     
+    
     if isempty(colsDiff)
-
-            seti1thRow = {[rowi1, alli1NaNcols(1)]};
+        % Only 1 NaN in rowi1:
+        seti1thRow = {[rowi1, alli1NaNcols(1)]};
         
     else
         if all(colsDiff==1)
 
             % they belong to the same set
 
-            thisset = [rowi1, alli1NaNcols(1) ; ...
-                       rowi1, alli1NaNcols(end)];
+            % % THIS IS DIFFERENT THAN THE ELSE BELOW. THE ELSE BELOW GETS
+            % % ALL THE POINTS, WHEREAS HERE I TAKE ONLY THE LIMITS!!!!
+%             thisset = [rowi1, alli1NaNcols(1) ; ...
+%                        rowi1, alli1NaNcols(end)];
+                   
+            % Same as else below:
+            thisset = [repmat(rowi1, length(alli1NaNcols), 1), alli1NaNcols];
             seti1thRow = {thisset};
-
+            
         else
 
 
@@ -115,8 +113,11 @@ for i1 = 1:length(indRowsUniq)
                 indRowAux = repmat(rowi1, length(alli1NaNcols(indstart:inddiffset(i2))), 1);
 
                 seti1thRow{i2} = [indRowAux, alli1NaNcols(indstart:inddiffset(i2))];
+                
                 % or I could use ([indstart, inddiffset(i2)]), which
-                % is what I really want
+                % is what I really want. The question is whether keeping
+                % all the points is a big problem or if I can easily
+                % reconstruct the region from the boundaries.
 
                 indstart = inddiffset(i2) + 1;
             end
@@ -165,6 +166,8 @@ for i1 = 1:length(indRowsUniq)
 
         activeRegions(1:length(seti1thRow)) = seti1thRow;
 
+        % I'm pretty sure this i2 will also be wrong...
+        
         for i2 = 1:length(seti1thRow)
 
             % Coordinates of the LEFT limit of the i2th row set:
@@ -183,8 +186,14 @@ for i1 = 1:length(indRowsUniq)
     else
         %% Loop over all NaNs sets and check
         % whether they belong to activeRegions:
+        
+%         checkActive = [checkActive(checkActive), false(1, length(~isnan(activeRegionsLims(2, :))))];
         checkActive = false(1, length(~isnan(activeRegionsLims(2, :))));
 
+        if rowi1==5
+            keyboard
+        end
+        
         for i2 = 1:length(seti1thRow)
 
             % sameSet is true when the largest column is greater than min
@@ -192,10 +201,15 @@ for i1 = 1:length(indRowsUniq)
             sameSet = seti1thRow{i2}(end, 2) >= (activeRegionsLims(2, :)-1) & ...
                       seti1thRow{i2}(1, 2) <= (activeRegionsLims(4, :)+1);
 
-
+            % I HAVE TO DO THE COMPARISON ABOVE FOR SUBSEQUENT
+            % ROWS!!! BUT DOES THAT WORK ?????????????
+                  
             nMatch = length(sameSet(sameSet));
 
-%             keyboard
+            if rowi1==5
+                keyboard
+            end
+            
             % Does not match with any of the active -- create new active
             if nMatch == 0
 
@@ -208,15 +222,17 @@ for i1 = 1:length(indRowsUniq)
                 activeRegionsLims(3, nActiveR) = seti1thRow{i2}(end, 1);
                 activeRegionsLims(4, nActiveR) = seti1thRow{i2}(end, 2);
 
-                % except that I do not need to compare the next sets
-                % on this row with this newly activeRegion
+                checkActive(nActiveR) = true;
+                
+                % EXCEPT THAT I DO NOT NEED TO COMPARE THE NEXT SETS
+                % ON THIS ROW WITH THIS NEWLY ACTIVEREGION. THIS IS
+                % SOMETHING THAT I MAY WANT TO OPTIMIZE, BUT PROBABLY NOT
+                % VERY IMPORANT FOR MY APPLICATIONS.
 
 %                 keyboard
-
             % Matches with one active region, simple concatenation
             elseif nMatch == 1
 
-%                 keyboard
                 activeRegions{sameSet} = [activeRegions{sameSet}; ...
                                           seti1thRow{i2}];                      
 
@@ -227,8 +243,9 @@ for i1 = 1:length(indRowsUniq)
 
                 % Says it is still active
                 checkActive(sameSet) = true;
-
-                keyboard
+                if rowi1==5
+                    keyboard
+                end
 
             % Matches with more than one, concatenate and merge regions:
             else
@@ -238,28 +255,25 @@ for i1 = 1:length(indRowsUniq)
                 indsSame = find(sameSet);
                 indMerge = indsSame(1);
                 indErase = indsSame(2:end);
-
-                keyboard
                 
                 mergeaux = activeRegions(sameSet);
                 mergeaux = mergeaux(:);
-
-                keyboard
                 
-                mergeaux = [mergeaux{:}];
+                mergeaux = cat(1, mergeaux{:});
 
-                keyboard
                 
                 activeRegions{indMerge} = mergeaux;
                 activeRegions(indErase) = cell(1, length(indErase));
 
-                keyboard
-                activeRegions{sameSet} = [activeRegions{sameSet}; ...
+                activeRegions{indMerge} = [activeRegions{sameSet}; ...
                                           seti1thRow{i2}];
 
+                %
+                activeRegionsLims(:, indErase) = NaN;
+                
                 % Update column indices:
-                activeRegionsLims(2, sameSet) = min(activeRegions{sameSet}(:, 2));
-                activeRegionsLims(4, sameSet) = max(activeRegions{sameSet}(:, 2)); 
+                activeRegionsLims(2, indMerge) = min(activeRegions{indMerge}(:, 2));
+                activeRegionsLims(4, indMerge) = max(activeRegions{indMerge}(:, 2)); 
 
                 % Decrease number of active regions because of the merge:
                 nActiveR = nActiveR - (nMatch - 1);
@@ -274,6 +288,9 @@ for i1 = 1:length(indRowsUniq)
                 % WILL ONLY BE IDENTIFIED LATER AS PARTE OF THE BIG SET
 
             end
+            if rowi1==5
+            keyboard
+            end
         end
 
     end
@@ -286,6 +303,7 @@ for i1 = 1:length(indRowsUniq)
 
     if i1<length(indRowsUniq)
 
+%         keyboard
         lTerminate = ~checkActive(1:nActiveR);
 
 %             indTerminate = find(~checkActive(1:nActiveR));
@@ -315,17 +333,6 @@ for i1 = 1:length(indRowsUniq)
 
     end
 
-    % lterminate = ~checkActive (EXCEPT I HAVE TO BE
-    % CAREFUL WITH THE RESIZING)
-    
-    
-    % --------------------------------------------
-    % remove activeRegions that are not active anymore.
-    
-    % 1 - loop through the sets in seti1thRow
-    % 2 - loop through the existing sets in the previous row
-    % 3 - match the indices
-    % 4 - merge sets if necessary.
     
 end
 
