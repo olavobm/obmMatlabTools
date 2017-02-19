@@ -201,6 +201,10 @@ for i1 = 1:length(indRowsUniq)
             sameSet = seti1thRow{i2}(end, 2) >= (activeRegionsLims(2, :)-1) & ...
                       seti1thRow{i2}(1, 2) <= (activeRegionsLims(4, :)+1);
 
+            % ------------------------------------
+            
+            % ------------------------------------
+                  
             % I HAVE TO DO THE COMPARISON ABOVE FOR SUBSEQUENT
             % ROWS!!! EXCEPT THAT activeRegionsLims ONLY KEEPS THE LIMITS
             % WHAT CAN I DO ?????????????
@@ -296,6 +300,8 @@ for i1 = 1:length(indRowsUniq)
             
         end
 
+        % create new NxN by array 
+        
     end
     
     
@@ -303,6 +309,9 @@ for i1 = 1:length(indRowsUniq)
       
 %     lcurrentRow = activeRegions{1} == max(activeRegions{1}(:, 1));
     
+    % THIS DOES NOT WORK THOUGH .... I MUST USE ALL
+    % COLUMN INDICES RATHER THAN JUST MIN AND MAX!!
+
     for i2 = 1:nActiveR
         
         if checkActive(i2)
