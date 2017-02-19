@@ -190,9 +190,9 @@ for i1 = 1:length(indRowsUniq)
 %         checkActive = [checkActive(checkActive), false(1, length(~isnan(activeRegionsLims(2, :))))];
         checkActive = false(1, length(~isnan(activeRegionsLims(2, :))));
 
-        if rowi1==5
-            keyboard
-        end
+%         if rowi1==5
+%             keyboard
+%         end
         
         for i2 = 1:length(seti1thRow)
 
@@ -202,13 +202,14 @@ for i1 = 1:length(indRowsUniq)
                       seti1thRow{i2}(1, 2) <= (activeRegionsLims(4, :)+1);
 
             % I HAVE TO DO THE COMPARISON ABOVE FOR SUBSEQUENT
-            % ROWS!!! BUT DOES THAT WORK ?????????????
+            % ROWS!!! EXCEPT THAT activeRegionsLims ONLY KEEPS THE LIMITS
+            % WHAT CAN I DO ?????????????
                   
             nMatch = length(sameSet(sameSet));
 
-            if rowi1==5
-                keyboard
-            end
+%             if rowi1==5
+%                 keyboard
+%             end
             
             % Does not match with any of the active -- create new active
             if nMatch == 0
@@ -236,18 +237,22 @@ for i1 = 1:length(indRowsUniq)
                 activeRegions{sameSet} = [activeRegions{sameSet}; ...
                                           seti1thRow{i2}];                      
 
-%                 activeRegionsLims(1, sameSet) = min(activeRegions{sameSet}(:, 1));
-                activeRegionsLims(2, sameSet) = min(activeRegions{sameSet}(:, 2));
-%                 activeRegionsLims(3, sameSet) = min(activeRegions{sameSet}(:, 1));
-                activeRegionsLims(4, sameSet) = max(activeRegions{sameSet}(:, 2));                   
+% %                 activeRegionsLims(1, sameSet) = min(activeRegions{sameSet}(:, 1));
+%                 activeRegionsLims(2, sameSet) = min(activeRegions{sameSet}(:, 2));
+% %                 activeRegionsLims(3, sameSet) = min(activeRegions{sameSet}(:, 1));
+%                 activeRegionsLims(4, sameSet) = max(activeRegions{sameSet}(:, 2));
 
+%                 activeRegionsLims(2, sameSet) = min(activeRegions{sameSet}(:, 2));
+%                 activeRegionsLims(4, sameSet) = max(activeRegions{sameSet}(:, 2));
+                
                 % Says it is still active
                 checkActive(sameSet) = true;
-                if rowi1==5
-                    keyboard
-                end
+%                 if rowi1==5
+%                     keyboard
+%                 end
 
             % Matches with more than one, concatenate and merge regions:
+            % I SHOULD MERGE AT THE THE END, NOT WITHIN THIS LOOP!
             else
 
                 checkActive(sameSet) = true;
@@ -266,7 +271,7 @@ for i1 = 1:length(indRowsUniq)
                 activeRegions(indErase) = cell(1, length(indErase));
 
                 activeRegions{indMerge} = [activeRegions{sameSet}; ...
-                                          seti1thRow{i2}];
+                                           seti1thRow{i2}];
 
                 %
                 activeRegionsLims(:, indErase) = NaN;
@@ -278,7 +283,7 @@ for i1 = 1:length(indRowsUniq)
                 % Decrease number of active regions because of the merge:
                 nActiveR = nActiveR - (nMatch - 1);
 
-
+                keyboard
                 % HOW ABOUT IF THE MERGING IS IN SAW TOOTH??? LIKE
                 %
                 %  -   NAN  NAN  -   -
@@ -288,15 +293,29 @@ for i1 = 1:length(indRowsUniq)
                 % WILL ONLY BE IDENTIFIED LATER AS PARTE OF THE BIG SET
 
             end
-            if rowi1==5
-            keyboard
-            end
+            
         end
 
     end
     
-
     
+    %% Update activeRegionsLims only where checkActive is true:
+      
+%     lcurrentRow = activeRegions{1} == max(activeRegions{1}(:, 1));
+    
+    for i2 = 1:nActiveR
+        
+        if checkActive(i2)
+                        
+            lrowi1 = (activeRegions{i2}(:, 1) == rowi1);
+        
+            activeRegionsLims(2, i2) = min(activeRegions{i2}(lrowi1, 2));
+            activeRegionsLims(4, i2) = max(activeRegions{i2}(lrowi1, 2));
+            
+        end
+    end
+
+ 
     %% Check whether there are activeRegions with no matching NaNs
     % In this case, terminate its "activity" and pass to final output:
 
@@ -310,7 +329,8 @@ for i1 = 1:length(indRowsUniq)
 
     else  % last iteration over i1 -- pass all activeRegions to output
 
-        lTerminate = checkActive(1:nActiveR);
+%         lTerminate = checkActive(1:nActiveR);
+        lTerminate = true(1, nActiveR);
 
     end
 
