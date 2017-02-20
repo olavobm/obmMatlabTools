@@ -2,10 +2,11 @@ function indbdry = findBoundary(x)
 % indbdry = FINDBOUNDARY(x)
 %
 %   inputs:
-%       - x: logical array.
+%       - x: logical 2D array.
 %
 %   outputs:
-%       - indbdry:
+%       - indbdry: Nx2 array with row/column subscripts of
+%                  the boundary values of true regions in x.
 %
 %
 % Olavo Badaro Marques, 18/Feb/2017.
@@ -20,6 +21,7 @@ daux2 = [false(nr+2, 1), daux, false(nr+2, 1)];
 
 coldiff = daux2(:, 2:end) - daux2(:, 1:end-1);
 rowdiff = daux2(2:end, :) - daux2(1:end-1, :);
+
 
 %%
 indleft = find(coldiff == 1);
