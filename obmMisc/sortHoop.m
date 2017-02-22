@@ -7,21 +7,27 @@ function y = sortHoop(x)
 %   outputs:
 %       - y: Nx2 array with values of x sorted.
 %
+% SORTHOOP takes the subscript indices of the boundary of a regions
+% (such as the output of findBoundary.m) and returns same indices
+% but sorted in the CCW sense, starting with the elements on the
+% rightmost column, among those that are in the uppermost row.
 %
-% SORT in the CCW sense.
+% The way SORTHOOP works, it starts from a point in x and then it
+% looks for other points around it that are also in x. It 
 %
-% HUGE(!!!) PROBLEMS IF "TIVER UMA PENINSULA", INSTEAD OF A PROPER HOOP.
-%
+% It starts 
 %   4      3      2
 %   5    ptaux    1
 %   6      7      8
 %
+%
 % Olavo Badaro Marques, 21/Feb/2017.
 
+% HUGE(!!!) PROBLEMS IF "TIVER UMA PENINSULA", INSTEAD OF A
+% PROPER HOOP. I COULD TRY TO KEEP TRACK OF PENINSULAS!
 
-% I MUST RECONSIDER THE BOUNDARY DEFINITION TO ALLOW
-% STEPS !!! I PROBABLY NEED CONSIDER NSEW BEFORE
-% CONSIDERING DIAGONAL NEIGHBOURS
+
+%%
 
 rmin = min(x(:, 1));
 
@@ -78,6 +84,12 @@ while lloop    % THIS SHOULD PROBABLY BE A FOR LOOP!
         lloop = false;
     end
         
+end
+
+
+%% Check if any point in the input are not in the output:
+if ~isempty(find(isnan(y(:, 1)), 1))
+    warning('Not all input values are on the boundary.')
 end
 
 
