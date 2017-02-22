@@ -19,8 +19,9 @@ function y = sortHoop(x)
 % Olavo Badaro Marques, 21/Feb/2017.
 
 
-% THIS CODE IS NOT GOING TO WORK FOR CUSP BOUNDARIES,
-% BUT CUSPS HAVE INTERIOR POINTS (so am I good?????)
+% I MUST RECONSIDER THE BOUNDARY DEFINITION TO ALLOW
+% STEPS !!! I PROBABLY NEED CONSIDER NSEW BEFORE
+% CONSIDERING DIAGONAL NEIGHBOURS
 
 rmin = min(x(:, 1));
 
@@ -55,6 +56,7 @@ lloop = true;
 
 while lloop    % THIS SHOULD PROBABLY BE A FOR LOOP!
     
+    y(i, :) = ptaux;
     
     adjpts = getadjpts(ptaux, ptb4);
     
@@ -63,13 +65,10 @@ while lloop    % THIS SHOULD PROBABLY BE A FOR LOOP!
     c = sort(b(b>0));
     c = c(1);
     
-    ptnew = adjpts(c, :);
+    ptnew = adjpts(c, :);  
     
-    
-    if ptnew~=ptstart
-        
-        y(i, :) = ptaux;
-        
+    if ~isequal(ptnew, ptstart)   % change to something else
+                
         ptb4 = ptaux;     % except that this is different than my initial condition
         ptaux = ptnew;
         
@@ -80,8 +79,6 @@ while lloop    % THIS SHOULD PROBABLY BE A FOR LOOP!
     end
         
 end
-
-keyboard
 
 
 end
