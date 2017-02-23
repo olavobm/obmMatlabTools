@@ -2,7 +2,10 @@ function y = sortHoop(x)
 % y = SORTHOOP(x)
 %
 %   inputs:
-%       - x: Nx2 array.
+%       - x: Nx2 array with subscript indices (first column for
+%            row, second for column indices) that define a closed
+%            circuit. All the points must be on the hoop, otherwise
+%            output will not be what is expected.
 %
 %   outputs:
 %       - y: Nx2 array with values of x sorted.
@@ -12,14 +15,19 @@ function y = sortHoop(x)
 % but sorted in the CCW sense, starting with the elements on the
 % rightmost column, among those that are in the uppermost row.
 %
-% The way SORTHOOP works, it starts from a point in x and then it
-% looks for other points around it that are also in x. It 
+% The way SORTHOOP works, it starts from a point in x and then
+% it looks for other points around it that are also in x. The
+% next point is chosen by the first surrounding point found in
+% a CCW direction, such as:
 %
-% It starts 
-%   4      3      2
-%   5    ptaux    1
-%   6      7      8
+%       4      3      2
+%       5    ptaux    1
+%       6      7      8
 %
+% The location of the first reference point (1), depends on the
+% previous point (i.e. the pattern above may be rotated).
+%
+% As long as the input is a closed loop, there 
 %
 % Olavo Badaro Marques, 21/Feb/2017.
 
@@ -35,9 +43,7 @@ lrmin = (x(:, 1) == rmin);
 
 cmaxinrmin = max(x(lrmin, 2));
 
-
 lcmax = (x(:, 2) == cmaxinrmin);
-% there should be no points above this one!
 
 
 %%
@@ -94,7 +100,6 @@ end
 
 
 end
-
 
 
 %% ------------------------------------------------------------

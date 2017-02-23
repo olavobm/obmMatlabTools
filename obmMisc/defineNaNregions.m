@@ -6,7 +6,6 @@ function regionsNaN = defineNaNregions(lNaN)
 %
 %   outputs:
 %       - regionsNaN: sets of regions.
-%       - boundary of regions.
 %
 % or indNaN should probably be a logical matrix!
 %
@@ -207,7 +206,8 @@ for i1 = 1:length(indRowsUniq)
                   
             % I HAVE TO DO THE COMPARISON ABOVE FOR SUBSEQUENT
             % ROWS!!! EXCEPT THAT activeRegionsLims ONLY KEEPS THE LIMITS
-            % WHAT CAN I DO ?????????????
+            % WHAT CAN I DO ????????????? I WOULD HAVE TO LOOP OVER
+            % SETI0THROW SORT OF THING...
                   
             nMatch = length(sameSet(sameSet));
 
