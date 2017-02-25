@@ -18,8 +18,8 @@ function [intSpec, actualdf] = integrateSpec(pwspec, df, lsumrot)
 % INTEGRATESPEC integrates a spectrum over frequency band(s) specified
 % by df.
 %
-% In fact, df is also optional (even though this function can be ). If not specified, the integral
-% is taken over all frequencies.
+% In fact, df is also optional (even though this function can be ). If
+% not specified, the integral is taken over all frequencies.
 %
 % Olavo Badaro Marques, 23/Feb/2017.
 
@@ -39,9 +39,17 @@ end
 
 %%
 
+if (min(pwspec.(freq)) < 0) && (max(pwspec.(freq)) > 0)
+    lnegpos = true;
+else
+    lnegpos = false;
+end
+
+
 if ~exist('df', 'var') || isempty(df)
     
-    if min(pwspec.(freq)) <= 0
+    if min(pwspec.(freq)) <= 0   % maybe the next code block
+                                 % mayde this if useless
         
         indneg = find(pwspec.(freq) < 0);
         indpos = find(pwspec.(freq) > 0);
@@ -52,6 +60,17 @@ if ~exist('df', 'var') || isempty(df)
         df = [min(pwspec.(freq)), max(pwspec.(freq))];
     end
     
+    
+end
+
+
+%%
+
+if lnegpos && lsumrot
+    
+    negdf = - [df(:, 2), df(:, 1)];
+    
+    df = [df; negdf];
     
 end
 
@@ -87,10 +106,15 @@ for i = 1:nints
     intSpec(i) = trapz(pwspec.(freq)(inddf(1):inddf(2)), ...
                        pwspec.(psd)(inddf(1):inddf(2)));
     
-
-    
-    
-    
+	% I've seen a weird bug (?) with trapz
+    % Error using permute. ORDER contains an invalid permutation index.
 end
 
 
+%%
+
+if lsumrot
+    
+    intSpec = intSpec(1:(end/2)) + intSpec(((end/2)+1):end);
+    
+end
