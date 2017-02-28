@@ -1,39 +1,38 @@
-function [pwspec] = obmPSpec(x, dt, np, nchk, ovrlap, winkind)
-% [pwspec] = obmPSpec(x, dt, np, nchk, ovrlap, winkind)
+function [pwspec] = obmPSpec(x, dt, np, ovrlap)
+% [pwspec] = OBMPSPEC(x, dt, np, ovrlap)
 %
 %   inputs:
 %       - x: vector with evenly spaced data. No NaNs allowed.
 %       - dt: sampling period.
 %       - np: number of data points per chunk.
-%       - nchk: number of chunks to chop the data.
 %       - ovrlap: overlap between chunks (number
 %                 between 0-1, default is 0.5).
-%       - winkind: string with the kind of window you want.
 %
 %   output:
 %       - pwspec: struct variable with power spectrum info. The fields
 %                 of the structure array are:
-%                       - allpsd:
-%                       - psd:
-%                       - freq:
-%                       - dof:
-%                       - err:
+%                       - allpsd: matrix with all power spectra,
+%                                 that are averaged into psd.
+%                       - psd: ensemble-averaged power spectral density.
+%                       - freq: frequency vector.
+%                       - dof: degrees of freedom.
+%                       - err: 95% confidence interval.
 %
 % OBMPSPEC makes an estimate of the power spectrum using the Welch
 % method, i.e. averaging the periodogram of overlapping data subsets.
 % Each periodogram is computed by Matlab's fft function (the Discrete
 % Fourier Transform, DFT).
 %
-% Organization of Fourier Coefficients by Matlab's FFT???
 % (even ANNNND odd length of input????)
 %
-% MAKE SURE INPUT x is column vector-like.
-%
-% MAKE THIS NOTE BELOW (this is an example from Ian's routine)
-% Note: Spectrum has max period of record length and min
-%       (Nyquist) period of twice the sampling interval.
-%
 % Olavo Badaro Marques, 02/Sep/2015.
+
+
+%% Error message for update:
+
+if nargin > 4
+    error('I have removed useless inputs! Exclude calls for nchk and winkind.')
+end
 
 
 %% Check x is a column vector:
@@ -165,7 +164,6 @@ chunk_last_ind = chunk_last_ind(lchk);
 
 % Get number of chunks:
 nchk = length(find(lchk));
-
 
 
 %% Now loop through all chunks and make spectral estimates:
