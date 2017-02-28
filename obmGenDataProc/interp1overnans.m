@@ -10,8 +10,6 @@ function yinterp = interp1overnans(x, y, xgrid, maxgap)
 %                            will be interpolated through. If you give this
 %                            input, then xgrid input must be specified.
 %
-% THINK ABOUT THE XGRID INPUT!!! XGRID OR ROW INDICES????? OR BOTH????
-%
 %   outputs:
 %       - yinterp: y interpolated on x/xgrid.
 %
