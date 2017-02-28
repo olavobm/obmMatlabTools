@@ -3,7 +3,7 @@ function y = sortHoop(x)
 %
 %   inputs:
 %       - x: Nx2 array with subscript indices (first column for
-%            row, second for column indices) that define a closed
+%            row, second for column indices) defining a closed
 %            circuit. All the points must be on the hoop, otherwise
 %            output will not be what is expected.
 %
@@ -15,27 +15,29 @@ function y = sortHoop(x)
 % but sorted in the CCW sense, starting with the elements on the
 % rightmost column, among those that are in the uppermost row.
 %
-% The way SORTHOOP works, it starts from a point in x and then
-% it looks for other points around it that are also in x. The
-% next point is chosen by the first surrounding point found in
-% a CCW direction, such as:
+% SORTHOOP works by starting from a point in x and then looking
+% for other points around it that are also in x. The next point
+% is chosen by the first surrounding point found in a CCW
+% direction, such as:
 %
 %       4      3      2
 %       5    ptaux    1
 %       6      7      8
 %
-% The location of the first reference point (1), depends on the
-% previous point (i.e. the pattern above may be rotated).
+% The location of the first reference point (1), to the right of
+% ptaux in the example above, depends on the previous point (i.e.
+% the pattern above may be rotated).
 %
-% As long as the input is a closed loop, there 
+% This function should work as long as the input x is a closed
+% loop. Beware that when a boundary makes a 90-degree corner,
+% the point on the corner is NOT considered part of the loop IF
+% the corner is towards the inside of the closed hoop.
 %
 % Olavo Badaro Marques, 21/Feb/2017.
 
-% HUGE(!!!) PROBLEMS IF "TIVER UMA PENINSULA", INSTEAD OF A
-% PROPER HOOP. I COULD TRY TO KEEP TRACK OF PENINSULAS!
 
-
-%%
+%% Take the minimum row where values of x are
+% located and the maximum column among them:
 
 rmin = min(x(:, 1));
 
@@ -46,46 +48,61 @@ cmaxinrmin = max(x(lrmin, 2));
 lcmax = (x(:, 2) == cmaxinrmin);
 
 
-%%
+%% Assign the starting point to the variable ptaux, that is
+% updated in the while loop below. Also define an artificial
+% direction from where we approach ptaux:
 
 ptaux = x(lrmin & lcmax, :);
 
-ptstart = ptaux;
+ptstart = ptaux;  % this variable is kept to know we
+                  % have gone around the hoop
 
+% Because of the definition of the starting point and the sense
+% of rotation, we artificially define that we are approaching
+% ptaux from the upper left. Therefore, the location (1) for
+% searching neighboring points is to the left of ptaux
 ptb4 = ptaux;
 ptb4 = ptb4 - 1;
 
 
+%% Loop over all the elements on the hoop in the CCW sense:
 
-%%
-
-% Pre-allocate:
+% Pre-allocate for the output:
 y = NaN(size(x));
 
-i = 1;
-%
+% Logical switch for repeating
+% the loop and row index:
 lloop = true;
+i = 1;
 
-while lloop    % THIS SHOULD PROBABLY BE A FOR LOOP!
+while lloop    % !!! THIS SHOULD PROBABLY BE A FOR LOOP !!!
     
+    % Assign current point to output variable:
     y(i, :) = ptaux;
     
+    % Call nested function to get the 8 points adjacent to
+    % ptaux in the appropriate order (dependent on ptb4):
     adjpts = getadjpts(ptaux, ptb4);
     
+    % Get the rows in x of adjpts that are members of x:
     [~, b] = ismember(x, adjpts, 'rows');
     
-    c = sort(b(b>0));
+    % Get the row of the first member of the above:
+    c = sort(b(b>0));   % values that are not members have b==0
     c = c(1);
     
+    % Assign it as the new point:
     ptnew = adjpts(c, :);  
     
+    % If the new point is the starting point, update variables:
     if ~isequal(ptnew, ptstart)   % change to something else
                 
-        ptb4 = ptaux;     % except that this is different than my initial condition
+        ptb4 = ptaux;
         ptaux = ptnew;
         
         i = i + 1;
         
+	% Otherwise set logical switch to end the loop:
     else
         lloop = false;
     end
