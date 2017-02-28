@@ -15,6 +15,8 @@ function [pwspec] = obmPSpec(x, dt, np, ovrlap)
 %                                 that are averaged into psd.
 %                       - psd: ensemble-averaged power spectral density.
 %                       - freq: frequency vector.
+%                       - fcoef: fourier coefficients from
+%                                which allpsd are computed.
 %                       - dof: degrees of freedom.
 %                       - err: 95% confidence interval.
 %
@@ -23,7 +25,7 @@ function [pwspec] = obmPSpec(x, dt, np, ovrlap)
 % Each periodogram is computed by Matlab's fft function (the Discrete
 % Fourier Transform, DFT).
 %
-% (even ANNNND odd length of input????)
+% For now, np MUST BE ODD.
 %
 % Olavo Badaro Marques, 02/Sep/2015.
 
@@ -31,7 +33,7 @@ function [pwspec] = obmPSpec(x, dt, np, ovrlap)
 %% Error message for update:
 
 if nargin > 4
-    error('I have removed useless inputs! Exclude calls for nchk and winkind.')
+    error('I have removed unused inputs! Exclude calls for nchk and winkind.')
 end
 
 
@@ -44,6 +46,13 @@ else
         x = x(:);   % transpose, with this notation, which
                     % also works if x is complex
     end
+end
+
+
+%% If ovrlap is not given, choose default value:
+
+if ~exist('ovrlap', 'var')
+    ovrlap = 0.5;
 end
 
 
@@ -64,24 +73,7 @@ end
 N  = length(x);
 
 % Lowest frequency that can be resolved:
-df = (1/(N*dt));
-
-% % %% Get indices of beginning and end of each chunk - IS THIS WORTH DOING?:
-% % 
-% % inda = linspace(1, N, nchk+1);
-% % 
-% % stp = inda(2) - inda(1);
-% % 
-% % % Initialize chunk indices matrix:
-% % chkind = NaN(nchk, 2);
-% % for i = 1:nchk
-% %     chkind(i, 1) = inda(i);
-% %     chkind(i, 2) = inda(i+1);
-% % end
-% % 
-% % % Approximate indices up/down:
-% % chkind(:, 1) = ceil(chkind(:, 1));
-% % chkind(:, 2) = floor(chkind(:, 2));
+% df = (1/(N*dt));
 
 
 %% Determine chunks based on the user-specified number of points for
@@ -154,7 +146,6 @@ else
    
 end
 
-
 % Now get only those that don't exceed the data:
 lchk = chunk_last_ind <= N;
 
@@ -174,6 +165,7 @@ df = (1/(np*dt));
 % Matrix for storing all spectra:
 lenspec = length(2 : ceil(np/2)); % WHAT IS THIS LENGTH FOR EVEN/ODD np????
 allpsd = NaN(lenspec, nchk);
+allfcoefs = NaN(lenspec, nchk);
 
 % Loop through chosen chunks:
 for i = 1:nchk
@@ -185,11 +177,13 @@ for i = 1:nchk
     [fcoef, ~] = fftaux(xchk, np);
     
     % Choose only the appropriate coefficients
-    % EACH CHUNK MUST HAVE ODD LENGTH (np MUST BE ODD!!!!!!!)
     fcoef = fcoef( 2 : ceil(np/2) );
 
     % Power spectrum density estimate:
     allpsd(:, i) = (2 .* (abs(fcoef).^2)) ./ (df * np^2);
+    
+    % Keep fourier coefficients:
+    allfcoefs(:, i) = fcoef;
     
 %     % Checking variance (add xout in the output of fftaux above):
 %     sample_var = var(xout);
@@ -201,7 +195,7 @@ for i = 1:nchk
 end
 
 
-%% Organize structure containing spectral estimate:
+%% Organize output structure:
 
 % Store all individual periodograms:
 pwspec.allpsd = allpsd;
@@ -211,6 +205,9 @@ pwspec.psd = mean(allpsd, 2);
 
 % Frequency vector:
 pwspec.freq = ( 1:lenspec ) ./ (np*dt);
+
+% Fourier coefficients:
+pwspec.fcoef = allfcoefs;
 
 % Degrees of freedom - THIS NOW DEPENDS ON THE OVERLAP! I SHOULD INCLUDE
 % A REFERENCE (BENDAT & PIERSOL???) FOR THE D.O.F. FORMULA:
@@ -231,9 +228,18 @@ pwspec.err = [err_low err_high];
 %% Nested functions:
 
     function [fcoef, xaux] = fftaux(xaux, naux)
+        % [fcoef, xaux] = FFTAUX(xaux, naux)
+        %
+        %   inputs:
+        %       -
+        %       -
+        %
+        %   outputs:
+        %       -
+        %       -
+        %
         % Computing Fourier coefficients via fft, but first remove
         % mean, detrend and multiply by window:
-        %    - ADD INPUT SO THAT A SPECIFIED WINDOW CAN BE CHOSEN!!!):
         %    - DO I NEED NAUX AS AN INPUT (SPECIALLY WHEN CALLING FFT):
         %    - preferentially don't use Matlab's detrend function:
 
