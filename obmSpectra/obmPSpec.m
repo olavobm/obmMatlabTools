@@ -2,7 +2,7 @@ function [pwspec] = obmPSpec(x, dt, np, ovrlap)
 % [pwspec] = OBMPSPEC(x, dt, np, ovrlap)
 %
 %   inputs:
-%       - x: vector with evenly spaced data. No NaNs allowed.
+%       - x: vector with evenly spaced data.
 %       - dt: sampling period.
 %       - np: number of data points per chunk.
 %       - ovrlap: overlap between chunks (number
@@ -26,6 +26,8 @@ function [pwspec] = obmPSpec(x, dt, np, ovrlap)
 % Fourier Transform, DFT).
 %
 % For now, np MUST BE ODD.
+%
+% SHOULD ADD OPTION FOR ROTARY SPECTRUM!
 %
 % Olavo Badaro Marques, 02/Sep/2015.
 
