@@ -32,6 +32,14 @@ function [pwspec] = obmPSpec(x, dt, np, ovrlap)
 % KEEP BOTH PARTS OF A REAL VARIABLE, I ONLY NEED TO ADD A ZERO IMAGINARY
 % PART).
 %
+% The highest frequency is different whether np is even or odd.
+% If np is even, max(pwspec.freq) is the Nyquist frequency ..... For
+% np odd, the highest frequency is a bit smaller than Nyquist
+% and equal to .....(np-1)/np * PI/DT.
+%
+% The spectrum has has length FLOOR(N/2)+1, or N/2+1 for even N, and
+% (N+1)/2 for odd N.
+%
 % Olavo Badaro Marques, 02/Sep/2015.
 
 
@@ -168,7 +176,11 @@ nchk = length(find(lchk));
 df = (1/(np*dt));
 
 % Matrix for storing all spectra:
-lenspec = length(2 : ceil(np/2)); % WHAT IS THIS LENGTH FOR EVEN/ODD np????
+% lenspec = length(2 : ceil(np/2)); % WHAT IS THIS LENGTH FOR EVEN/ODD np????
+% allpsd = NaN(lenspec, nchk);
+% allfcoefs = NaN(lenspec, nchk);
+
+lenspec = np - 1;
 allpsd = NaN(lenspec, nchk);
 allfcoefs = NaN(lenspec, nchk);
 
@@ -180,14 +192,14 @@ for i = 1:nchk
     
     % Call nested function to compute Fourier coefficients:
     [fcoef, ~] = fftaux(xchk, np);
-    
-    % Choose only the appropriate coefficients
-    fcoef = fcoef( 2 : ceil(np/2) );
+
+    % Remove Fourier coefficient of the mean:
+    fcoef = fcoef(2:end);
 
     % Power spectrum density estimate:
-    allpsd(:, i) = (2 .* (abs(fcoef).^2)) ./ (df * np^2);
-    
-    % Keep fourier coefficients:
+    allpsd(:, i) = (abs(fcoef).^2) ./ (df * np^2);
+
+    % Assign fourier coefficients to variable to in the output:
     allfcoefs(:, i) = fcoef;
     
 %     % Checking variance (add xout in the output of fftaux above):
@@ -200,6 +212,43 @@ for i = 1:nchk
 end
 
 
+%%
+
+nyquistFreq = 1/(2*dt);    % == floor(np/2)/(np*dt) if np is even
+
+% Frequency vector:
+
+% Frequency vector -- from fundamental to highest:
+pwspec.freq = (1:floor(np/2)) ./ (np*dt);
+
+% Replicate and create negative frequencies:
+pwspec.freq = [pwspec.freq, -fliplr(pwspec.freq(pwspec.freq < nyquistFreq))];
+
+%
+indneg = find(pwspec.freq < 0);
+if isreal(x)
+
+    % fold negative-frequency part onto positive side:
+    allpsd(1:length(indneg), :) = allpsd(1:length(indneg), :) + ...
+                                                flipud(allpsd(indneg, :));  
+	allpsd = allpsd(1:(indneg(1)-1), :);
+           
+    allfcoefs = allfcoefs(1:(indneg(1)-1), :);
+    
+    pwspec.freq = pwspec.freq(1:(indneg(1)-1));
+    
+else
+    
+    % complex
+    allpsd = [allpsd(indneg, :); allpsd(1:(indneg(1)-1), :)];
+    
+    allfcoefs = [allfcoefs(indneg, :); allfcoefs(1:(indneg(1)-1), :)];
+    
+    pwspec.freq = [pwspec.freq(indneg), pwspec.freq(1:(indneg(1)-1))];
+    
+end
+
+
 %% Organize output structure:
 
 % Store all individual periodograms:
@@ -207,9 +256,6 @@ pwspec.allpsd = allpsd;
 
 % Ensemble-averaged power spectral density:
 pwspec.psd = mean(allpsd, 2);
-
-% Frequency vector:
-pwspec.freq = ( 1:lenspec ) ./ (np*dt);
 
 % Fourier coefficients:
 pwspec.fcoef = allfcoefs;
@@ -236,12 +282,12 @@ pwspec.err = [err_low err_high];
         % [fcoef, xaux] = FFTAUX(xaux, naux)
         %
         %   inputs:
-        %       -
-        %       -
+        %       - xaux: 1xnaux (row) vector.
+        %       - naux: PROBABLY UNNECESSARY!!!
         %
         %   outputs:
-        %       -
-        %       -
+        %       - fcoef: Fourier coefficients
+        %       - xaux: demeaned-detrend-windowed xaux.
         %
         % Computing Fourier coefficients via fft, but first remove
         % mean, detrend and multiply by window:
