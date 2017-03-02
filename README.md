@@ -30,9 +30,9 @@ Given a vector (real or complex) *data*, regularly spaced by *dt*, make an estim
 pwspec =
 
       freq: [1xN double]
-    allpsd: [Nx3 double]
+    allpsd: [NxM double]
        psd: [Nx1 double]
-     fcoef: [Nx3 double]
+     fcoef: [NxM double]
        dof: a
        err: [errup errdown]
 ```
