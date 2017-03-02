@@ -18,6 +18,16 @@ The variable data can be a vector or a matrix, in which case, each column is int
 
 ### Spectral estimates:
 
-In many scientific areas, estimating power spectra is a routine job. However, from my experience, there are several *little details* that are usually not explained and can cause a lot of pain for beginners when writing their own code. The comments in my functions hopefully address some these issues.
+In many scientific areas, estimating power spectra is a routine job. However, from my experience, there are several **little details** that are usually not explained and can cause a lot of pain for beginners when writing their own code. The comments in my functions hopefully address these issues.
 
 #### Power spectrum:
+
+There are [several ways](https://en.wikipedia.org/wiki/Spectral_density_estimation) to estimate the power spectral density. In fact, we never compute the true power spectrum: we make an **estimate**. Over time, better estimates have been developed. See below an example for making an estimate using the [Welch's method](https://en.wikipedia.org/wiki/Welch%27s_method), which is still widely used, though the Multitaper method gives a better estimate.
+
+Given a vector (real or complex) *data*, **regularly spaced** by *dt*, make an estimate of the power spectrum by simply
+
+```matlab
+[pwspec] = obmPSpec(data, dt, np, ovrlap)
+```
+
+To be continued...
