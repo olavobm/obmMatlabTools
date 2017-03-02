@@ -26,6 +26,15 @@ Given a vector (real or complex) *data*, regularly spaced by *dt*, make an estim
 
 ```matlab
 [pwspec] = obmPSpec(data, dt, np, ovrlap)
+
+pwspec =
+
+      freq: [1xN double]
+    allpsd: [Nx3 double]
+       psd: [Nx1 double]
+     fcoef: [Nx3 double]
+       dof: a
+       err: [errup errdown]
 ```
 
 The function computes power spectra for data chunks of *np* data points, overlapping those chunks by *ovrlap* ($0 \leq ovrlap < 1$) and finally taking the mean of all spectra. Each chunk is windowed by a hanning window. The output is a struct variable with the following fields:
