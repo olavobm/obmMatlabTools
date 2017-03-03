@@ -191,11 +191,13 @@ for i = 1:nchk
     % Remove Fourier coefficient of the mean:
     fcoef = fcoef(2:end);
     
+    fcoef = fcoef .* sqrt(np/(sum(window(@hann, np).^2)));
+    
     % Power spectrum density estimate:
     allpsd(:, i) = (abs(fcoef).^2) ./ (df * np^2);
 
     % Normalize to account by variance reduction from Hanning window:
-    allpsd(:, i) = allpsd(:, i) .* (np/(sum(window(@hann, np).^2)));
+%     allpsd(:, i) = allpsd(:, i) .* (np/(sum(window(@hann, np).^2)));
     % or should I normalize the fourier coefficients such that
     % cross-Spectral analysis take the variance preserving coefficients????
     
