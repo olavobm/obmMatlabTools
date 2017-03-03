@@ -25,22 +25,17 @@ function [pwspec] = obmPSpec(x, dt, np, ovrlap)
 % Each periodogram is computed by Matlab's fft function (the Discrete
 % Fourier Transform, DFT).
 %
-% For now, np MUST BE ODD.
-%
-% SHOULD ADD OPTION FOR ROTARY SPECTRUM! IN OTHER WORDS, HANDLE WITH
-% OUTPUT DIFFERENTLY IF X IS COMPLEX (THIS CAN ALSO BE USED IF I WANT TO
-% KEEP BOTH PARTS OF A REAL VARIABLE, I ONLY NEED TO ADD A ZERO IMAGINARY
-% PART).
-%
-% The highest frequency is different whether np is even or odd.
-% If np is even, max(pwspec.freq) is the Nyquist frequency ..... For
-% np odd, the highest frequency is a bit smaller than Nyquist
-% and equal to .....(np-1)/np * PI/DT.
-%
-% The spectrum has has length FLOOR(N/2)+1, or N/2+1 for even N, and
-% (N+1)/2 for odd N.
+% The highest frequency is different whether np is even or odd. If np
+% is even, max(pwspec.freq) is the Nyquist frequency, 1/(2*dt). For
+% np odd, the highest frequency is a bit smaller than Nyquist, equal
+% to 1/(2*dt) - (1/2)*(1/(np*dt)), which is Nyquist minus half of the
+% frequency resolution.
 %
 % Olavo Badaro Marques, 02/Sep/2015.
+
+% AFTER WINDOWING BY HANNING, I SHOULD NORMALIZE THE DATA BY:
+%   NP/(SUM(xaux.^2)). I SHOULD ALSO INTEGRATE THE SPECTRUM
+% TO SEE IF IT EQUALS THE VARIANCE.
 
 
 %% Error message for update:
@@ -195,20 +190,27 @@ for i = 1:nchk
 
     % Remove Fourier coefficient of the mean:
     fcoef = fcoef(2:end);
-
+    
     % Power spectrum density estimate:
     allpsd(:, i) = (abs(fcoef).^2) ./ (df * np^2);
 
+    % Normalize to account by variance reduction from Hanning window:
+    allpsd(:, i) = allpsd(:, i) .* (np/(sum(window(@hann, np).^2)));
+    % or should I normalize the fourier coefficients such that
+    % cross-Spectral analysis take the variance preserving coefficients????
+    
     % Assign fourier coefficients to variable to in the output:
     allfcoefs(:, i) = fcoef;
     
 %     % Checking variance (add xout in the output of fftaux above):
-%     sample_var = var(xout);
+%     sample_var = var(detrend(xchk, 'linear'));
+% %     sample_var = var(xout);   % this has been windowed, so the
+%                                 % variance won't match
 %     integr_var = sum(allpsd(:, i) * df);
 % 
 %     sprintf('Variance of the data is %f and integrated spectrum is %f', ...
 %                           sample_var, integr_var)
-
+                      
 end
 
 
@@ -302,7 +304,7 @@ pwspec.err = [err_low err_high];
 
             % Multiplying chunk values by window:
             xaux = xaux .* window(@hann, naux);
-
+            
             % Compute Fourier coefficients with FFT:
             fcoef = fft(xaux, naux);
 
