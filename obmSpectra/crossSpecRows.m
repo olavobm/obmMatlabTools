@@ -1,4 +1,4 @@
-function [xyCoh, xyPha, x_pwspec, y_pwspec] = crossSpecRows(f, x, y, dt, np, x_indrows, y_indrows)
+function [xyCross, x_pwspec, y_pwspec] = crossSpecRows(f, x, y, dt, np, x_indrows, y_indrows)
 % [crossSpec, x_pwspec, y_pwspec] = CROSSSPECROWS(f, x, y, dt, np, indrows)
 %
 %   inputs:
@@ -40,7 +40,7 @@ y_pwspec = spectrarows(y, dt, np, y_indrows);
 
 %%
 
-indf = dsearchn(x_pwspec.freq(:), f);
+indf = dsearchn(x_pwspec(1).freq(:), f);
 
 
 %%
@@ -48,8 +48,8 @@ indf = dsearchn(x_pwspec.freq(:), f);
 ny = length(y_indrows);
 nx = length(x_indrows);
 
-xyCoh = NaN(ny, nx);
-xyPha = NaN(ny, nx);
+xyCross.Coh = NaN(ny, nx);
+xyCross.Pha = NaN(ny, nx);
 
 
 for i1 = 1:ny
@@ -60,11 +60,13 @@ for i1 = 1:ny
                                            y_pwspec(i1), ...
                                            np, dt);
     
-        xyCoh(i1, i2) = auxCrossSpec.Coh(indf);
+        xyCross.Coh(i1, i2) = auxCrossSpec.Coh(indf);
+        xyCross.Pha(i1, i2) = auxCrossSpec.Pha(indf);
         
         
     end 
     
 end
+
 
 
