@@ -27,15 +27,22 @@ function [xyCross, x_pwspec, y_pwspec] = crossSpecRows(f, x, y, dt, np, x_indrow
 % to look at by specifying the last two inputs.
 %
 % The output only keeps the cross-spectra at a single frequency f.
-% The output is the value from the cross-spectrum that is closest
+% The output are the value from the cross-spectra that are closest
 % in frequency to the input f.
 %
-% Spectra are calculated using my function obmPSpec.m, which is called
-% by my other function spectrarows.m. Note the cross-spectrum is then
-% computed by my other function crossSpecFromStruct.m.
+% CROSSSPECROWS is only a "high-level funcion" (it calls other
+% functions of mine). Spectra are calculated by obmPSpec.m, which
+% is called by spectrarows.m. The cross-spectrum is then computed
+% by crossSpecFromStruct.m.
+%
+% Be careful with NaNs. You want to give inputs that have NaNs in the
+% same locations because you want to select values taken together to
+% compute spectra. Because obmPSpec.m handles NaNs in a certain way,
+% you may get the right result even with NaNs in different locations.
+% On the other hand, given the definition of the cross-spectrum, you
+% probably want to avoid any NaNs as much as you can.
 %
 % TODO:
-%   - make a comment about NaNs.
 %   - maybe should return full cross-spectrum rather than magnitude
 %     and argument.
 %   - maybe do something different about the closest frequency to choose.
