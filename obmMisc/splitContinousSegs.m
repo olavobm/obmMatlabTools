@@ -24,25 +24,22 @@ n = length(indsplit) + 1;
 
 segscell = cell(1, n);
 
-indauxstart = 1;
-indauxend = indsplit(1);
 
-segscell{1} = inds(indauxstart:indauxend);
+for i = 1:n
 
+    if i==1
+        indauxstart = 1;
+    else
+        indauxstart = indsplit(i-1) + 1;
+    end
 
-for i = 1:(n-1)
-
-    indauxstart = indsplit(i) + 1;
-    
-    if i~=(n-1)
-        indauxend = indsplit(i + 1);
+    if i<n
+        indauxend = indsplit(i);
     else
         indauxend = length(inds);
     end
     
-    segscell{i+1} = inds(indauxstart:indauxend);
-    
-    keyboard
-    
+    segscell{i} = inds(indauxstart:indauxend);
+     
 end
 
