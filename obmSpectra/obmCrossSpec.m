@@ -22,7 +22,17 @@ function [crossSpec, x_pwspec, y_pwspec] = obmCrossSpec(x, y, dt, np, ovrlap)
 %       - y_pwspec: power spectrum structure of y.
 %
 % OBMCROSSSPEC takes the cross spectrum of x with y. The spectral
-% estimates for each of x and y are done by obmPSpec.
+% estimates for each of x and y are done by obmPSpec. Inputs x
+% and y should be co-located and regularly spaced by dt.
+%
+% A cross-spectral estimate is a biased estimate. For example, a
+% coherence estimate with 2 degrees of freedom is equal to 1 at all
+% frequencies. It is then necessary to average different realizations
+% of cross-spectral estimates to obtain an estimate that is closer
+% to the true value. Input np is the number of points of a single
+% realization. Smaller np gives a cross-spectral estimate with more
+% degrees of freedom at the expense of decreasing the frequency
+% resolution (and the smallest frequency resolved).
 %
 % Olavo Badaro Marques, 28/Feb/2017.
 
