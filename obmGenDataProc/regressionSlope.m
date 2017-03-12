@@ -16,9 +16,9 @@ function a = regressionSlope(x, y)
 % If inputs x and y are vectors, then a is a single number. If one
 % is a vector and the other is a matrix, then output is a vector
 % where each element is the regression slope between the vector
-% and each row of the matrix. If both inputs are matrices, the
-% j'th column of a has the regression slopes of the j'th row of x
-% with each column of y.
+% and each row of the matrix. If both inputs are matrices, output
+% a is also a matrix where its j'th column has the regression
+% slopes of the j'th row of x with each row of y.
 %
 % If inputs x and y are complex vectors, then a is also complex.
 % If for example the magnitude of a is 1 and its argument is pi/2,
