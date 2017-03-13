@@ -1,5 +1,5 @@
-function [xout] = subsettimeseriesStruct(x, varfields, d, dlims, t, tavgstep)
-% [xout] = SUBSETTIMESERIESSTRUCT(x, varfields, d, dlims, t, tavgstep)
+function [xout] = subsetProfilerTimeseries(x, varfields, d, dlims, t, tavgstep)
+% [xout] = SUBSETPROFILERTIMESERIES(x, varfields, d, dlims, t, tavgstep)
 %
 %   inputs:
 %       - x:
@@ -23,6 +23,8 @@ function [xout] = subsettimeseriesStruct(x, varfields, d, dlims, t, tavgstep)
 
 
 indcell = 
+
+
 
 indvarlims = dlims;
 
