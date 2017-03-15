@@ -4,7 +4,9 @@ function structout = subsetStruct(indvarcell, indvarlims, structvar, varcell, lr
 %   inputs:
 %       - indvarcell: cell array with independent variable names.
 %       - indvarlims: Nx2 array with limits of the independent variables.
-%       - structvar: structure
+%       - structvar: structure with (at least) the independent variables
+%                    (indvarcell) and the dependent variables (varcell)
+%                    to subset.
 %       - varcell: cell array with dependent variables to subset.
 %       - lrm (optional): logical variable (default is false). If true,
 %                         remove all fields not specified in either
