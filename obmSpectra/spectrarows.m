@@ -54,7 +54,7 @@ nrows = length(indrows);
 for i = 1:nrows
     
     % Compute power spectrum:
-	pwspecaux = obmPSpec(x(indrows(i), :), dt, np, 0, ovrlap, 0);
+	pwspecaux = obmPSpec(x(indrows(i), :), dt, np, ovrlap);
     
     % If the it is the first iteration, get the field names
     % of the output of obmPSpec to create an empty struct
