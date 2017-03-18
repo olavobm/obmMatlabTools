@@ -13,14 +13,14 @@ function initSquarePlot(xlims, ylims)
 % Olavo Badaro Marques, 17/Mar/2017.
 
 
-%%
+%% If second input is not given, make it the same as xlims:
 
 if ~exist('ylims', 'var')
     ylims = xlims;
 end
 
 
-%%
+%% Create plot background:
 
 figure
     hold on
@@ -29,7 +29,7 @@ figure
     xlim(xlims)
     ylim(ylims)
        
-%
+% Make ticks on both axes to be the same:
     xtickslen = length(get(gca, 'XTick'));
     ytickslen = length(get(gca, 'YTick'));
     
