@@ -1,5 +1,5 @@
-function [xout, xstd, xn] = obmBinAvg(t, x, binlen, tbin)
-% [xout, xstd, xn] = OBMBINAVG(t, x, binlen, tbin)
+function [xout, xstd, nbins] = obmBinAvg(t, x, binlen, tbin)
+% [xout, xstd, nbins] = OBMBINAVG(t, x, binlen, tbin)
 %
 %   input:
 %       - t:
@@ -15,3 +15,53 @@ function [xout, xstd, xn] = obmBinAvg(t, x, binlen, tbin)
 %       - xn:
 %
 % Olavo Badaro Marques, 20/Mar/2017.
+
+
+%%
+
+if ~exist('tbin', 'var')
+    tbin = t;
+end
+
+tbin = tbin(:);
+
+%
+if iscolumn(x)
+    x = reshape(x, 1, length(x));
+end
+
+
+%%
+
+% Pre-allocate space for outputs:
+nr = size(x, 1);
+nc = length(tbin);
+
+xout = NaN(nr, nc);
+xstd = NaN(size(xout));
+nbins = zeros(nr, nc);
+
+%
+tbinlims = [tbin - (binlen/2), tbin + (binlen/2)];
+
+%
+for i1 = 1:nr
+    for i2 = 1:length(tbin)
+
+        linbin = (t >= tbinlims(i2, 1)) & ...
+                 (t <= tbinlims(i2, 2));
+
+        %
+        if any(linbin)
+            
+            xout(i1, i2) = nanmean(x(i1, linbin));
+            xstd(i1, i2) = nanstd(x(i1, linbin));
+            
+            nbins(i1, i2) = sum(linbin);
+            
+        end
+
+    end
+end
+
+
