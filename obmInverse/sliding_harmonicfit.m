@@ -144,7 +144,7 @@ for i1 = 1:xn
 % ----------------------------------------------------------------
 
 
-    disp(['On window center ' num2str(xwndcenteraux) ', last is ' num2str(xwndclast) ''])
+%     disp(['On window center ' num2str(xwndcenteraux) ', last is ' num2str(xwndclast) ''])
     
 %         % Print message to the screen of how long it is going to take:
 % %         if rem(i1, round(0.2*xn)) == 0
