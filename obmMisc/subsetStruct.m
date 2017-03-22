@@ -15,7 +15,14 @@ function structout = subsetStruct(indvarcell, indvarlims, structvar, varcell, lr
 %   outputs:
 %       - structout: subsetted structure variable.
 %
+% SUBSETSTRUCT subsets multiple fields of structvar. Suppose you have
+% lots of variables (fields of the structure structvar) that are
+% functions of time and you want to subset them between two specific
+% dates. The name of the time variable should go in indvarcell, the
+% date limits in indvarlims and the dependent variable names in varcell.
 %
+% Should explain about higher dimensions...
+% What about subsetting time series a function of 2 variables???
 %
 % Olavo Badaro Marques, 13/Mar/2017.
 
