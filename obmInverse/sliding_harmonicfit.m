@@ -83,7 +83,7 @@ end
 dnew = NaN(size(d));
 
 % Loop through the levels with different x vectors
-% (greater than 1, only if x is a mtrix):
+% (greater than 1, only if x is a matrix):
 for i1 = 1:xn
     
     % Get the i1th row of x:
@@ -124,7 +124,6 @@ for i1 = 1:xn
             dwndaux = d(i2 + i1-1, linwindow);
 
             [fit_aux, m_aux, G_aux] = myleastsqrs(xwndedaux, dwndaux, imf);
-
             if exist('lpartfit', 'var')
                 fit_aux = partialFit(lpartfit, m_aux, G_aux);
             end
