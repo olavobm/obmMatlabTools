@@ -24,7 +24,7 @@ There are [several ways](https://en.wikipedia.org/wiki/Spectral_density_estimati
 
 Given a vector (real or complex) *data*, regularly spaced by *dt*, make an estimate of the power spectrum by simply calling
 
-```matlab
+```
 [pwspec] = obmPSpec(data, dt, np, ovrlap)
 
 pwspec =
