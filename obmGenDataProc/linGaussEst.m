@@ -1,5 +1,5 @@
 function y = linGaussEst(tx, x, decorScale, xnoise, ty)
-%
+% y = LINGAUSSEST(tx, x, decorScale, xnoise, ty)
 %
 %   inputs:
 %       - tx:
@@ -16,21 +16,22 @@ function y = linGaussEst(tx, x, decorScale, xnoise, ty)
 
 %%
 
-
-%%
+n = length(x);
 
 x = x(:);
 
-% Generalizing cov:
-n = length(x);
+if length(xnoise) == 1
+    xnoise = repmat(xnoise, 1, n);
+end
 
+%
 tx = tx(:);    % make sure it is a column vector
 txGrid = tx * ones(1, n);
 txGridaux = txGrid';
 
 % Data-data covariance matrix:
 ddCov = exp(-( (txGrid - txGridaux)./decorScale).^2 );
-ddCov = ddCov + diag(repmat(xnoise, n, 1));
+ddCov = ddCov + diag(xnoise);
 
 % Data-grid covariance matrix:
 ty = ty(:);
@@ -45,14 +46,4 @@ dgCov = exp(-((txRep - tyGrid)/decorScale).^2);
 % Estimate values at the grid points ty:
 y = dgCov / ddCov * x;
 
-
-%% Plot:
-
-figure
-    subplot(2,1,1)
-        plot(ty, y)
-        xlabel('t')
-        ylabel('x');
-%     subplot(2,1,2)
-%     plot(t,skill),xlabel('t'),ylabel('skill')
 
