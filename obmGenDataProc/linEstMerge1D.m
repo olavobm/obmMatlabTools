@@ -83,20 +83,45 @@ end
 xnoiseaux = [xnoiseaux{:}];
 
 
+%% Subset only the data that is within a certain range of the
+% grid. If data is far away, it is uncorrelated with estimated
+% data on the grid and the calculation is slow......
+% makes the calculation slower by
+% adding insignicant information:
 
-%%
+rangeScale = 3;
 
-% ------------------------------------------------------------------
-% CUT DATA POINTS FAR AWAY FROM ty TO MAKE THE CODE FASTER ???????
-% FAR AWAY MEANS (2 * DECORSCALE) AWAY FROM THE EDGES OF THE GRID
-% ------------------------------------------------------------------
+% Fast:
+lclose = (ty >= (min(ty) - rangeScale*decorScale)) & ...
+         (ty <= (max(ty) + rangeScale*decorScale));
+  
+% Very slow (not sure if is better than above in any situation):
+% [b1, b2] = meshgrid(txaux, ty);
+% lclose = any(abs(b1 - b2) < rangeScale*decorScale, 1);
+
+%
+txaux = txaux(lclose);
+xaux = xaux(lclose, :);
+xnoiseaux = xnoiseaux(lclose);
 
 
-%% 
+%% Loop over columns and estimate data on grid ty:
+
+y = NaN(length(ty), nc);
 
 for i = 1:nc
-    
-    y = linGaussEst(txaux, xaux(:, 1), decorScale, xnoiseaux, ty);
+
+    lok = ~isnan(xaux(:, i));
+
+    if any(lok)
+        
+        aaux = txaux(lok);
+        baux = xaux(lok, i);
+        caux = xnoiseaux(lok);
+        
+        y(:, i) = linGaussEst(aaux, baux, decorScale, caux, ty);
+        
+    end
     
 end
 
