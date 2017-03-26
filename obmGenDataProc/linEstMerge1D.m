@@ -92,8 +92,8 @@ xnoiseaux = [xnoiseaux{:}];
 rangeScale = 3;
 
 % Fast:
-lclose = (ty >= (min(ty) - rangeScale*decorScale)) & ...
-         (ty <= (max(ty) + rangeScale*decorScale));
+lclose = (txaux >= (min(ty) - rangeScale*decorScale)) & ...
+         (txaux <= (max(ty) + rangeScale*decorScale));
   
 % Very slow (not sure if is better than above in any situation):
 % [b1, b2] = meshgrid(txaux, ty);
