@@ -11,7 +11,21 @@ function y = linGaussEst(tx, x, decorScale, xnoise, ty)
 %       - y:
 %
 %
+% NaNs????
+%
 % Olavo Badaro Marques, 23/Mar/2017.
+
+
+%%
+
+lok = ~isnan(x);
+
+if ~any(lok)
+    error('NaNs only in the input. There is no data.')
+end
+
+tx = tx(lok);
+x = x(lok);
 
 
 %%
