@@ -1,11 +1,12 @@
 function hplt = overlayline(vorh, a, varargin)
-% OVERLAYLINE(x, vorh, varargin)
+% OVERLAYLINE(vorh, a, varargin)
 %
 %   inputs:
 %       - vorch: either 'v' or 'h', for vertical or horizontal.
 %       - a: vector of x (for 'v') or y (for 'h') locations of where
 %            you want to draw vertical or horizontal lines.
-%       - varargin (optional): parameters-value pairs that c
+%       - varargin (optional): parameters to customize the line (these
+%                              are passed as input to the plot function).
 %
 %   outputs:
 %       - hplt: name-value pair arguments acceptable by the function plot.
