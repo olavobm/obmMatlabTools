@@ -13,6 +13,7 @@ datainterp = interp1overnans(t, data, tinterp, maxgap)
 ```
 
 The variable data can be a vector or a matrix, in which case, each column is interpolated separately. The function takes care of NaNs, such that it fills the gaps (NaN locations) with interpolated values. The last 2 inputs of the function above are optional. Input *tinterp* explicitly defines where you want to interpolate and *maxgap* defines an upper bound for the length of the gap that can be interpolated over.
+
 **Summary:** this function disregard NaNs (whereas interp1 does not) and maxgap avoids interpolating where we don’t want to.
 
 ## Spectral estimates:
