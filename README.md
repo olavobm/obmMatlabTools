@@ -22,7 +22,7 @@ In many scientific areas, estimating power spectra is a routine job. However, fr
 
 ### Power spectrum:
 
-There are [several ways](https://en.wikipedia.org/wiki/Spectral_density_estimation) to estimate the power spectral density of a digital signal. In fact, we never compute the true power spectrum: we make an **estimate**. Over time, better estimates have been developed. See below an example for making an estimate using the [Welch's method](https://en.wikipedia.org/wiki/Welch%27s_method), which is still widely used, though the Multitaper method gives a better estimate.
+There are [several ways](https://en.wikipedia.org/wiki/Spectral_density_estimation) to estimate the power spectral density of a digital signal. An important aspect to bear in mind is that we never compute the true power spectrum: we make an **estimate**. Over time, better estimates have been developed. See below an example for making an estimate using the [Welch's method](https://en.wikipedia.org/wiki/Welch%27s_method), which is still widely used, though the Multitaper method gives a better estimate.
 
 Given a vector (real or complex) *data*, regularly spaced by *dt*, make an estimate of the power spectrum by simply calling
 
