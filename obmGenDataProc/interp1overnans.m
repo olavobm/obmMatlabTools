@@ -38,6 +38,10 @@ if ry == 1 && cy > 1
     y = y(:);
 %     ry = cy;   % ry is not used anymore, so it does not matter
     cy = 1;
+    
+    lyrowvec = true;
+else
+    lyrowvec = false;
 end
 
 
@@ -100,7 +104,6 @@ if exist('maxgap', 'var') && lregularNaN
 end
 
 
-
 %% Interpolate each column of y:
 
 % Create yinterp for filling it:
@@ -134,3 +137,10 @@ for i = 1:cy
     
 end
 
+
+%% If input y is a row vector, transpose yinterp
+% such that output is also a row vector:
+
+if lyrowvec
+    yinterp = yinterp.';
+end
