@@ -1,5 +1,5 @@
-function plot2DdataStats(x, y, z, dimstats, lnewplt)
-% PLOT2DDATASTATS(x, y, z, dimstats, lnewplt)
+function haxs = plot2DdataStats(x, y, z, dimstats, lnewplt)
+% haxs = PLOT2DDATASTATS(x, y, z, dimstats, lnewplt)
 %
 %   inputs:
 %       - x:
@@ -7,6 +7,9 @@ function plot2DdataStats(x, y, z, dimstats, lnewplt)
 %       - z:
 %       - dimstats (optional): default is 2.
 %       - lnewplt (optional):
+%
+%   outputs:
+%       - x:
 %
 % Olavo Badaro Marques, 27/Mar/2017.
 
@@ -65,20 +68,23 @@ else
 end
 
 %
-    axes('Position', axsPos(1, :))
+haxs = gobjects(1, 3);
+
+%
+    haxs(1) = axes('Position', axsPos(1, :));
         pcolor(x, y, z)
         shading flat
         axis ij
         colorbar
         
-	axes('Position', axsPos(2, :))
+	haxs(2) = axes('Position', axsPos(2, :));
         plot(nanmean(z, 2), y, '.-')
         axis ij
         grid on
         set(gca, 'YTickLabel', [])
         title('Mean')
         
-	axes('Position', axsPos(3, :))
+	haxs(3) = axes('Position', axsPos(3, :));
         plot(nanvar(z'), y, '.-')
         axis ij
         grid on
