@@ -1,39 +1,90 @@
-function plot2DdataStats(x, y, z, pltcode, lnewplt, dimstats)
-% PLOT2DDATASTATS(x, y, z, pltcode, lnewplt)
+function plot2DdataStats(x, y, z, dimstats, lnewplt)
+% PLOT2DDATASTATS(x, y, z, dimstats, lnewplt)
 %
 %   inputs:
 %       - x:
 %       - y:
 %       - z:
-%       - pltcode (optional): default is [1, 2, 3].
-%       - lnewplt (optional): default is true.
 %       - dimstats (optional): default is 2.
+%       - lnewplt (optional):
 %
 % Olavo Badaro Marques, 27/Mar/2017.
 
 
-speedaux = sqrt(correctedData.RDIadcp(i).u.^2 + correctedData.RDIadcp(i).v.^2);
+%%
+    
+if ~exist('dimstats', 'var')
+    dimstats = 2;
+end 
 
-figure
-    axes('Position', [0.08 0.2 0.6 0.6])
-        pcolor(correctedData.RDIadcp(i).yday, ...
-               correctedData.RDIadcp(i).z, ...
-               speedaux)
-        shading flat, axis ij
-        caxis([0 0.3])
-        colorbar
-        title('T3 - Speed')
+if ~exist('lnewplt', 'var')
+    lnewplt = true;
+end 
 
-    axes('Position', [0.8 0.2 0.15 0.6])
-        plot(nanvar(speedaux'), correctedData.RDIadcp(i).z, '.-')               
+
+%%
+
+axsPos = NaN(3, 4);
+
+if dimstats==1
+    
+%     zpltH = 
+   
+elseif dimstats==2
+    
+    zpltL = 0.45;
+    statspltL = 0.15;
+    dumarg = 0.2;
+    lenspac = 0.05;
+    lmarg = 0.1;
+    
+    axsPos(1, :) = [lmarg, dumarg, zpltL, 1-(2*dumarg)];
+    axsPos(2, :) = [lmarg+zpltL+lenspac, dumarg, statspltL, 1-(2*dumarg)];
+    axsPos(3, :) = [lmarg+zpltL+lenspac+statspltL+lenspac, dumarg, statspltL, 1-(2*dumarg)];
+    
+else
+    
+    error('dimstats should be either 1 or 2')
+    
+end
+
+
+%%
+
+    
+%%
+
+%
+if lnewplt
+    figure
+else
+    allAxes = findall(gcf, 'Type', 'axes');
+    if ~isempty(allAxes)
+        error('Current figure already has objects on it.')
+    end
+end
+
+%
+    axes('Position', axsPos(1, :))
+        pcolor(x, y, z)
+        shading flat
         axis ij
+        colorbar
+        
+	axes('Position', axsPos(2, :))
+        plot(nanmean(z, 2), y, '.-')
+        axis ij
+        grid on
+        set(gca, 'YTickLabel', [])
+        title('Mean')
+        
+	axes('Position', axsPos(3, :))
+        plot(nanvar(z'), y, '.-')
+        axis ij
+        grid on
+        set(gca, 'YTickLabel', [])
         title('Variance')
-        if i==1
-            xlim([0 0.01])
-        else
-            xlim([0 0.007])
-        end
-
-    apply2allaxes(gcf, {'FontSize', 14, 'YLim', yaxaux(i, :)})
+        
+    apply2allaxes(gcf, {'FontSize', 14})
 
     linkallaxes('y')
