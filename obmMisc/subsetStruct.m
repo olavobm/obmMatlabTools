@@ -57,16 +57,16 @@ else
 end
 
 
-%% Subset independent variables and create an
-% appropriate logical vector (lsubset) to
-% subset the dependent variables:
+%% Subset independent variables and create an appropriate
+% logical vector (lsubset) to subset the dependent variables:
 
-varsize = size(structvar.(varcell{1}));
+varsize = size(structvar.(varcell{1}));   % I ASSUME SAME SIZE FOR ALL DEPENDENT VARIABLES
 varnumel = prod(varsize);    % same as numel(structvar.(varcell{1}))
 
 lsubset = true(varnumel, 1);
 
-subsetdimslen = ones(1, length(varsize));
+% subsetdimslen = ones(1, length(varsize));
+subsetdimslen = varsize;
 
 structout = structvar;
 
@@ -112,8 +112,9 @@ end
 for i = 1:length(varcell)
     
     structout.(varcell{i}) = structvar.(varcell{i})(lsubset);
-
+    
     structout.(varcell{i}) = reshape(structout.(varcell{i}), subsetdimslen);
+
 end
 
 
