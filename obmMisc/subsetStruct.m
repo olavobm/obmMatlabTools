@@ -21,17 +21,16 @@ function structout = subsetStruct(indvarcell, indvarlims, structvar, varcell, lr
 % dates. The name of the time variable should go in indvarcell, the
 % date limits in indvarlims and the dependent variable names in varcell.
 %
-% Should explain about higher dimensions...
 %
-% FOR A MATRIX, DO I NEED TO SPECIFY BOTH INDEPENDENT VARIABLES??????????
-% IT LOOKS THAT I DO NEED. IT SHOULDN'T BE NECESSARY, BUT IT IS TRICKY!!!
-% WOULD BE TO NICE GET AROUND THIS SO WE CAN DEAL WITH ROW VECTORS.
-%
-% ONE THING I CAN DO (AND IT IS FAIRLY SIMPLE) IS, WHEN indvarcell HAS ONLY
-% ONE ELEMENT, I CAN FOR EACH VARIABLE TO SUBSET FIND WHICH DIMENSION HAS
-% THE SAME LENGTH AS THE INDEPENDENT VARIABLE (IF MORE THAN ONE DIMENSION
-% HAVE THE SAME LENGTH, SHOULD GIVE A WARNING OR ERROR).
-%
+% TO DO:
+%   - for a square matrix, I need to specify both independent variables
+%     because of my solution to subset vectors that are row or column
+%     I should fix this.
+%   - Maybe my idea previous does not exist anymore, and iloop
+%     shouldn't exist.
+%   - when I flipped the independent variable order in the input,
+%     having a matrix and vectors, nothing was subsetted and there
+%     was no error/warning message.
 %
 % Olavo Badaro Marques, 13/Mar/2017.
 
@@ -70,7 +69,7 @@ else
     else
         
         indsubsetdims = find(~cellfun(@isempty, indvarcell));
-%         nindvar = length(indsubsetdims);   % not used
+        nindvar = length(indsubsetdims);   % not used
         
     end
     
@@ -78,37 +77,43 @@ else
 end
 
 
-%% Remove from varcell the variables 
+%% Remove from varcell the fields that do not have
+% any dimension of same length as one of the independent
+% variables in indvarcell:
 
 % maybe I should only run if varcell is not given in input
 
-%
+% Create logical variable (which is updated in the loop below) where
+% true indicates the subset of variables that will be subsetted:
 Nfields = length(varcell);
 lkeepvar = false(1, Nfields);
 
-for i = 1:length(indsubsetdims)
+% Loop over dimensions to subset:
+for i1 = 1:nindvar
         
-    %
+    % Logical array to see if the Nfields variables have a
+    % dimension consistent with the i1'th independent variable:
     lkeepvaraux = false(1, Nfields);
     
-    %
-    iloop = indsubsetdims(i);
+    % 
+    iloop = indsubsetdims(i1);
     
+    % Length of the i1'th independent variable to subset:
+    lenindvar = length(structvar.(indvarcell{iloop}));
+    
+    % Loop over elements of varcell:
     for i2 = 1:Nfields
         
-        %
-        lenindvar = length(structvar.(indvarcell{iloop}));
-        
+        % Size of the variable named varcell(i2):
         i2thvarsize = size(structvar.(varcell{i2}));
         
         %
         if ismember(lenindvar, i2thvarsize)
-%             lkeepvar(i2) = false;
             lkeepvaraux(i2) = true;
         end
         % -----------------------------------------------------------------
         % Instead of the above (ismember), maybe it should match the length
-        % at the a single dimension. need to put some thought on that
+        % at the a single dimension. But maybe not
         % -----------------------------------------------------------------
     end
     
@@ -117,36 +122,23 @@ for i = 1:length(indsubsetdims)
 
 end
 
-%
+% Keep only variables with at least one dimension
+% consistent with dimensions to be subsetted:
 varcell = varcell(lkeepvar);
 
 
-%%
+%% Create logical array (lsubsetcell) with the
+% subset regions for all independent variables:
 
-
-% I SHOULD CHANGE THE LOGIC OF THE SUBSETTING BELOW.
-% IT SHOULD BE SOMETHING LIKE:
-%           - LOOP OVER INDVARCELL
-%           - FIND LOGICAL VECTOR FOR SUBSETTING ALONG THAT DIMENSION
-%           - LOOP OVER DEPENDENT VARIABLES TO BE SUBSETTED.
-%           - RESIZE VECTOR TO BE A N-DIMENSIONAL LOGICAL ARRAY
-%             CONSISTENT WITH THE DEPENDENT VARIABLE.
-%           - SUBSET AND CONTINUE FROM THE TOP.
-%
-% THIS IS MORE INTENSIVE THAN WHAT I PREVIOUSLY HAD, BUT WORKS
-% FOR MULTIPLE VARIABLES WITH DIFFERENTE SIZES.
-
-
-%%
-
+% Pre-allocate space:
 lsubsetcell = cell(1, length(indvarcell));
 
-subsetdimslen = NaN(1, length(indsubsetdims));
+subsetdimslen = NaN(1, nindvar);
 
 structout = structvar;
 
-%
-for i1 = 1:length(indsubsetdims)
+% Loop over independent variables:
+for i1 = 1:nindvar
     
     indloop = indsubsetdims(i1);
     
@@ -166,12 +158,12 @@ for i1 = 1:length(indsubsetdims)
 end
 
 
-% I SHOULD BE ABLE TO SUBSET MATRICES IN BOTH ROWS AND COLUMNS,
-% BUT ONLY COLUMNS IF VARCELL{I2} IS A VECTOR!!!!!!!
+%% Subset dependent variables one at a time:
 
-for i2 = 1:length(varcell)
+% Loop over variables to be subsetted:
+for i1 = 1:length(varcell)
     
-    varsize = size(structvar.(varcell{i2}));
+    varsize = size(structvar.(varcell{i1}));
     varnumel = prod(varsize);    % same as numel(structvar.(varcell{1}))
 
     lsubset = true(varnumel, 1);
@@ -179,13 +171,9 @@ for i2 = 1:length(varcell)
     %
     subsettedsize = varsize;
     
-    %
-    for i1 = 1:length(indsubsetdims)
-    
-        % ---------------------------------------------------------------
-        % I NEED SOMEHOW TO DEAL WITH A VARIABLE THAT IS NOT SUBSETTED IN ALL
-        % DIMENSIONS THAT A MORE "COMPLETE" DEPENDENT VARIABLE IS SUBSETTED
-        % ---------------------------------------------------------------
+    % Loop over independent variables, such that we can see in which
+    % of those we need to subset the i1'th dependent variable:
+    for i2 = 1:nindvar
     
         %
         if length(indvarcell)==1
@@ -212,16 +200,16 @@ for i2 = 1:length(varcell)
             
         else
             
-            indloop = indsubsetdims(i1);
+            indloop = indsubsetdims(i2);
             
             dimsubset = indloop;
             
         end
 
-%         keyboard
+        %
         if length(indvarcell)>1 && length(lsubsetcell{indloop})~=varsize(dimsubset)
             
-%             keyboard
+
             continue    % not great to use this, just because it does
                         % not look good, in terms of syntax.
             
@@ -251,76 +239,14 @@ for i2 = 1:length(varcell)
         
     end
     
-    % -------------------------------------------------------
+    %% Finally subset the i1'th dependent variable:
+    
     % Subset dependent variable:
-	structout.(varcell{i2}) = structvar.(varcell{i2})(lsubset);
+	structout.(varcell{i1}) = structvar.(varcell{i1})(lsubset);
 
     % Put the variable back to its original size:
-    structout.(varcell{i2}) = reshape(structout.(varcell{i2}), subsettedsize);
+    structout.(varcell{i1}) = reshape(structout.(varcell{i1}), subsettedsize);
         
-end
-
-keyboard
-
-
-%% Subset independent variables and create an appropriate
-% logical vector (lsubset) to subset the dependent variables:
-
-varsize = size(structvar.(varcell{1}));   % I ASSUME SAME SIZE FOR ALL DEPENDENT VARIABLES
-varnumel = prod(varsize);    % same as numel(structvar.(varcell{1}))
-
-lsubset = true(varnumel, 1);
-
-% subsetdimslen = ones(1, length(varsize));
-subsetdimslen = varsize;
-
-structout = structvar;
-
-for i = 1:length(indsubsetdims)
-    
-    indloop = indsubsetdims(i);
-    
-    % this should be a vector...
-    lauxsubset = structvar.(indvarcell{indloop}) >= indvarlims(indloop, 1) & ...
-                 structvar.(indvarcell{indloop}) <= indvarlims(indloop, 2);
-                      
-	subsetdimslen(indloop) = sum(lauxsubset);
-         
-    %
-    structout.(indvarcell{indloop}) = structvar.(indvarcell{indloop})(lauxsubset);
-    
-    % necessary for 2D or higher dimensions..
-    if numel(lauxsubset)~=varnumel
-        
-        %
-        dimvec = ones(1, length(varsize));
-        dimvec(indloop) = length(lauxsubset);
-        
-        
-        lauxsubset = reshape(lauxsubset, dimvec);
-        
-        %
-        repsize = varsize;
-        repsize(indloop) = 1;
-        
-        lauxsubset = repmat(lauxsubset, repsize);
-        
-    end
-    
-    %
-    lsubset = (lsubset & lauxsubset(:));
-                 
-end
-
-
-%% Subset dependent variables:
-
-for i = 1:length(varcell)
-    
-    structout.(varcell{i}) = structvar.(varcell{i})(lsubset);
-    
-    structout.(varcell{i}) = reshape(structout.(varcell{i}), subsetdimslen);
-
 end
 
 
