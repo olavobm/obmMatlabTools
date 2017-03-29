@@ -47,7 +47,7 @@ if ~exist('lmake', 'var')
 end
 
 
-%% Subplots sizes:
+%% Subplots size:
 
 % Width:
 sx = (1 - mlx - mrx - (nx-1)*mix) / nx;
@@ -56,7 +56,8 @@ sx = (1 - mlx - mrx - (nx-1)*mix) / nx;
 sy = (1 - mty - mby - (ny-1)*miy) / ny;
 
 
-%% Now make the panes, starting at top and moving across to right
+%% Now make the subplots, starting at top and
+% moving across to right, line by line:
 
 % Pre-allocate for output:
 axshndls = NaN(1, N);
