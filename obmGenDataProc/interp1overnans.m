@@ -47,7 +47,7 @@ end
 
 %% 1D grid where data will be interpolated onto:
 
-if ~exist('xgrid', 'var')
+if ~exist('xgrid', 'var') || isempty(xgrid)
     xgrid = x;
 end
 
