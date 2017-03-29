@@ -22,6 +22,13 @@ function indy = findwithinbound(x, y, r)
 % Olavo Badaro Marques, 19/Jan/2017.
 
 
+%% If y is a column vector, transpose it:
+
+if iscolumn(y)
+    y = y';
+end
+
+
 %% Deal separately with elements of
 % y that are found or not in x:
 
