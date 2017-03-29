@@ -5,11 +5,11 @@ function [xnew] = obmRunMean(x, npt, fracwndw, wndwtype)
 %       - x: vector or matrix, regularly spaced across the rows (the
 %            dimension where the running mean is applied).
 %       - npt: length of window in number of points.
-%       - fracwndw: fractional quantity of points inside a window required
-%                   to compute mean. Default is 0.5.
-%       - wndwtype:
-% 
-% input wndwtype is (?) OPTIONAL!
+%       - fracwndw (optional): fractional quantity of points inside a
+%                              window required to compute mean. Default
+%                              is 0.5.
+%       - wndwtype (optional): type of window, defining weights of a
+%                              weighted average.
 %
 %   output:
 %       - xnew:
