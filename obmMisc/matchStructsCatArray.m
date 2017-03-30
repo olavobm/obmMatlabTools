@@ -9,7 +9,10 @@ function outstructarray = matchStructsCatArray(structarray, newstruct)
 %       - outstructarray: 1x(N+1) structure array with newstruct
 %                         concatenated to the input array.
 %
-% 
+% MATCHSTRUCTSCATARRAY calls addEmptyFields2matchStructs.m to
+% concatenate a structure newstruct to the array structarray,
+% where newstruct has a different set of fields than the array
+% structarray.
 %
 % Olavo Badaro Marques, 30/Mar/2017.
 
