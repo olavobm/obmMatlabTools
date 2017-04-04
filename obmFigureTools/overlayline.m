@@ -43,13 +43,17 @@ if strcmp(vorh, 'v')
     
     x = a;
     
-    y = ylim;
+    linerange = ylim;
+    
+    y = linerange;
     y = y(:);
     y = repmat(y, 1, n);
     
 elseif strcmp(vorh, 'h')
    
-    x = xlim;
+    linerange = xlim;
+    
+    x = linerange;
     x = x(:);
     x = repmat(x, 1, n);
     
@@ -66,3 +70,11 @@ end
 hold on
 
 hplt = plot(x, y, varargin{:});
+
+% Make sure the axis limits in the
+% direction of the line do not change:
+if strcmp(vorh, 'v')
+    ylim(linerange)
+elseif strcmp(vorh, 'h')
+    xlim(linerange)
+end
