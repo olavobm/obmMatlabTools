@@ -1,5 +1,5 @@
 function hplt = overlayline(vorh, a, varargin)
-% OVERLAYLINE(vorh, a, varargin)
+% hplt = OVERLAYLINE(vorh, a, varargin)
 %
 %   inputs:
 %       - vorch: either 'v' or 'h', for vertical or horizontal.
