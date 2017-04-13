@@ -5,7 +5,7 @@ function outstruct = createEmptyStruct(listfields, n)
 %       - listfields: cell array with field names of the
 %                     structure array to be created (such
 %                     as the output of fieldnames.m).
-%       - n: size of the structure array.
+%       - n: size of the structure array. If not given, n is set to 1.
 %
 %   outputs
 %       - outstruct: empty structure array of size n and
@@ -22,6 +22,13 @@ function outstruct = createEmptyStruct(listfields, n)
 % not used so far).
 %
 % Olavo Badaro Marques, 20/Jan/2017.
+
+
+%% If n is not given, set it equal to 1 (create scalar structure):
+
+if ~exist('n', 'var')
+    n = 1;
+end
 
 
 %% Create string that goes as the input of the function
