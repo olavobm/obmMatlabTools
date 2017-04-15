@@ -1,4 +1,4 @@
-function [dnew, xnew] = sliding_harmonicfit(x, d, wnd, slidestep, imf, lpartfit)
+function [dnew, xnew, mpar] = sliding_harmonicfit(x, d, wnd, slidestep, imf, lpartfit)
 % [dnew, xnew] = SLIDING_HARMONICFIT(x, d, wnd, slidestep, imf)
 %
 %   inputs:
@@ -25,6 +25,7 @@ function [dnew, xnew] = sliding_harmonicfit(x, d, wnd, slidestep, imf, lpartfit)
 %   outputs:
 %       - dnew: data 
 %       - xnew:
+%       - mpar:
 %
 % This function computes a least squares fit using only a segment (window)
 % of the dataset. The window is shifted (slid) along the record in order
@@ -82,6 +83,8 @@ end
 % Pre-allocate (DEPENDS ON THE INTERPOLATION OR NON-OPTION.....):
 dnew = NaN(size(d));
 
+mpar = cell(size(d));
+
 % Loop through the levels with different x vectors
 % (greater than 1, only if x is a matrix):
 for i1 = 1:xn
@@ -130,6 +133,8 @@ for i1 = 1:xn
 
             % Assign fitted value to output in the appropriate location:
             dnew(i2 + i1-1, indwndcenteraux) = fit_aux;
+            
+            mpar{i2 + i1-1, indwndcenteraux} = m_aux;
         end
         
         % Update window center indice and the associated date:
