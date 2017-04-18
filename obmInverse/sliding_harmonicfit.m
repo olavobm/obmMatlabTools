@@ -23,9 +23,9 @@ function [dnew, xnew, mpar] = sliding_harmonicfit(x, d, wnd, slidestep, imf, lpa
 %                              THIRD DIMENSION).
 %
 %   outputs:
-%       - dnew: data 
-%       - xnew:
-%       - mpar:
+%       - dnew: fit of d.
+%       - xnew: independent variable of dnew.
+%       - mpar: model parameters of the harmonic fit.
 %
 % This function computes a least squares fit using only a segment (window)
 % of the dataset. The window is shifted (slid) along the record in order
