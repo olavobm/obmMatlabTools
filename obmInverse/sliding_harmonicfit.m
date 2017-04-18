@@ -92,13 +92,17 @@ for i1 = 1:xn
     % Get the i1th row of x:
     xaux = x(i1, :);
 
+    %
+    lisOK = ~isnan(xaux);
+    xauxOK = xaux(lisOK);
+    
     % Get indices of the first and last data points
     % that are at the center of the window:
-    indfirstx = find(xaux-xaux(1) >= halfwnd, 1, 'first');
-    indlastx = find((xaux(end)-xaux(1))-(xaux-xaux(1)) >= halfwnd, ...
+    indfirstx = find(xauxOK-xauxOK(1) >= halfwnd, 1, 'first');
+    indlastx = find((xauxOK(end)-xauxOK(1))-(xauxOK-xauxOK(1)) >= halfwnd, ...
                                                                 1, 'last');
-    xwndcfirst = xaux(indfirstx);
-    xwndclast = xaux(indlastx);
+    xwndcfirst = xauxOK(indfirstx);
+    xwndclast = xauxOK(indlastx);
 
     % Central date of the window for the while loop below:
     indwndcenteraux = indfirstx;
@@ -115,7 +119,7 @@ for i1 = 1:xn
         linwindow = xaux >= (xwndcenteraux - halfwnd) & ...
                     xaux <= (xwndcenteraux + halfwnd);
         
-        xwndedaux = xaux(linwindow);
+        xwndedaux = xaux(linwindow & lisOK);
 
         % Loop through the rows of d that have same x, which is all of
         % them if x is a vector or only one row if x is a matrix:
@@ -139,12 +143,15 @@ for i1 = 1:xn
         
         % Update window center indice and the associated date:
         indwndcenteraux = indwndcenteraux + slidestep;
-        xwndcenteraux = xaux(indwndcenteraux);      % sliding based on points - good for keeping the raw data timing
+        xwndcenteraux = xauxOK(indwndcenteraux);      % sliding based on points - good for keeping the raw data timing
                 
 % ----------------------------------------------------------------
         % Sliding based on time - good for interpolation (WHICH IS NOT
         % IMPLEMENTED YET!!!)... should I ever implement it???
 %         xwndcenteraux = xwndcfirst + slidestep;   
+%
+%       MAYBE NOT AS A TIME STEP, BUT AS VECTOR WHERE AN ESTIMATE IS
+%       MADE FOR EACH POINT OF THE VECTOR, WITH A CERTAIN WINDOW AROUND IT
 % ----------------------------------------------------------------
 
 
