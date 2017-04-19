@@ -1,10 +1,10 @@
-function axshndls = symSubArray(mxy, mixy, nxy, lmake)
-% SYMSUBARRAY(mxy, mixy, nxy, lmake)
+function axshndls = symSubArray(mxy, mixy, nrc, lmake)
+% SYMSUBARRAY(mxy, mixy, nrc, lmake)
 %
 %   inputs:
 %       - mxy: 1x1 or 1x2 array.
 %       - mixy: 1x1 or 1x2 array.
-%       - nxy: number of subplots
+%       - nrc: number of subplots
 %       - lmake (optional): logical vector with false for the subplots
 %                           you do not want to create (such that you
 %                           can make an irregular grid of sublots).
@@ -40,7 +40,7 @@ end
 %% Check optional input lmake:
 
 if ~exist('lmake', 'var')
-	lmake = true(1, nxy(1)*nxy(2));
+	lmake = true(1, nrc(1)*nrc(2));
 end
 
 
@@ -48,4 +48,4 @@ end
 
 axshndls = makeSubPlots(mxy(1), mxy(1), mixy(1), ...
                         mxy(2), mxy(2), mixy(2), ...
-                        nxy(1), nxy(2), lmake);
+                        nrc(2), nrc(1), lmake);
