@@ -8,11 +8,20 @@ function [dfit, mfit] = slidingHarmFit(x, d, xfit, wnd, imf, lpartfit, minptsfit
 %       - wnd:
 %       - imf:
 %       - lpartfit:
-%       - minptsfit:
+%       - minptsfit (optional): default is 0, but you may have problems
+%                               (such as little data to make a fit).
 %
 %   outputs:
 %       - dfit:
 %       - mfit:
+%
+% This function computes a least squares fit using only a segment (window)
+% of the dataset. Fits are estimated for each point in xfit.
+%
+% IMPORTANT NOTE: for each windowed segment, we only retrieve the fitted
+% value for the midpoint of the window. It would be much more
+% computationally expensive to fit for a certain region, because of the
+% need to do some averaging over overlapping windows.
 %
 % TO REPLACE sliding_harmonicfit.m
 %
@@ -26,16 +35,15 @@ if ~exist('minptsfit', 'var')
 end
 
 
-%% Take the window half length (which is the variable
-% that is used below) and define ??????????????????:
-
-halfwnd = wnd/2;
+%% Now look at the sizes of x and d to determine the numbers
+% "xn" and "dn" to loop over:
 
 if isvector(x)
     
     xn = 1;
     dn = size(d, 1);
     
+    % Make sure x is a row vector:
     if iscolumn(x)
         x = x';
     end
@@ -55,7 +63,10 @@ dfit = NaN(size(d, 1), length(xfit));
 mfit = cell(size(d, 1), length(xfit));
 
 
-%%
+%% Now go for the windowed harmonic fit:
+
+% Take the window half length:
+halfwnd = wnd/2;
 
 % Loop through the levels with different x vectors
 % (greater than 1, only if x is a matrix):
@@ -63,8 +74,6 @@ for i1 = 1:xn
     
     % Get the i1th row of x:
     xaux = x(i1, :);
-    
-    % 
     
     % Loop through the points where we estimate fits (points of xfit):
     for i2 = 1:length(xfit)
@@ -98,24 +107,6 @@ for i1 = 1:xn
         
     end
     
-
-% %     % Look at first and last indices in order to include a timer
-% %     % inside the loop (to print on the screeen message of how long
-% %     % it is going to take):
-% %     nindstots = indlastx - indfirstx + 1;
-% % 
-% % 
-% % %     disp(['On window center ' num2str(xwndcenteraux) ', last is ' num2str(xwndclast) ''])
-% % 
-% % %         % Print message to the screen of how long it is going to take:
-% % % %         if rem(i1, round(0.2*xn)) == 0
-% % % %             if rem(indwndcenteraux - indfirstx, round(0.25 * nindstots))==0
-% % % %                 disp(['At row ' num2str(i1) ' of ' num2str(xn) ', ' ...
-% % % %                       'doing window ' ...
-% % % %                       num2str(indwndcenteraux - indfirstx) ' of ' ...
-% % % %                       num2str(nindstots) ''])
-% % % %             end
-% % % %         end
 
 end
 
