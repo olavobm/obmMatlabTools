@@ -1,12 +1,23 @@
 function G = makeG(imf, t)
-% G = makeG(imf, t)
+% G = MAKEG(imf, t)
 %
 %   inputs:
-%       -
-%       -
+%       - imf: input-model-fit structure (see myleastsqrs.m).
+%       - t: independent variable of data.
 %
 %   outputs:
-%       - G:
+%       - G: data kernel (or Gram matrix).
+%
+% In standard least-squares problem, we choose models, with unknown
+% model parameters "m", to fit the data "d". The problem is written
+% as G*m = d and the solution is m = (G'*G) \ G'*d.
+%
+% MAKEG creates this matrix G. The types of models supported by this
+% function are the ones in the funcFields variable and in the switch
+% statement.
+%
+% TO DO: bring the switch statement out of the loop
+%        and use an anonymous function.
 %
 % Olavo Badaro Marques, 18/Apr/2017.
 
@@ -16,10 +27,11 @@ function G = makeG(imf, t)
 t = t(:);
 
 
-%%
+%% Define the types of model and how many model parameters
+% each of them has. Link them through a map variable:
 
 funcFields = {'power', 'sine', 'modelinput'};
-nparFields = [1, 2, 1];   % should be a dictionary
+nparFields = [1, 2, 1];
 
 nparFields = containers.Map(funcFields, nparFields);
 
