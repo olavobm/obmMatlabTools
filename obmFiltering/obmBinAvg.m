@@ -1,4 +1,4 @@
-function [xout, xstd, nbins] = obmBinAvg(t, x, binlen, tbin)
+function [xout, xstd, nbins] = obmBinAvg(t, x, binlen, tbin, wndhandle)
 % [xout, xstd, nbins] = OBMBINAVG(t, x, binlen, tbin)
 %
 %   input:
@@ -6,6 +6,7 @@ function [xout, xstd, nbins] = obmBinAvg(t, x, binlen, tbin)
 %       - x: vector or matrix, regularly spaced across the rows (the
 %            dimension where the running mean is applied).
 %       - binlen: window length in units of t.
+%       - wndhandle (optional): default is @rectwin (box car). 
 %       - tbin (optional): t values for the center of the bins to take the
 %                          average of.
 %
@@ -15,6 +16,13 @@ function [xout, xstd, nbins] = obmBinAvg(t, x, binlen, tbin)
 %       - xn:
 %
 % Olavo Badaro Marques, 20/Mar/2017.
+
+
+%%
+
+if ~exist('wndhandle', 'var')
+    wndhandle = @rectwin;
+end
 
 
 %%
@@ -54,7 +62,12 @@ for i1 = 1:nr
         %
         if any(linbin)
             
-            xout(i1, i2) = nanmean(x(i1, linbin));
+            %
+            avgWeights = windowatt(wndhandle, tbinlims(i2, :), t(linbin));
+            avgWeights = avgWeights';    % make it a row vector
+            xout(i1, i2) = nansum(x(i1, linbin) .* avgWeights) ./ sum(avgWeights);
+            
+            %
             xstd(i1, i2) = nanstd(x(i1, linbin));
             
             nbins(i1, i2) = sum(linbin);
