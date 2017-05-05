@@ -1,5 +1,5 @@
 function [xout, xstd, nbins] = obmBinAvg(t, x, binlen, tbin, wndhandle)
-% [xout, xstd, nbins] = OBMBINAVG(t, x, binlen, tbin)
+% [xout, xstd, nbins] = OBMBINAVG(t, x, binlen, tbin, wndhandle)
 %
 %   input:
 %       - t:
@@ -15,6 +15,9 @@ function [xout, xstd, nbins] = obmBinAvg(t, x, binlen, tbin, wndhandle)
 %       - xstd:
 %       - xn:
 %
+% TO DO: do not compute weights when box car window is chosen (because we
+%        already know the weights and computing it is unecessary).
+%
 % Olavo Badaro Marques, 20/Mar/2017.
 
 
@@ -27,7 +30,7 @@ end
 
 %%
 
-if ~exist('tbin', 'var')
+if ~exist('tbin', 'var') || isempty(tbin)
     tbin = t;
 end
 
@@ -63,7 +66,7 @@ for i1 = 1:nr
         if any(linbin)
             
             %
-            avgWeights = windowatt(wndhandle, tbinlims(i2, :), t(linbin));
+            avgWeights = windowatt(wndhandle, tbinlims(i2, :), t(linbin), 15*length(t(linbin)));
             avgWeights = avgWeights';    % make it a row vector
             xout(i1, i2) = nansum(x(i1, linbin) .* avgWeights) ./ sum(avgWeights);
             
