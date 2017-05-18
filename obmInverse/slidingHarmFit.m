@@ -1,4 +1,4 @@
-function [dfit, mfit] = slidingHarmFit(x, d, xfit, wnd, imf, lpartfit, minptsfit)
+function [dfit, mfit] = slidingHarmFit(x, d, xfit, wnd, imf, lpartfit, minptsfit, lprogmsg)
 %
 %
 %   inputs:
@@ -10,6 +10,10 @@ function [dfit, mfit] = slidingHarmFit(x, d, xfit, wnd, imf, lpartfit, minptsfit
 %       - lpartfit:
 %       - minptsfit (optional): default is 0, but you may have problems
 %                               (such as little data to make a fit).
+%       - lprogmsg (optional): logical variable to display partial progress
+%                              of this function, which may be useful since
+%                              this calculation may take a long time
+%                              (default is false).
 %
 %   outputs:
 %       - dfit:
@@ -27,6 +31,12 @@ function [dfit, mfit] = slidingHarmFit(x, d, xfit, wnd, imf, lpartfit, minptsfit
 %
 % Olavo Badaro Marques, 18/Apr/2017.
 
+
+%%
+
+if ~exist('lprogmsg', 'var')
+    lprogmsg = false;
+end
 
 %%
 
@@ -104,9 +114,17 @@ for i1 = 1:xn
             end
         end
         
+        % If true, prints progress message (correspondent to 20%):
+        if lprogmsg
+            dispforProgress(i2, [1, length(xfit)], round(length(xfit)*0.2), 1)
+        end
         
     end
-    
 
+    % If true, prints progress message (correspondent to 20%):
+    if lprogmsg
+        dispforProgress(i1, [1, xn], round(xn*0.2), 1)
+    end
+    
 end
 
