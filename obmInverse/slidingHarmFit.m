@@ -1,5 +1,5 @@
 function [dfit, mfit] = slidingHarmFit(x, d, xfit, wnd, imf, lpartfit, minptsfit, lprogmsg)
-%
+% [dfit, mfit] = SLIDINGHARMFIT(x, d, xfit, wnd, imf, lpartfit, minptsfit, lprogmsg)
 %
 %   inputs:
 %       - x: vector or matriz consistent with the columns of d
