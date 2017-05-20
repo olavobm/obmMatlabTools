@@ -2,21 +2,22 @@ function [xout, xstd, nbins] = obmBinAvg(t, x, binlen, tbin, wndhandle)
 % [xout, xstd, nbins] = OBMBINAVG(t, x, binlen, tbin, wndhandle)
 %
 %   input:
-%       - t:
-%       - x: vector or matrix, regularly spaced across the rows (the
-%            dimension where the running mean is applied).
+%       - t: independent variable
+%       - x: vector or matrix. In the second case, bin averaging is
+%            done for each row independently.
 %       - binlen: window length in units of t.
+%       - tbin (optional): t values for the center of the bins to take
+%                          the average of (default is to use t).
 %       - wndhandle (optional): default is @rectwin (box car). 
-%       - tbin (optional): t values for the center of the bins to take the
-%                          average of.
 %
 %   output:
 %       - xout:
 %       - xstd:
 %       - xn:
 %
-% TO DO: do not compute weights when box car window is chosen (because we
-%        already know the weights and computing it is unecessary).
+% TO DO: - do not compute weights when box car window is chosen (because
+%          we already know the weights and computing it is unecessary).
+%        - allow t to be a matrix?
 %
 % Olavo Badaro Marques, 20/Mar/2017.
 
