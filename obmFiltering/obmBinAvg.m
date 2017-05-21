@@ -8,24 +8,23 @@ function [xout, xstd, nbins] = obmBinAvg(t, x, binlen, tbin, wndhandle)
 %       - binlen: window length in units of t.
 %       - tbin (optional): t values for the center of the bins to take
 %                          the average of (default is to use t).
-%       - wndhandle (optional): default is @rectwin (box car). 
+%       - wndhandle (optional): default is @hann. 
 %
 %   output:
-%       - xout:
-%       - xstd:
-%       - xn:
+%       - xout: x averaged at tbin.
+%       - xstd: standard deviation of the values used to compute xout.
+%       - xn: number of values used to compute xout and xstd.
 %
-% TO DO: - do not compute weights when box car window is chosen (because
-%          we already know the weights and computing it is unecessary).
+% TO DO: 
 %        - allow t to be a matrix?
 %
 % Olavo Badaro Marques, 20/Mar/2017.
 
 
-%%
+%% If no window is specified, choose a default window:
 
 if ~exist('wndhandle', 'var')
-    wndhandle = @rectwin;
+    wndhandle = @hann;
 end
 
 
@@ -66,10 +65,16 @@ for i1 = 1:nr
         %
         if any(linbin)
             
-            %
-            avgWeights = windowatt(wndhandle, tbinlims(i2, :), t(linbin), 15*length(t(linbin)));
-            avgWeights = avgWeights(:)';    % make it a row vector
+            % Call function to compute weights for the weighted mean
+            % (for boxcar window, the weights are simply 1):
+            if isequal(wndhandle, @rectwin)
+                avgWeights = ones(1, length(t(linbin)));
+            else
+                avgWeights = windowatt(wndhandle, tbinlims(i2, :), t(linbin), 15*length(t(linbin)));
+                avgWeights = avgWeights(:)';    % make it a row vector
+            end
             
+            %
             xout(i1, i2) = nansum(x(i1, linbin) .* avgWeights) ./ sum(avgWeights);
             
             %
