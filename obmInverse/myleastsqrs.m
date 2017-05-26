@@ -1,4 +1,4 @@
-function [xfit, m, G] = myleastsqrs(t, x, imf)
+function [xfit, m, G, err] = myleastsqrs(t, x, imf)
 % [xfit, m, G] = MYLEASTSQRS(t, x, imf)
 %
 %  inputs:
@@ -168,6 +168,9 @@ end
 % Model parameters:
 m = ( G' * G) \ ( G' * xgd);
 
+% Copy G to another variable that will go into error analysis:
+G4err = G;
+
 
 %% Computes the curve that fits the data based on the model
 % parameters m. The matrix G may be recreated to compute
@@ -179,12 +182,32 @@ if ~exist('domain', 'var')
     
     % Computes the fit:
     xfit = G * m;
-
+    
 % On the domain specified in "imf":
 else
     G = makeG(imf, allfields, npar, ncols_G, domain);   % G-domain
     xfit = G * m;
 end
+
+
+%%
+
+if nargout == 4
+    
+    %
+    err.res = (G4err * m) - xgd;
+    err.MSE = mean(err.res.^2);
+    
+    %
+    facCI = 1.96; % for 95% confidence interval / normal distribution
+    errorCovmat = (facCI^2) * err.MSE .* eye(length(tgd));
+    aux_G4err = (G4err'*G4err) \ G4err';
+
+    err.mErr = diag(aux_G4err * errorCovmat * aux_G4err');
+%     keyboard
+end
+
+
 
 end   % ends the main function.
 
