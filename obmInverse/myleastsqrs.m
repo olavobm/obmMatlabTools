@@ -229,8 +229,18 @@ end   % ends the main function.
 
 % Function that creates the matrix G for fitting the model:
 function [G] = makeG(imf, allfields, npar, ncols_G, tfit)
-    % what are the inputs ??????????????????????????????????????????   
-
+    % [G] = MAKEG(imf, allfields, npar, ncols_G, tfit)
+    %
+    %   inputs:
+    %       - imf: input-model-fit structure.
+    %       - allfields:
+    %       - npar:
+    %       - ncols_G:
+    %       - tdif:
+    %
+    %   outputs:
+    %       - G:
+    
     % We now pre-allocate space for matrix G and fill it (the index
     % icf is an indicator of the column of G to be filled):
     G = NaN(length(tfit), ncols_G);
@@ -263,12 +273,8 @@ function [G] = makeG(imf, allfields, npar, ncols_G, tfit)
             % so we are referring to either 1 or 2 columns of G):
             indcG = icf+1 : icf+npar(i1);
 
-%             try
             % Fill matrix G:
             G(:, indcG) = cauxG;
-%             catch
-%                 keyboard
-%             end
 
             % Update the index icf:
             icf = icf + npar(i1);
