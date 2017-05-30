@@ -192,8 +192,12 @@ end
 if nargout == 4
     
     % Compute the misfit and the mean-squared error (MSE):
-    err.res = (G4err * m) - xgd;
+    fit4err = (G4err * m);
+    err.res = fit4err - xgd;
     err.MSE = mean(err.res.^2);
+    
+    % Compute r2 (squared correlation coefficient):
+    err.r2 = var(fit4err) / var(xgd);
     
     % Constant factor which determines the confidence interval (CI)
     % associated with the error. 1.96 gives a 95% CI. In fact, this
