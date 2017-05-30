@@ -1,5 +1,5 @@
 function [xfit, m, G, err] = myleastsqrs(t, x, imf)
-% [xfit, m, G] = MYLEASTSQRS(t, x, imf)
+% [xfit, m, G, err] = MYLEASTSQRS(t, x, imf)
 %
 %  inputs:
 %    - t: vector with independent variable (i.e. where x is specified)
@@ -12,6 +12,7 @@ function [xfit, m, G, err] = myleastsqrs(t, x, imf)
 %    - m: model parameters.
 %    - G: the one that gives the fit (which may different than the one
 %         used to compute m).
+%    - err: struct variable with different error estimates.
 %
 % The function MYLEASTSQRS uses standard least squares
 % to fit user-specified models to the data x, whose
@@ -190,21 +191,32 @@ else
 end
 
 
-%%
+%% Compute different error quantities/estimates:
 
+% Only calculate if appropriate output was specified:
 if nargout == 4
     
-    %
+    % Compute the misfit and the mean-squared error (MSE):
     err.res = (G4err * m) - xgd;
     err.MSE = mean(err.res.^2);
     
-    %
-    facCI = 1.96; % for 95% confidence interval / normal distribution
+    % Constant factor which determines the confidence interval (CI)
+    % associated with the error. 1.96 gives a 95% CI. In fact, this
+    % constant is valid if the variable is normally distributed:
+    facCI = 1.96;
+    
+    % Use the MSE as the magnitude of data error variance. Define
+    % the error covariance matrix and the matrix that combines with
+    % the data error to give error estimates for the model parameters:
     errorCovmat = (facCI^2) * err.MSE .* eye(length(tgd));
     aux_G4err = (G4err'*G4err) \ G4err';
 
+    % Compute the error variance of the model parameters and take
+    % the square root to compute the error associated with the
+    % confidence interval set by facCI:
     err.mErr = diag(aux_G4err * errorCovmat * aux_G4err');
-%     keyboard
+    err.mErr = sqrt(err.mErr);
+
 end
 
 
