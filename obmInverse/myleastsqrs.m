@@ -52,15 +52,10 @@ function [xfit, m, G, err] = myleastsqrs(t, x, imf)
 % Suggestions:
 %  1 - I don't like this name for this function.
 %  2 - Include comments above explaining the possible fields of imf.
-%  3 - Include options for tidal frequencies (or even better,
-%      make another function that gives tidal frequency in whatever units).
-%  4 - Include error of the model and confidence intervals (compare with
-%      Matlab's function regress).
-%  5 - How to easily add models without the need of concatenating?
-%  6 - Include constraints in the model.
-%  7 - Make some major change such that this code can be extended or used
+%  3 - How to easily add models without the need of concatenating?
+%  4 - Include constraints in the model.
+%  5 - Make some major change such that this code can be extended or used
 %      to make least squares fit in 2D/3D.
-%  8 - Include something to output the residue.
 %
 % Olavo Badaro Marques:
 %    Log -- 12/07/2015: created on this day
