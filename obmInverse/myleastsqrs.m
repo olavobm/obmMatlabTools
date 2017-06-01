@@ -14,31 +14,34 @@ function [xfit, m, G, err] = myleastsqrs(t, x, imf)
 %         used to compute m).
 %    - err: struct variable with different error estimates.
 %
-% The function MYLEASTSQRS uses standard least squares
-% to fit user-specified models to the data x, whose
-% values are specified at t. NaN values in x are ignored
-% (NaN in vector t will cause error).
+% The function MYLEASTSQRS uses standard least squares to fit
+% user-specified models to the data x, whose values are specified
+% at t. NaN values in x are ignored (NaN in vector t will cause error).
 %
 % User specifies which models to fit in the input imf. This must
 % be a struct variable. Fields indicate what kind of model to fit
 % and each of them has a vector with paratemers for the model. "One
-% parameter for each model" (always???????), therefore, the length of this vector
-% is equal to the number of models of that category to fit.
+% parameter for each model" (always???????), therefore, the length of these
+% vectors are equal to the number of models of that category to fit.
 %
-% Talk about imf.modelinput option!!!!!!!!!! On a piece of paper I wrote:
-% Since this case is intrisically user-specified, the domain will be the
-% same as the data even though one might have to interpolate the model
-% every time before calling this function. This emphasizes to the user what
-% model you are really fitting (a discretized version of the real model).
-% This is a cell array to comply with the rest of the code. If you want to
-% convert a double array A, with size NxM, in a 1xM cell array (split the
-% columns of A), then do mat2cell(A, N, ones(1, M)).
+% The fields of imf that indicate a type of model to fit are:
+%       (1) power: a vector with the powers of the polynomials to fit.
+%       (2) sine: a vector of frequencies (in units of inverse of units
+%                 of t) of harmonic functions.
+%       (3) modelinput: a cell vector where each element is a vector with
+%                       values of a model specified at t.
 %
-% In the case of sinusoidal fits, the fit parameter is a frequency,
-% that is specified in units of the inverse of t (cyclic frequency).
-% From the model weights output, the amplitude is given by
-% ampl = sqrt(a^2 + b^2) and the phase by pha = atan2(b/ampl, a/ampl)
-% (where pha = 0 is "regular" cosine and pha = pi/2 a sine).
+% imf input may also have field named "domain". In this case, the model
+% xfit is calculated at the points imf.domain instead of at t.
+%
+% imf.modelinput is a cell array to comply with the rest of the code.
+% If you want to convert a double array A, with size NxM, in a 1xM cell
+% array (split the columns of A), then do mat2cell(A, N, ones(1, M)).
+%
+% In the case of sinusoidal fits, the model parameters (m) is a vector
+% with 2 elements, the amplitude is given by sqrt(m(1)^2 + m(2)^2) and
+% the phase by atan2(m(2), m(1)) (where phase = 0 is the "regular" cosine
+% and pha = pi/2 a sine).
 %
 % Writing the overdetermined (or least squares) problem as
 % G*m = x, where (i) x is the data, (ii) G is a matrix whose
@@ -51,10 +54,9 @@ function [xfit, m, G, err] = myleastsqrs(t, x, imf)
 %
 % Suggestions:
 %  1 - I don't like this name for this function.
-%  2 - Include comments above explaining the possible fields of imf.
-%  3 - How to easily add models without the need of concatenating?
-%  4 - Include constraints in the model.
-%  5 - Make some major change such that this code can be extended or used
+%  2 - How to easily add models without the need of concatenating?
+%  3 - Include constraints in the model.
+%  4 - Make some major change such that this code can be extended or used
 %      to make least squares fit in 2D/3D.
 %
 % Olavo Badaro Marques:
@@ -205,15 +207,19 @@ if nargout == 4
     facCI = 1.96;
     
     % Use the MSE as the magnitude of data error variance. Define
-    % the error covariance matrix and the matrix that combines with
-    % the data error to give error estimates for the model parameters:
-    errorCovmat = (facCI^2) * err.MSE .* eye(length(tgd));
+    % the error variance and the matrix that combines with the data
+    % error to give error estimates for the model parameters. Note
+    % that, in general, an error covariance matrix should be used instead
+    % of a scalar. But it is assumed the error is constant and
+    % uncorrelated at different locations, which greatly simplifies the
+    % computational time:
+    errorVar = (facCI^2) * err.MSE;
     aux_G4err = (G4err'*G4err) \ G4err';
-
+    
     % Compute the error variance of the model parameters and take
     % the square root to compute the error associated with the
     % confidence interval set by facCI:
-    err.mErr = diag(aux_G4err * errorCovmat * aux_G4err');
+    err.mErr = errorVar .* diag(aux_G4err * aux_G4err');
     err.mErr = sqrt(err.mErr);
 
 end
