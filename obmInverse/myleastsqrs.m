@@ -211,7 +211,7 @@ if nargout == 4
     % error to give error estimates for the model parameters. Note
     % that, in general, an error covariance matrix should be used instead
     % of a scalar. But it is assumed the error is constant and
-    % uncorrelated at different locations, which greatly simplifies the
+    % uncorrelated at different locations, which greatly decreases the
     % computational time:
     errorVar = (facCI^2) * err.MSE;
     aux_G4err = (G4err'*G4err) \ G4err';
