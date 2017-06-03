@@ -1,4 +1,4 @@
-function [dfit, mfit] = slidingHarmFit(x, d, xfit, wnd, imf, lpartfit, minptsfit, lprogmsg)
+function [dfit, mfit, errfit] = slidingHarmFit(x, d, xfit, wnd, imf, lpartfit, minptsfit, lprogmsg)
 % [dfit, mfit] = SLIDINGHARMFIT(x, d, xfit, wnd, imf, lpartfit, minptsfit, lprogmsg)
 %
 %   inputs:
@@ -18,6 +18,7 @@ function [dfit, mfit] = slidingHarmFit(x, d, xfit, wnd, imf, lpartfit, minptsfit
 %   outputs:
 %       - dfit:
 %       - mfit:
+%       - errfit: cell array with error on the model parameters.
 %
 % This function computes a least squares fit using only a segment (window)
 % of the dataset. Fits are estimated for each point in xfit.
@@ -68,9 +69,19 @@ end
 
 %% Pre-allocate:
 
-dfit = NaN(size(d, 1), length(xfit));
+%
+if iscell(lpartfit)
+    Nkeeps = length(lpartfit);
+else
+    Nkeeps = 1;
+end
 
-mfit = cell(size(d, 1), length(xfit));
+% Pre-allocate:
+dfit = NaN(size(d, 1), length(xfit), Nkeeps);
+
+mfit = cell(size(d, 1), length(xfit), Nkeeps);
+
+errfit = cell(size(d, 1), length(xfit), Nkeeps);
 
 
 %% Now go for the windowed harmonic fit:
@@ -102,15 +113,29 @@ for i1 = 1:xn
 
             if length(find(~isnan(dwndaux))) >= minptsfit
             
+                % Should test this first (it tried to crate a huge error
+                % covariance matrix). Now it should work:
+%                 [fit_aux, m_aux, G_aux, err_aux] = myleastsqrs(xaux(linWindow), dwndaux, imf);
+                
                 [fit_aux, m_aux, G_aux] = myleastsqrs(xaux(linWindow), dwndaux, imf);
+                
                 if exist('lpartfit', 'var')
-                    fit_aux = partialFit(lpartfit, m_aux, G_aux);
+                    [fit_aux, m_aux] = partialFit(lpartfit, m_aux, G_aux);
+                    
+%                     err_aux.mErr = err_aux.mErr(lpartfit);
                 end
+                
+                %
+                for i4 = 1:Nkeeps
+                    
+                    % Assign fitted value to output in the appropriate location:
+                    dfit(i3 + i1-1, i2, i4) = fit_aux(:, i4);
+                    mfit{i3 + i1-1, i2, i4} = m_aux(:, i4);
 
-                % Assign fitted value to output in the appropriate location:
-                dfit(i3 + i1-1, i2) = fit_aux;
-
-                mfit{i3 + i1-1, i2} = m_aux;
+    %                 errfit{i3 + i1-1, i2, i4} = err_aux.mErr;
+                    
+                end                
+                
             end
         end
         
