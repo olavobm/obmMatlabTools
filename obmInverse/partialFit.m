@@ -49,8 +49,10 @@ else
     
     nfits = length(lpartfit);
     
-    lpartfitaux = NaN(nfits, length(m));
+    % Pre-allocate logical array:
+    lpartfitaux = false(nfits, length(m));
     
+    %
     for i = 1:nfits
         
         if length(lpartfit{i})~=length(m)
@@ -76,11 +78,10 @@ mout = NaN(length(m), nfits);
 Gout = cell(1, nfits);
 
 % Loop through the different combination of models to be
-% kept (nfits is 1 if lpartfit is NOT a cell array):
+% kept (nfits is 1 if lpartfit input is NOT a cell array):
 for i = 1:nfits
     
     lkeep = lpartfit(i, :);
-    
     mout(lkeep, i) = m(lkeep);
     Gout{i} = G(:, lkeep);
 
