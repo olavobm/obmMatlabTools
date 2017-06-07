@@ -55,7 +55,7 @@ if length(structarray)>1
         
         structarray = orderfields(structarray, allfieldnames);
         
-        outstructarray(1:(nnew-2)) = structarray;
+        outstructarray(1:(nnew-2)) = structarray(1:(nnew-2));
         
         
     end
