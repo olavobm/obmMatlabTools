@@ -2,10 +2,13 @@ function linkaxesFigs(hfigs, axsstr)
 % LINKAXESFIGS(hfigs, axsstr)
 %
 %   inputs:
-%       - hfigs: figure handles
+%       - hfigs: vector of figure handles (or figure numbers).
 %       - axsstr: string in the same manner as it goes into linkaxes.m
 %
+% By using my other function (linkallaxes.m), LINKAXESFIGS links all axes
+% in figures specified by their handles (or numbers) in input hfigs.
 %
+% See also: linkallaxes.m
 %
 % Olavo Badaro Marques, 05/May/2017.
 
@@ -15,6 +18,7 @@ function linkaxesFigs(hfigs, axsstr)
 Nfigs = length(hfigs);
 
 haxscell = cell(1, Nfigs);
+
 
 %%
 
