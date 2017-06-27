@@ -15,7 +15,7 @@ function psout = pwSpecStruct(n)
 % Olavo Badaro Marques, 26/Jun/2017.
 
 % List of fields:
-listfields = {'freq', 'allpsd', 'psd', 'fcoed', 'dof', 'err'};
+listfields = {'freq', 'allpsd', 'psd', 'fcoef', 'dof', 'err'};
 
 % Call my function that creates empty structure array:
 psout = createEmptyStruct(listfields, n);
