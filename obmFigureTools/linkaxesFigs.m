@@ -13,14 +13,15 @@ function linkaxesFigs(hfigs, axsstr)
 % Olavo Badaro Marques, 05/May/2017.
 
 
-%%
+%% Get number of figure handles and pre-aloocate
+% cell array for axes handles:
 
 Nfigs = length(hfigs);
 
 haxscell = cell(1, Nfigs);
 
 
-%%
+%% Loop over figures and assign axes handles to cell array:
 
 for i = 1:Nfigs
     
@@ -33,14 +34,16 @@ for i = 1:Nfigs
 end
 
 
-%%
+%% Go from the cell array "haxscell" to the array of axes "allhaxs":
 
 naxsperfig = cellfun(@length, haxscell);
 
+% Pre-allocate space to store all axes handles:
 allhaxs = gobjects(sum(naxsperfig), 1);
 
 indi = 1;
 
+% Loop over figures:
 for i = 1:Nfigs
     
     indf = indi + naxsperfig(i) - 1;
@@ -51,6 +54,7 @@ for i = 1:Nfigs
 
 end
 
-%%
+
+%% Link axes:
 
 linkallaxes(axsstr, allhaxs)
