@@ -36,7 +36,7 @@ nparFields = [1, 2, 1];
 nparFields = containers.Map(funcFields, nparFields);
 
 
-%%
+%% Create the variables nmodels, npar and ncols_G:
 
 Gfields = intersect(fieldnames(imf), funcFields, 'stable');
 
@@ -57,7 +57,7 @@ for i = 1:nfields
 end
 
 
-%%
+%% Finally create the matrix G:
 
 % We now pre-allocate space for matrix G and fill it (the index
 % icf is an indicator of the column of G to be filled):
