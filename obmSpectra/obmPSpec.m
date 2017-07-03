@@ -33,10 +33,6 @@ function [pwspec] = obmPSpec(x, dt, np, ovrlap)
 %
 % Olavo Badaro Marques, 02/Sep/2015.
 
-% AFTER WINDOWING BY HANNING, I SHOULD NORMALIZE THE DATA BY:
-%   NP/(SUM(xaux.^2)). I SHOULD ALSO INTEGRATE THE SPECTRUM
-% TO SEE IF IT EQUALS THE VARIANCE.
-
 
 %% Error message for update:
 

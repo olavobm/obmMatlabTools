@@ -2,9 +2,8 @@ function [intSpec, actualdf] = integrateSpec(pwspec, df, lsumrot)
 % [intSpec] = INTEGRATESPEC(pwspec, df, lsumrot)
 %
 %   inputs:
-%       - pwspec: structure with (at least) 2 fields -- psd
-%                 (power spectral density) and freq
-%                 (frequency vector).
+%       - pwspec: structure with (at least) 2 fields -- freq
+%                 (frequency vector) and psd (power spectral density).
 %       - df: Nx2 matrix with N bandwidths to integrate the spectrum.
 %       - lsumrot (optional): logical variable -- true if you want to add
 %                             the integrals in the negative and positive
