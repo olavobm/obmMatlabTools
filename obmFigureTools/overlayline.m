@@ -69,7 +69,7 @@ end
 
 hold on
 
-hplt = plot(x, y, varargin{:});
+hplt_aux = plot(x, y, varargin{:});
 
 % Make sure the axis limits in the
 % direction of the line do not change:
@@ -77,4 +77,11 @@ if strcmp(vorh, 'v')
     ylim(linerange)
 elseif strcmp(vorh, 'h')
     xlim(linerange)
+end
+
+
+%% Assign handle to output only if it is required
+
+if nargout==1
+    hplt = hplt_aux;
 end
