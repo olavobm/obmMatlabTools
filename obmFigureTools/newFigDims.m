@@ -10,14 +10,38 @@ function hfig = newFigDims(lenhei, lnew)
 %   outputs:
 %       - hfig: figure handle.
 %
-% Units are cm, (but should implement giving input for different units).
+% Units are inches, (but should implement giving input for different units).
 %
-% I GOTTA AN UNEXPECTED BEHAVIOUR...MAKE SOME TESTS! ????????????
+% Note that this function set the figure dimensions. In general, the
+% aspect ratio of the axes of a plot in the figure will be different
+% than the aspect ratio of the figure itself.
 % 
 % The last part of this function was copied from
 % wysiwyg.m, available on the internet.
 %
+% TO DO:
+%   - There are some unnecessary things at the end of this code.
+%
 % Olavo Badaro Marques, 13/Feb/2017.
+
+
+%%
+
+if nargin==0
+
+    %
+    originalUnits = get(gcf, 'Units');
+    set(gcf, 'Units', get(gcf, 'PaperUnits'));
+    
+    %
+    figposaux = get(gcf, 'Position');
+    disp(figposaux(3:4));
+    
+    set(gcf, 'Units', originalUnits);
+    
+    % End function
+    return
+end
 
 
 %%
