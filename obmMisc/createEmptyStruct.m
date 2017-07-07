@@ -31,6 +31,13 @@ if ~exist('n', 'var')
 end
 
 
+%% If "listfields" is a string, transform it into cell array
+
+if ischar(listfields)
+    listfields = {listfields};
+end
+
+
 %% Create string that goes as the input of the function
 % struct. For example, if this string looks like:
 %           'field1', cell(1, n), 'field2', cell(1, n),
