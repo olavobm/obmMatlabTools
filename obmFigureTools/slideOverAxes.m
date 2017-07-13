@@ -7,6 +7,12 @@ function slideOverAxes(dir2save, haxs, xlimsFrames, ylimsFrames, nameroot)
 %       - xlimsFrames:
 %       - ylimsFrames (optional):
 %
+% TO DO:
+%      - need to fix the size of the axis for every frame (because,
+%        for example, different XTickLabels for different frames
+%        give a slightly different size of the axes box).
+%
+% See also: makeSegs.m
 %
 % Olavo Badaro Marques, 06/Jul/2017.
 

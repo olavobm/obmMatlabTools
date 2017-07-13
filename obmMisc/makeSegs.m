@@ -1,5 +1,5 @@
 function segsLims = makeSegs(nbegend, seglen, segstep)
-% segslims = MAKESEGS(seglen, segstep, nstop)
+% segslims = MAKESEGS(nbegend, seglen, segstep)
 %
 %   inputs:
 %       - nbegend:
