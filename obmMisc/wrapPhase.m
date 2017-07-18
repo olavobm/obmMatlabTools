@@ -1,27 +1,38 @@
-function y = wrapPhase(limang, x)
-% y = WRAPPHASE(limang, x)
+function y = wrapPhase(phalims, x)
+% y = WRAPPHASE(phalims, x)
 %
 %   inputs:
-%       - limang:
-%       - x:
+%       - phalims: 1x2 array, with (sorted) phase limits.
+%       - x: phase.
 %
 %   outputs:
-%       - y: x wrapped between limang.
+%       - y: x wrapped between phalims.
 %
+% Wraps phase values (x) between the limits given by phalims.
+% Matlab has functions for specific limits, such as wrapTo2Pi.m.
 %
-% Olavo Badaro Marques, 22/Mar/2013.
+% Olavo Badaro Marques, 22/Mar/2017.
 
 
-angrange = limang(2) - limang(1);
+%% Phase limits range
 
+angrange = phalims(2) - phalims(1);
+
+
+%% Wrap the phase
+
+% Pre-allocate
 y = NaN(size(x));
 
-linlim = (x >= limang(1) & x <= limang(2));
+% Phases that already are within phalims
+linlim = (x >= phalims(1) & x <= phalims(2));
 y(linlim) = x(linlim);
 
-lbig = (x > limang(2));
-y(lbig) = mod(x(lbig) - limang(2), angrange) + limang(1);
+% Values larger than upper limit
+lbig = (x > phalims(2));
+y(lbig) = mod(x(lbig) - phalims(2), angrange) + phalims(1);
 
-lsmall = (x < limang(1));
-y(lsmall) = mod(x(lsmall) - limang(1), angrange) + limang(1);
+% Values smaller than lower limit
+lsmall = (x < phalims(1));
+y(lsmall) = mod(x(lsmall) - phalims(1), angrange) + phalims(1);
 
