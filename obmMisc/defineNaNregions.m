@@ -1,8 +1,8 @@
 function regionsNaN = defineNaNregions(lNaN)
-% = DEFINENANREGIONS(lNaN)
+% regionsNaN = DEFINENANREGIONS(lNaN)
 %
 %   inputs:
-%       - lNaN:
+%       - lNaN: logical array, where true represents locations with NaNs.
 %
 %   outputs:
 %       - regionsNaN: sets of regions.
