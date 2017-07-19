@@ -42,7 +42,7 @@ end
 %%
 
 %
-if ~exist('ylimsFrames', 'var')
+if ~exist('ylimsFrames', 'var') || isempty(ylimsFrames)
     ylimsFrames = ylim(haxs);
 end
 
@@ -60,11 +60,22 @@ Nframe_str = mat2str(Nframes);
 
 str0s = ['%.' num2str(length(Nframe_str)) 'd'];
 
+
+%%
+
+axsPos = get(haxs, 'Position');
+
+
 %%
 
 for i = 1:Nframes
     
     axis(haxs, [xlimsFrames(i, :), ylimsFrames])
+    
+    %
+    if ~isequal(axsPos, get(haxs, 'Position'))
+        set(haxs, 'Position', axsPos)
+    end
     
     %%
     if lsave
