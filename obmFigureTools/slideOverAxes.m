@@ -56,6 +56,9 @@ end
 
 Nframes = size(xlimsFrames, 1);
 
+Nframe_str = mat2str(Nframes);
+
+str0s = ['%.' num2str(length(Nframe_str)) 'd'];
 
 %%
 
@@ -65,7 +68,7 @@ for i = 1:Nframes
     
     %%
     if lsave
-        strnumFig = num2str(i);
+        strnumFig = num2str(i, str0s);
         print(hfig, '-dpng', fullfile(dir2save, [nameroot strnumFig]))
     end
     
