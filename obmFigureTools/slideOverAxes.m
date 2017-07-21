@@ -1,11 +1,19 @@
-function slideOverAxes(dir2save, haxs, xlimsFrames, ylimsFrames, nameroot)
-% SLIDEOVERAXES(dir2save, haxs, xlimsFrames, ylimsFrames)
+function slideOverAxes(dir2save, haxs, xlimsFrames, ylimsFrames, nameroot, pausetime)
+% SLIDEOVERAXES(dir2save, haxs, xlimsFrames, nameroot, pausetime)
 %
 %   inputs:
-%       - dir2save:
-%       - hfig:
-%       - xlimsFrames:
-%       - ylimsFrames (optional):
+%       - dir2save: directory to save figures (give [] to not save figures). 
+%       - haxs: axes handle to slide over of.
+%       - xlimsFrames: Nx2 with x limits of each of the N frames.
+%       - ylimsFrames (optional): same as xlimsFrames, but for the y
+%                                 values. If not given, the current values
+%                                 are used for all frames.
+%       - nameroot (optional): string that starts the name of all saved figures.
+%       - pausetime (optional): number of seconds to pause at each frame
+%                               (only when not saving figures).
+%
+% TO DO:
+%   - Should also fix the position of other objects, specially colorbars.
 %
 % See also: makeSegs.m
 %
@@ -26,13 +34,11 @@ else
     lsave = true;
 end
 
-
-%% Just a reminder of something I tried
-
-% if lsave
-%     set(gcf, 'Visible', 'off')    % I thought this could speed
-%                                   % plotting the figures, but it doesn't 
-% end
+if ~lsave
+    if ~exist('pausetime', 'var')
+        pausetime = 0.5;
+    end
+end
 
 
 %% If optional inputs are not given, set default values
@@ -43,9 +49,17 @@ if ~exist('ylimsFrames', 'var') || isempty(ylimsFrames)
 end
 
 %
-if ~exist('nameroot', 'var')
+if ~exist('nameroot', 'var') || isempty(nameroot)
     nameroot = 'fig_';
 end
+
+
+%% Just a reminder of something I tried
+
+% if lsave
+%     set(gcf, 'Visible', 'off')    % I thought this could speed
+%                                   % plotting the figures, but it doesn't 
+% end
 
 
 %% Get number of frames and set leading zeros
@@ -77,6 +91,8 @@ for i = 1:Nframes
     if lsave
         strnumFig = num2str(i, str0s);
         print(hfig, '-dpng', fullfile(dir2save, [nameroot strnumFig]))
+    else
+        pause(pausetime)
     end
     
 end
