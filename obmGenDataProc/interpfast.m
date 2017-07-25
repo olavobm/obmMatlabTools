@@ -21,9 +21,9 @@ nr = size(y, 1);
 
 
 %%
-lsame = (y == x0);
-lsmall = (y < x0);
-lbig = (y > x0);
+lsame = (x == x0);
+lsmall = (x < x0);
+lbig = (x > x0);
 
 
 %%
@@ -48,7 +48,7 @@ for i = 1:N
     
     if any(ithlsame)
         
-        y0(i) = x(ithlsame);
+        y0(i) = y(ithlsame);
         ind0(i) = find(ithlsame);
         
     else
@@ -70,8 +70,8 @@ ind2 = ind1 + 1;
 %
 lOK = ~isnan(ind1);
 
-y0(lOK) = x(ind1(lOK)) + (x0 - y(ind1(lOK))) .* ...
-          ((x(ind2(lOK)) - x(ind1(lOK))) ./ (y(ind2(lOK)) - y(ind1(lOK))));
+y0(lOK) = y(ind1(lOK)) + (x0 - x(ind1(lOK))) .* ...
+          ((y(ind2(lOK)) - y(ind1(lOK))) ./ (x(ind2(lOK)) - x(ind1(lOK))));
 
 
 %%
