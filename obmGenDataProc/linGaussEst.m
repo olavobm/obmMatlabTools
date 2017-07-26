@@ -2,13 +2,14 @@ function y = linGaussEst(tx, x, decorScale, xnoise, ty)
 % y = LINGAUSSEST(tx, x, decorScale, xnoise, ty)
 %
 %   inputs:
-%       - tx:
-%       - x:
-%       - decorScale:
-%       - ty:
+%       - tx: independent variable of x.
+%       - x: depedent variable to be used to compute y.
+%       - decorScale: decorrelation scale
+%       - xnoise: noise (error) of x.
+%       - ty: points to make an estimate of x.
 %
 %   outputs:
-%       - y:
+%       - y: estimate of the quantity x at the points ty.
 %
 %
 % NaNs????
