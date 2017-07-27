@@ -33,17 +33,23 @@ function [dfit, mfit, errfit] = slidingHarmFit(x, d, xfit, wnd, imf, lpartfit, m
 % Olavo Badaro Marques, 18/Apr/2017.
 
 
-%%
+%% If not given as inputs, choose default values for parameters
 
+%
 if ~exist('lprogmsg', 'var')
     lprogmsg = false;
 end
 
-%%
-
-if ~exist('minptsfit', 'var')
+%
+if ~exist('minptsfit', 'var') || isempty(minptsfit)
     minptsfit = 0;
 end
+
+
+%%
+
+minptsSide = 0.4;
+minptsSide = minptsSide * minptsfit;
 
 
 %% Now look at the sizes of x and d to determine the numbers
@@ -113,28 +119,43 @@ for i1 = 1:xn
 
             if length(find(~isnan(dwndaux))) >= minptsfit
             
-                % Should test this first (it tried to crate a huge error
-                % covariance matrix). Now it should work:
-%                 [fit_aux, m_aux, G_aux, err_aux] = myleastsqrs(xaux(linWindow), dwndaux, imf);
+                xaux_2 = xaux(linWindow);
+                xaux_2 = xaux_2(~isnan(dwndaux));
                 
-                [fit_aux, m_aux, G_aux] = myleastsqrs(xaux(linWindow), dwndaux, imf);
+                dist_aux = xaux_2 - imf.domain;
                 
-                if exist('lpartfit', 'var')
-                    [fit_aux, m_aux] = partialFit(lpartfit, m_aux, G_aux);
+                % First try
+                lmost = (sum(abs(dist_aux) < (0.7*halfwnd))./length(dist_aux)) >= 0.5;
+                
+                % Only do the calculation if there are enough points
+                % to the right and to the left of center point
+                if length(dist_aux(dist_aux > 0)) > minptsSide && ...
+                   length(dist_aux(dist_aux < 0)) > minptsSide && lmost
+               
+                    % Should test this first (it tried to create a huge
+                    % error covariance matrix). Now it should work:
+    %                 [fit_aux, m_aux, G_aux, err_aux] = myleastsqrs(xaux(linWindow), dwndaux, imf);
+                    [fit_aux, m_aux, G_aux] = myleastsqrs(xaux(linWindow), dwndaux, imf);
                     
-%                     err_aux.mErr = err_aux.mErr(lpartfit);
+                    if exist('lpartfit', 'var')
+                        [fit_aux, m_aux] = partialFit(lpartfit, m_aux, G_aux);
+    %                     err_aux.mErr = err_aux.mErr(lpartfit);
+                    end
+
+                    %
+                    for i4 = 1:Nkeeps
+
+                        % Assign fitted value to output in the appropriate location:
+                        dfit(i3 + i1-1, i2, i4) = fit_aux(:, i4);
+                        mfit{i3 + i1-1, i2, i4} = m_aux(:, i4);
+
+        %                 errfit{i3 + i1-1, i2, i4} = err_aux.mErr;
+
+                    end   
+               
                 end
                 
-                %
-                for i4 = 1:Nkeeps
-                    
-                    % Assign fitted value to output in the appropriate location:
-                    dfit(i3 + i1-1, i2, i4) = fit_aux(:, i4);
-                    mfit{i3 + i1-1, i2, i4} = m_aux(:, i4);
-
-    %                 errfit{i3 + i1-1, i2, i4} = err_aux.mErr;
-                    
-                end                
+             
                 
             end
         end
