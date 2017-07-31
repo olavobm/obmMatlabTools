@@ -14,6 +14,10 @@ function htxt = textFig(x0, y0, s, varargin)
 % TEXTFIG places a text "s" anywhere in the current figure (rather
 % than axes), using normalized coordinates (from 0 to 1).
 %
+% Note that invisible axes are placed on top of all others, such
+% that the user loses GUI interaction (e.g. zomming) with the axes
+% of the actual plots.
+%
 % Olavo Badaro Marques, 18/Jul/2017
 
 
