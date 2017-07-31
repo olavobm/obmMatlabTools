@@ -42,13 +42,9 @@ end
 %% Loop over axes and title them:
 
 for i = 1:n
-%     axes(axeshandles(i))   % Matlab warns this can be slow...
-    axeshandles(i).Title.String = celltitles{i};
+%     axeshandles(i).Title.String = celltitles{i};
     
-%     for i2 = 1:(length(varargin)/2)
-%         axeshandles(i2).Title.() = celltitles{i};
-%     end
-    
-%     title(celltitles{i}, varargin{:})
+    % Add title to the i'th axes handle
+    title(axeshandles(i), celltitles{i}, varargin{:})
 end
 
