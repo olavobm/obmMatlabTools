@@ -1,12 +1,12 @@
 function y = wrapPhase(phalims, x)
 % y = WRAPPHASE(phalims, x)
 %
-%   inputs:
-%       - phalims: 1x2 array, with (sorted) phase limits.
-%       - x: phase.
+%   inputs
+%       - phalims: 1x2 array, with min/max phase limits.
+%       - x: phase (in the same units as phalims).
 %
-%   outputs:
-%       - y: x wrapped between phalims.
+%   outputs
+%       - y: x wrapped (bounded) between phalims.
 %
 % Wraps phase values (x) between the limits given by phalims.
 % Matlab has functions for specific limits, such as wrapTo2Pi.m.
