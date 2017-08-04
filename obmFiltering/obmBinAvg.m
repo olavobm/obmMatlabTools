@@ -1,7 +1,7 @@
-function [xout, xstd, nbins] = obmBinAvg(t, x, binlen, tbin, wndhandle)
-% [xout, xstd, nbins] = OBMBINAVG(t, x, binlen, tbin, wndhandle)
+function [xout, xstd, xn, tout] = obmBinAvg(t, x, binlen, tbin, wndhandle, lreg)
+% [xout, xstd, xn, tout] = OBMBINAVG(t, x, binlen, tbin, wndhandle, lreg)
 %
-%   input:
+%   input
 %       - t: independent variable
 %       - x: vector or matrix. In the second case, bin averaging is
 %            done for each row independently.
@@ -10,21 +10,29 @@ function [xout, xstd, nbins] = obmBinAvg(t, x, binlen, tbin, wndhandle)
 %                          the average of (default is to use t).
 %       - wndhandle (optional): default is @hann. 
 %
-%   output:
+%   output
 %       - xout: x averaged at tbin.
 %       - xstd: standard deviation of the values used to compute xout.
 %       - xn: number of values used to compute xout and xstd.
+%       - tout:
 %
-% TO DO: 
-%        - allow t to be a matrix?
+% TO DO:
+%	- t regularlt spaced included. Code needs to be improved and to allow
+%     x to be a matrix for this case.
+% 	- allow t to be a matrix?
+%   - include minimum number of points per window?
 %
 % Olavo Badaro Marques, 20/Mar/2017.
 
 
 %% If no window is specified, choose a default window:
 
-if ~exist('wndhandle', 'var')
+if ~exist('wndhandle', 'var') || isempty(wndhandle)
     wndhandle = @hann;
+end
+
+if ~exist('lreg', 'var')
+    lreg = false;
 end
 
 
@@ -50,40 +58,64 @@ nc = length(tbin);
 
 xout = NaN(nr, nc);
 xstd = NaN(size(xout));
-nbins = zeros(nr, nc);
+xn = zeros(nr, nc);
 
 %
 tbinlims = [tbin - (binlen/2), tbin + (binlen/2)];
 
 %
 for i1 = 1:nr
-    for i2 = 1:length(tbin)
-
-        linbin = (t >= tbinlims(i2, 1)) & ...
-                 (t <= tbinlims(i2, 2));
-
+    
+    if lreg
+        
         %
-        if any(linbin)
-            
-            % Call function to compute weights for the weighted mean
-            % (for boxcar window, the weights are simply 1):
-            if isequal(wndhandle, @rectwin)
-                avgWeights = ones(1, length(t(linbin)));
-            else
-                avgWeights = windowatt(wndhandle, tbinlims(i2, :), t(linbin), 15*length(t(linbin)));
-                avgWeights = avgWeights(:)';    % make it a row vector
-            end
-            
-            %
-            xout(i1, i2) = nansum(x(i1, linbin) .* avgWeights) ./ sum(avgWeights);
-            
-            %
-            xstd(i1, i2) = nanstd(x(i1, linbin));
-            
-            nbins(i1, i2) = sum(linbin);
-            
-        end
+        indtstep = dsearchn(t(:), t(1) + binlen);
+% %         indtstep = indtstep - 1;    % -1 to not include both ends
 
+        indlast = length(t) - mod(length(t), indtstep);
+
+        % Should be outisde of the loop
+        ti = reshape(t(1:indlast), indtstep, indlast./indtstep);
+        
+        %
+        xi = reshape(x(i1, 1:indlast), indtstep, indlast./indtstep);
+        
+        xout = nanmean(xi, 1);
+        xstd = nanstd(xi, 0, 1);
+% %         xn = nanmean(xi, 0, 1);
+        tout = mean(ti, 1);
+
+    else
+    
+        for i2 = 1:length(tbin)
+
+            linbin = (t >= tbinlims(i2, 1)) & ...
+                     (t <= tbinlims(i2, 2));
+
+            %
+            if any(linbin)
+
+                % Call function to compute weights for the weighted mean
+                % (for boxcar window, the weights are simply 1):
+                if isequal(wndhandle, @rectwin)
+                    avgWeights = ones(1, length(t(linbin)));
+                else
+                    avgWeights = windowatt(wndhandle, tbinlims(i2, :), t(linbin), 15*length(t(linbin)));
+                    avgWeights = avgWeights(:)';    % make it a row vector
+                end
+
+                %
+                xout(i1, i2) = nansum(x(i1, linbin) .* avgWeights) ./ sum(avgWeights);
+
+                %
+                xstd(i1, i2) = nanstd(x(i1, linbin));
+
+                xn(i1, i2) = sum(linbin);
+
+            end
+
+        end
+    
     end
 end
 
