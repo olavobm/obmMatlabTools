@@ -1,14 +1,16 @@
 function [y0, ind4interp] = interpfast(x, y, x0)
 % [y0, ind4interp] = INTERPFAST(x, y, x0)
 %
-%   inputs:
-%       - x:
-%       - y:
-%       - x0:
+%   inputs
+%       - x: independent variable associated with the rows of y.
+%       - y: variable to interpolate.
+%       - x0: 1 value in the x-dimension.
 %
-%   outputs:
-%       - yinterp:
-%       - ind4interp:
+%   outputs
+%       - yinterp: vector of y interpolated on x0.
+%       - ind4interp: row indices used in the interpolation.
+%
+%
 %
 % Olavo Badaro Marques, 24/Jul/2014.
 
