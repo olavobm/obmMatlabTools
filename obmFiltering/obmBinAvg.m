@@ -9,12 +9,27 @@ function [xout, xstd, xn, tout] = obmBinAvg(t, x, binlen, tbin, wndhandle, lreg)
 %       - tbin (optional): t values for the center of the bins to take
 %                          the average of (default is to use t).
 %       - wndhandle (optional): default is @hann. 
+%       - lreg (optional): logical variable to specifiy whether t is
+%                          regularly spaced and result is to reduce
+%                          the number of data points (default is false).
 %
 %   output
 %       - xout: x averaged at tbin.
 %       - xstd: standard deviation of the values used to compute xout.
 %       - xn: number of values used to compute xout and xstd.
 %       - tout:
+%
+% OBMBINAVG bin-averages the variable x, which is specified at t. The
+% length of each bin, in units of t, is given by binlen and the center
+% of each bin is specified by tbin (i.e. the points used in each average
+% are taken half-window to the left and half to the right of tbin).
+%
+% If tbin is not given as an input, then it is set to t. Another optional
+% input is wndhandle, which is a window handle, which specified a window
+% to multiply each bin of x.
+%
+% lreg ...
+% 
 %
 % TO DO:
 %	- t regularlt spaced included. Code needs to be improved and to allow
