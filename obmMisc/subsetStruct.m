@@ -1,7 +1,7 @@
 function structout = subsetStruct(indvarcell, indvarlims, structvar, varcell, lrm)
-% structout = SUBSETSTRUCT(indvarcell, indvarlims, structvar, varcell)
+% structout = SUBSETSTRUCT(indvarcell, indvarlims, structvar, varcell, lrm)
 %
-%   inputs:
+%   inputs
 %       - indvarcell: cell array with independent variable names.
 %       - indvarlims: Nx2 array with limits of the independent variables.
 %       - structvar: structure with (at least) the independent variables
@@ -12,7 +12,7 @@ function structout = subsetStruct(indvarcell, indvarlims, structvar, varcell, lr
 %                         remove all fields not specified in either
 %                         indvarcell or varcell.
 %
-%   outputs:
+%   outputs
 %       - structout: subsetted structure variable.
 %
 % SUBSETSTRUCT subsets multiple fields of structvar. Suppose you have
@@ -35,7 +35,14 @@ function structout = subsetStruct(indvarcell, indvarlims, structvar, varcell, lr
 % Olavo Badaro Marques, 13/Mar/2017.
 
 
-%% If lrm is not given as input, choose default value:
+%% If first variable is a string, turn it into a cell array
+
+if ~exist('indvarcell', 'var')
+    indvarcell = {indvarcell};
+end
+
+
+%% If lrm is not given as input, choose default value
 
 if ~exist('lrm', 'var')
     lrm = false;
@@ -44,7 +51,7 @@ end
 
 %% If input varcell is not given, then assign all fieldnames
 % of structvar to it, except those in indvarcell. All fields
-% with dimensions consistent with indvarcell will be subsetted:
+% with dimensions consistent with indvarcell will be subsetted
 
 if ~exist('varcell', 'var')
     
@@ -57,7 +64,7 @@ end
 %% Check if first 2 inputs are consistent (among each other)
 % and determine which dimensions are subsetted (this is not
 % quite true for vectors, which are 1D but can be either
-% row or column vectors):
+% row or column vectors)
 
 if length(indvarcell) ~= size(indvarlims, 1)
     error('')
@@ -77,10 +84,9 @@ else
 end
 
 
-%% Remove from varcell the fields that do not have
-% any dimension of same length as one of the independent
-% variables in indvarcell:
-
+%% Remove from varcell the fields that do not have any dimension
+% of same length as one of the independent variables in indvarcell
+%
 % maybe I should only run if varcell is not given in input
 
 % Create logical variable (which is updated in the loop below) where
@@ -128,7 +134,7 @@ varcell = varcell(lkeepvar);
 
 
 %% Create logical array (lsubsetcell) with the
-% subset regions for all independent variables:
+% subset regions for all independent variables
 
 % Pre-allocate space:
 lsubsetcell = cell(1, length(indvarcell));
@@ -158,7 +164,7 @@ for i1 = 1:nindvar
 end
 
 
-%% Subset dependent variables one at a time:
+%% Subset dependent variables one at a time
 
 % Loop over variables to be subsetted:
 for i1 = 1:length(varcell)
@@ -239,7 +245,7 @@ for i1 = 1:length(varcell)
         
     end
     
-    %% Finally subset the i1'th dependent variable:
+    %% Finally subset the i1'th dependent variable
     
     % Subset dependent variable:
 	structout.(varcell{i1}) = structvar.(varcell{i1})(lsubset);
@@ -250,7 +256,7 @@ for i1 = 1:length(varcell)
 end
 
 
-%% If lrm is true, remove fields that are not subsetted:
+%% If lrm is true, remove fields that are not subsetted
 
 if lrm
     
