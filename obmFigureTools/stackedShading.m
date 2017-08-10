@@ -1,12 +1,13 @@
 function stackedShading(y, x, lnorm)
 % STACKEDSHADING(y, x, lnorm)
 %
-%	inputs:
-%       - y: array number of columns
-%       - x (optional): independent variable vector associated with y.
-%       - lnorm (optional): normalize such that it shows the relative
-%                           contribution of each row of y. Default value
-%                           is false.
+%	inputs
+%       - y: matrix.
+%       - x (optional): independent variable vector associated
+%                        with the columns of y.
+%       - lnorm (optional): normalize such that it shows the
+%                           relative contribution of each row of y.
+%                           Default is false.
 %
 % STACKEDSHADING creates stacked shading plot where each row of y is shaded
 % behind the former tow of y. This plot is particularly useful when all
@@ -15,22 +16,20 @@ function stackedShading(y, x, lnorm)
 %
 % If lnorm is true, the shadings add up to 1 for all columns of y, except
 % for the columns in which all elements are zero, in which case the
-% associated shadings are all zero, adding up to zero.
-% 
-% for possible cases If a column of y has only zeros and lnorm is true, then 
+% associated shadings are all zero.
 %
-% Use the standard Matlab functions, as long as your version is
-% newer than (including) 2014b. For additional colors, STACKEDSHADING
-% calls brewermap.m. If you want to specify your colors, you have to
-% edit this function (for example, by defining a colorsets.set0).
+% Use the standard Matlab colors as long as your version is at least
+% 2014b. For additional colors, STACKEDSHADING calls brewermap.m. If
+% you want to specify your colors, you have to edit this function (for
+% example, by defining a colorsets.set0).
 %
 % No NaNs are allowed in y! Would be awesome to leave gap on the plot
-% (but kind of boring to implement that).
+% (but kind of time consuming to implement that).
 % 
 % Olavo Badaro Marques, 29/Nov/2016.
 
 
-%% Check inputs and define default options:
+%% Check inputs and define default options
 
 if ~exist('x', 'var') || isempty(x)
     x = 1:size(y, 2);
@@ -45,7 +44,7 @@ if find(isnan(y), 1)
 end
 
 
-%% All the possible colors:
+%% All the possible colors
 
 % If you have your colors, add them here.
 % colorsets.set0
@@ -68,7 +67,7 @@ catch
 end
 
 
-%% Subset the color that will be used:
+%% Subset the color that will be used
 
 colorfields = fieldnames(colorsets);
 
@@ -87,7 +86,7 @@ for i1 = 1:length(colorfields)
 end
 
 
-%% Subset the colors that we want:
+%% Subset the colors that we want
 
 n = size(y, 1);
 
@@ -101,12 +100,12 @@ ncolors = flipud(ncolors);
 
 
 %% Rearrange RGB colors in a 3-D array because that
-% is the requirement of fill/patch function:
+% is the requirement of fill/patch function
 
 ncolorsfill = reshape(ncolors, n, 1, 3);
 
 
-%% Normalize if required and do cumulative sum for plotting:
+%% Normalize if required and do cumulative sum for plotting
 
 yplt = y;
 
@@ -133,11 +132,9 @@ ypts = fliplr(ypts);   % flip such that the first row of y is plotted on
                        % top of all the other
 
 
-%% Plot the figure:
+%% Plot the shaded regions
 
-figure
-    box on
-	patch(xpts, ypts, ncolorsfill)
-    set(gca, 'FontSize', 14)   % my taste
-    xlim([min(x) max(x)])
+patch(xpts, ypts, ncolorsfill)
+set(gca, 'FontSize', 14)   % my taste
+xlim([min(x) max(x)])
     
