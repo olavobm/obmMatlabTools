@@ -37,7 +37,7 @@ function structout = subsetStruct(indvarcell, indvarlims, structvar, varcell, lr
 
 %% If first variable is a string, turn it into a cell array
 
-if ~exist('indvarcell', 'var')
+if ~iscell(indvarcell)
     indvarcell = {indvarcell};
 end
 
