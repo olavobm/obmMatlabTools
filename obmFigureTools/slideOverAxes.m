@@ -1,7 +1,7 @@
 function slideOverAxes(dir2save, haxs, xlimsFrames, ylimsFrames, nameroot, pausetime)
-% SLIDEOVERAXES(dir2save, haxs, xlimsFrames, nameroot, pausetime)
+% SLIDEOVERAXES(dir2save, haxs, xlimsFrames, ylimsFrames, nameroot, pausetime)
 %
-%   inputs:
+%   inputs
 %       - dir2save: directory to save figures (give [] to not save figures). 
 %       - haxs: axes handle to slide over of.
 %       - xlimsFrames: Nx2 with x limits of each of the N frames.

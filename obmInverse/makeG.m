@@ -16,9 +16,6 @@ function G = makeG(imf, t)
 % function are the ones in the funcFields variable and in the switch
 % statement.
 %
-% TO DO: bring the switch statement out of the loop
-%        and use an anonymous function.
-%
 % Olavo Badaro Marques, 18/Apr/2017.
 
 

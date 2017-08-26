@@ -7,7 +7,7 @@ function regionsNaN = defineNaNregions(lNaN)
 %   outputs:
 %       - regionsNaN: sets of regions.
 %
-% or indNaN should probably be a logical matrix!
+% DEFINENANREGIONS
 %
 % Olavo Badaro Marques, 16/Feb/2017.
 

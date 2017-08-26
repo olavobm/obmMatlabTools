@@ -2,7 +2,7 @@ function [dfit, mfit, errfit] = slidingHarmFit(x, d, xfit, wnd, imf, lpartfit, m
 % [dfit, mfit] = SLIDINGHARMFIT(x, d, xfit, wnd, imf, lpartfit, minptsfit, lprogmsg)
 %
 %   inputs:
-%       - x: vector or matriz consistent with the columns of d
+%       - x: vector or matrix consistent with the columns of d
 %       - d:
 %       - xfit: must be a vector.
 %       - wnd:
@@ -114,7 +114,8 @@ for i1 = 1:xn
         % Loop through the rows of d that have same x, which is all of
         % them if x is a vector or only one row if x is a matrix:
         for i3 = 1:dn
-            
+
+            %
             dwndaux = d(i3 + i1-1, linWindow);
 
             if length(find(~isnan(dwndaux))) >= minptsfit
@@ -123,10 +124,10 @@ for i1 = 1:xn
                 xaux_2 = xaux_2(~isnan(dwndaux));
                 
                 dist_aux = xaux_2 - imf.domain;
-                
+
                 % First try
                 lmost = (sum(abs(dist_aux) < (0.7*halfwnd))./length(dist_aux)) >= 0.5;
-                
+
                 % Only do the calculation if there are enough points
                 % to the right and to the left of center point
                 if length(dist_aux(dist_aux > 0)) > minptsSide && ...
@@ -136,7 +137,7 @@ for i1 = 1:xn
                     % error covariance matrix). Now it should work:
     %                 [fit_aux, m_aux, G_aux, err_aux] = myleastsqrs(xaux(linWindow), dwndaux, imf);
                     [fit_aux, m_aux, G_aux] = myleastsqrs(xaux(linWindow), dwndaux, imf);
-                    
+
                     if exist('lpartfit', 'var')
                         [fit_aux, m_aux] = partialFit(lpartfit, m_aux, G_aux);
     %                     err_aux.mErr = err_aux.mErr(lpartfit);
