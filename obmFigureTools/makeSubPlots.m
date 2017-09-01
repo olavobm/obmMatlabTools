@@ -60,7 +60,8 @@ sy = (1 - mty - mby - (ny-1)*miy) / ny;
 % moving across to right, line by line:
 
 % Pre-allocate for output:
-axshndls = NaN(1, N);
+% % axshndls = NaN(1, N);
+axshndls = gobjects(1, N);
 
 % Loop over the subplots:
 for i = 1 : nx*ny
@@ -85,6 +86,5 @@ for i = 1 : nx*ny
 	   
 end
 
-
-% Remove NaNs from output (which exist if not all subplots are used):
-axshndls = axshndls(~isnan(axshndls));
+% Remove empty graphic objects (which return false for isgraphics)
+axshndls = axshndls(isgraphics(axshndls));
