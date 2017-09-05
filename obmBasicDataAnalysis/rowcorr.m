@@ -30,7 +30,7 @@ function outcorr = rowcorr(x, y, lall, minpts)
 % Olavo Badaro Marques, 14/Aug/2017.
 
 
-%%
+%% Define default values of optional inputs
 
 %
 N = size(x, 1);
@@ -49,8 +49,9 @@ end
 
 
 
-%%
+%% Compute correlations using the rows of x and y
 
+% Loop over rows
 for i = 1:N
     
     %
