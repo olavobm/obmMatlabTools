@@ -1,7 +1,7 @@
 function pwspec = spectrarows(x, dt, np, indrows, ovrlap)
 % pwspec = SPECTRAROWS(x, dt, np, indrows, ovrlap)
 %
-%   inputs:
+%   inputs
 %       - x: matrix for which we will compute power spectra of its rows.
 %            As a reminder, the columns must represent uniform spacing.
 %       - dt: sampling period (distance between columns).
@@ -11,14 +11,18 @@ function pwspec = spectrarows(x, dt, np, indrows, ovrlap)
 %       - ovrlap (optional): overlap between chuncks (number
 %                            between 0-1, default is 0.5).
 %
-%   outputs:
-%       - pwspec:
+%   outputs
+%       - pwspec: structure array, in the format of obmPSpec.m. Each
+%                 element of the array corresponds to the spectrum for
+%                 each row of x.
 %
 % Function SPECTRAROWS computes power spectra, one for every
 % row of x, using the function obmPSpec.m.
 %
 % This function also calls createEmptyStruct.m to organize
 % the output into a structure array.
+%
+% See also: obmPSpec.m.
 %
 % Olavo Badaro Marques, 19/Jan/2017.
 
