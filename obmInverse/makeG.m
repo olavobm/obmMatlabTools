@@ -1,11 +1,11 @@
 function G = makeG(imf, t)
 % G = MAKEG(imf, t)
 %
-%   inputs:
+%   inputs
 %       - imf: input-model-fit structure (see myleastsqrs.m).
 %       - t: independent variable of data.
 %
-%   outputs:
+%   outputs
 %       - G: data kernel (or Gram matrix).
 %
 % In standard least-squares problem, we choose models, with unknown

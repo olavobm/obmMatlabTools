@@ -1,7 +1,7 @@
 function [dfit, mfit, errfit] = slidingHarmFit(x, d, xfit, wnd, imf, lpartfit, minptsfit, lprogmsg)
 % [dfit, mfit] = SLIDINGHARMFIT(x, d, xfit, wnd, imf, lpartfit, minptsfit, lprogmsg)
 %
-%   inputs:
+%   inputs
 %       - x: vector or matrix consistent with the columns of d
 %       - d:
 %       - xfit: must be a vector.
@@ -15,7 +15,7 @@ function [dfit, mfit, errfit] = slidingHarmFit(x, d, xfit, wnd, imf, lpartfit, m
 %                              this calculation may take a long time
 %                              (default is false).
 %
-%   outputs:
+%   outputs
 %       - dfit:
 %       - mfit:
 %       - errfit: cell array with error on the model parameters.

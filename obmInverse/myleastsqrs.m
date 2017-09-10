@@ -1,13 +1,13 @@
 function [xfit, m, G, err] = myleastsqrs(t, x, imf)
 % [xfit, m, G, err] = MYLEASTSQRS(t, x, imf)
 %
-%  inputs:
+%  inputs
 %    - t: vector with independent variable (i.e. where x is specified)
 %    - x: vector with the data (dependent variable).
 %    - imf: input-model-fit. Struct variable specifying models to
 %                   fit (see paragraphs below for an explanation).
 %
-%  output:
+%  output
 %    - xfit: fit to the data. specified at t.
 %    - m: model parameters.
 %    - G: the one that gives the fit (which may different than the one

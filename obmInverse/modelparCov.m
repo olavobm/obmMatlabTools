@@ -1,11 +1,11 @@
 function mCovmat = modelparCov(dataCovmat, G)
 % mCovmat = MODELPARCOV(dataCovmat, G)
 %
-%   inputs:
+%   inputs
 %       - dataCovmat: data covariance matrix.
 %       - G: data kernel.
 %
-%   outputs:
+%   outputs
 %       - mCovmat: model parameters covariance matrix.
 %
 %

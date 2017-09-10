@@ -1,13 +1,13 @@
 function [xfit, mout, Gout] = partialFit(lpartfit, m, G)
 % [xfit, mout, Gout] = PARTIALFIT(lpartfit, m, G)
 %
-%  inputs:
+%  inputs
 %    - lpartfit: logical array indicating which model parameters (and
 %                correspondent columns of G) to keep and compute the fit.
 %    - m: model parameters (output of function myleastsqrs).
 %    - G: G matrix (output of myleastsqrs).
 %
-%  output:
+%  output
 %    - xfit: fit only keeping the models indicated by lpartfit.
 %    - mout: subsetted model parameters.
 %    - Gout: subsetted matrix G, such that xfit = Gmout * mout.
@@ -31,7 +31,8 @@ function [xfit, mout, Gout] = partialFit(lpartfit, m, G)
 % Olavo Badaro Marques, 15/Nov/2016.
 
 
-%% 
+%% Look at input lpartfit and how many
+% different partial fits it specifies
 
 if ~iscell(lpartfit)
     
