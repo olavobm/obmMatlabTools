@@ -1,13 +1,13 @@
 function [dfit, xnew] = filterHarmFit(x, d, wnd, freq)
 % [dfit, xnew] = FILTERHARMFIT(x, d, wnd, freq)
 %
-%   inputs:
+%   inputs
 %       - x: vector OR matrix with independent variable.
 %       - d: vector or matrix. Each row of d is filtered independently.
 %       - wnd: window length, in the SAME UNITS as x.
 %       - freq: frequency of the signal to filter, in units of x.
 %
-%   outputs:
+%   outputs
 %       - dfit: d filtered around the frequency freq.
 %       - xnew:
 %

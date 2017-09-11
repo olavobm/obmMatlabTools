@@ -1,7 +1,7 @@
 function yinterp = interp1overnans(x, y, xgrid, maxgap)
 %% [yinterp] = INTERP1OVERNANS(x, y, xgrid, maxgap)
 %
-%   inputs:
+%   inputs
 %       - x: location of data points of y along the
 %            interpolation dimension.
 %       - y: vector or matrix.
@@ -10,7 +10,7 @@ function yinterp = interp1overnans(x, y, xgrid, maxgap)
 %                            will be interpolated through. If you give this
 %                            input, then xgrid input must be specified.
 %
-%   outputs:
+%   outputs
 %       - yinterp: y interpolated on x/xgrid.
 %
 % This function uses Matlab's interp1 function to interpolate a
