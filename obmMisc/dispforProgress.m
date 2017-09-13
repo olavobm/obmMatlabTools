@@ -1,23 +1,26 @@
 function dispforProgress(indd, minmaxinds, msgstep, msgcode)
 % DISPFORPROGRESS(indd, minmaxinds, msgstep, msgcode)
 %
-%   inputs:
+%   inputs
 %       - indd: iteration dummy index.
 %       - minmaxinds: 1x2 vector with the first and
 %                     last indices of the loop.
-%       - msgstep: display message step.
+%       - msgstep: iteration step to display progress message.
 %       - msgcode: number for what type of message to display
 %                  (see the switch code block below).
 %
 % A simple function for displaying on the command window a message
-% to see the progress of a for loop. The input msgcode (an integer
-% equal or greater than 1) indicates which type of message, defined
-% on the body of this function, will be printed.
+% to see the progress of a for loop. Invoke this function before
+% the end statement of the for loop.
+%
+% The input msgcode (an integer equal or greater than 1) indicates
+% which type of message, defined on the body of this function, will
+% be printed.
 %
 % Olavo Badaro Marques, 18/Apr/2017.
 
 
-%% Just split minmaxinds into 2 inputs for clarity:
+%% Just split minmaxinds into 2 inputs for clarity
 
 indstart = minmaxinds(1);
 indend = minmaxinds(2);
@@ -26,7 +29,7 @@ indend = minmaxinds(2);
 %% Define the type of messages will be printed and the code associated
 % with each. Each case must define 3 variables: msgProgress (string),
 % msgVars (variables associated with the string), indClock (an integer
-% defining ): 
+% defining)
 
 switch msgcode
     
@@ -49,7 +52,7 @@ switch msgcode
 end
 
 
-%% Print message on the screen:
+%% Print message on the screen
 
 if rem((indd - indstart + 1), indClock)==0
     
