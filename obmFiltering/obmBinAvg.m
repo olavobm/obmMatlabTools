@@ -97,7 +97,6 @@ for i1 = 1:nr
         
         xout = nanmean(xi, 1);
         xstd = nanstd(xi, 0, 1);
-% %         xn = nanmean(xi, 0, 1);
         tout = mean(ti, 1);
 
     else
