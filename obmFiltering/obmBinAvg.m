@@ -117,14 +117,21 @@ for i1 = 1:nr
                     avgWeights = windowatt(wndhandle, tbinlims(i2, :), t(linbin), 15*length(t(linbin)));
                     avgWeights = avgWeights(:)';    % make it a row vector
                 end
-
+                
                 %
-                xout(i1, i2) = nansum(x(i1, linbin) .* avgWeights) ./ sum(avgWeights);
+                x_aux = x(i1, linbin);
+                l_aux_ok = ~isnan(x_aux);
+                
+                if any(l_aux_ok)
+                    
+                    %
+                    xout(i1, i2) = nansum( x_aux .* avgWeights ) ./ sum(avgWeights(l_aux_ok));
 
-                %
-                xstd(i1, i2) = nanstd(x(i1, linbin));
+                    %
+                    xstd(i1, i2) = nanstd(x(i1, linbin));
 
-                xn(i1, i2) = sum(linbin);
+                    xn(i1, i2) = sum(linbin);
+                end
 
             end
 
