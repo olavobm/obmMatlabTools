@@ -28,7 +28,11 @@ function [xout, xstd, xn, tout] = obmBinAvg(t, x, binlen, tbin, wndhandle, lreg)
 % input is wndhandle, which is a window handle, which specified a window
 % to multiply each bin of x.
 %
-% lreg ...
+% Optional input lreg was implemented to speed up calculations for a
+% varible x regularly spaced in t. In this case, a vector can be
+% transformed into a matrix and averages can be taken for all columns,
+% speeding up the calculation. In this case though, the output is
+% necessarily specified at times equal to the mean of time chunks.
 % 
 %
 % TO DO:
