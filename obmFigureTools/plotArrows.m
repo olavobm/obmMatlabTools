@@ -1,14 +1,17 @@
-function [hp, ht] = plotArrows(s, x, y, u, v, varargin)
-% PLOTARROWS(s, x, y, u, v, varargin)
+function hp = plotArrows(s, x, y, u, v, varargin)
+% hp = PLOTARROWS(s, x, y, u, v, varargin)
 %
-%   inputs:
+%   inputs
 %       - s: scale (should it be the same as m_map? arrows per inch?)
 %       - x: MxN position of the vector tails.
 %       - y: x position of the vector tails.
-%       - u:
-%       - v:
+%       - u: x-component of the vectors.
+%       - v: y-    "     "   "     "
 %       - varargin (optional): Parameters to control the
 %                              appearance of the arrows
+%
+%   outputs
+%       - hp: arrows handle.
 %
 % Function PLOTARROWS plots a two-dimensional vector field (u, v) given
 % at (x, y). The input s sets the scale of the arrows: larger values make
@@ -59,22 +62,44 @@ function [hp, ht] = plotArrows(s, x, y, u, v, varargin)
 %   still try a few values for a specfic plot to look good.
 % - zooming in the figure is a problem (that I may not want to tackle)!
 %
+% PLOTARROWS.m is a modified version of m_quiver.m, from the
+% toolbox m_map by Rich Pawlowicz (https://www.eoas.ubc.ca/~rich/map.html),
+% allowing it to be used outside of m_map plots.
+%
 % Olavo Badaro Marques, 12/Dec/2016.
 
 
 %% Demo:
 if nargin==0,  % demo
     
-%     obmvec2(100, [-133 -133], [49 49], [0 50], [100 0.0],...
-%           [0.7 0.8 0.9],'centered','yes', ...
-%           'shaftwidth', 5, 'headlength', 0,...
-%           'EdgeColor','k');
-      
-	obmvec2(100, [-133 -133], [49 49], [0 50], [100 0.0]);
+	plotArrows(100, [-133 -133], [49 49], [0 50], [100 0.0]);
     
-    % Terminate function (does not got beyond this if block):
+    % Terminate function execution:
     return
 end
+
+
+%% Parse varargin
+
+% % Other options t
+% centered = 0;
+% headwidth  = NaN;
+% headangle = 40;
+% key = '';
+
+%
+p = inputParser;
+
+defltHeadLength = 200;   % have to find what is a good default
+defltShaftWidth = 1/70;  % relative to the plot dimensions
+defltColor = 'k';
+
+addParameter(p, 'HeadLength', defltHeadLength)
+addParameter(p, 'ShaftWidth', defltShaftWidth)
+addParameter(p, 'Color', defltColor)
+
+% Fill variable p with default values or input specifications:
+parse(p, varargin{:})
 
 
 %%
@@ -88,23 +113,21 @@ end
 % % c = 'k';
 % % key = '';
 
-% % % Default arrow parameters:
+% % % Mooring M5:
 % % centered = 0;
-% % headlength = 30/3200;
-% % % headlength = 5/3200;
+% % headlength = 1/50;
 % % headwidth  = NaN;
 % % headangle = 40;
-% % % shaftwidth = 1/1500;
-% % shaftwidth = 1/3000;
+% % shaftwidth = 1/200;
 % % c = 'k';
 % % key = '';
 
-% Default arrow parameters:
+% Mooring T7:
 centered = 0;
-headlength = 1/30;
+headlength = 1/40;
 headwidth  = NaN;
 headangle = 40;
-shaftwidth = 1/100;
+shaftwidth = 1/150;
 c = 'k';
 key = '';
 
@@ -132,6 +155,8 @@ v = v(:);
 %% Begin the slightly complicated parsing of arguments.
 % One cause of complexity is that the optional argument c
 % could be either character or numeric.
+
+% I SHOULD DO THIS RIGOROUSLY!!!!!
 
 keyvars = {};  % This will hold keyword/value pairs.
 nvarargin = length(varargin);
