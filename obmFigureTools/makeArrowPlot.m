@@ -37,6 +37,6 @@ uv = [u'; v'];
 uplt = uv(1, :);
 vplt = uv(2, :);
 
-plotArrows(s, x, y, uplt, vplt)
+plotArrows(s, x, y, uplt, vplt, varargin)
 
 % % % % arrowPlotTransform  % this must be called inside plotArrows
