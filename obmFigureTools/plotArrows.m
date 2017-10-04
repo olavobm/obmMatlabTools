@@ -99,7 +99,7 @@ addParameter(p, 'ShaftWidth', defltShaftWidth)
 addParameter(p, 'Color', defltColor)
 
 % Fill variable p with default values or input specifications:
-parse(p, varargin{:})
+parse(p, varargin{1}{:})
 
 
 %%
@@ -124,7 +124,7 @@ parse(p, varargin{:})
 
 % Mooring T7:
 centered = 0;
-headlength = 1/40;
+headlength = p.Results.HeadLength;
 headwidth  = NaN;
 headangle = 40;
 shaftwidth = 1/150;
@@ -236,7 +236,7 @@ end
 if isnan(headwidth) && headangle < 170 && headangle > 0
     headwidth = headlength * tan(headangle*pi/180);
 end
-headwidth = max([headwidth; shaftwidth]);
+headwidth = max([headwidth; p.Results.ShaftWidth]);
 
 
 %% Replicate x/y if there is lots of u/v specified at only one x/y:
@@ -282,7 +282,7 @@ scY = diff(get(gca, 'YLim')) / axWidLenInches(2);
 sc = max([scX; scY]);  % max selects the dimension limited by
                        % the plot box.
 
-Width = shaftwidth*sc;
+Width = sc * p.Results.ShaftWidth;
 HeadWidth = headwidth*sc;
 HeadLength = headlength*sc;
 
