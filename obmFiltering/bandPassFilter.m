@@ -30,17 +30,20 @@ function yfilt = bandPassFilter(dt, x, cfreq, bndw, nord)
 
 %%
 
-%% Form the filter parameters (a, b):
+N = length(x);
+
+
+%% Form the filter parameters (a, b) and the frequency responce function
 
 samplefreq  = 1/dt;
 nyquistfreq = samplefreq/2;
 
 %
-fc1 = cfreq * (1-bandwfilter/2);
-fc2 = cfreq * (1+bandwfilter/2);
+fc1 = cfreq * (1 - (bndw/2));
+fc2 = cfreq * (1 + (bndw/2));
 
 % Compute parameters for a butterworth filter
-[b, a] = butter(butterorder, [fc1/nyquistfreq, fc2/nyquistfreq]);
+[b, a] = butter(nord, [fc1/nyquistfreq, fc2/nyquistfreq]);
 
 
 % % % Low-pass filter:
@@ -53,22 +56,35 @@ fc2 = cfreq * (1+bandwfilter/2);
 xl = 0 : (1/(N/2 -1)) : 1;
 
 
-%%
-
-figure(1)
-    hold on, box on, grid on
-    plot(xl, abs(Hl), 'r')
-    xlabel('Normalized frequency [\pi radians per sample]', 'FontSize',14)
-    ylabel('Gain [unitless]', 'FontSize', 14)
-    set(gca, 'FontSize', 14)
-    ylim([-0.1 1.1])
-
-
 %% Now take the fft of x
 
 xfft = fft(x);
 
 bla = fftshift(xfft);
+
+%
+ble = obmPSpec(x, dt, N);
+
+%%
+
+newFigDims([14, 8])
+
+    subplot(2, 1, 1)
+        semilogy(xl, abs(xfft(1:(N/2))))
+        ylabel('FFT magnitude')
+    
+    subplot(2, 1, 2)
+        semilogx(fourier(dt, N-1)./(2*pi), abs(Hl), 'r')
+        xlabel('Normalized frequency [\pi radians per sample]')
+        ylabel('Gain [unitless]')
+
+	%
+	apply2allaxes(gcf, {'FontSize', 14, 'XGrid', 'on', ...
+                        'YGrid', 'on'})
+    
+keyboard
+
+
 
 
 %% Normalize the fft by the response function
