@@ -99,7 +99,11 @@ addParameter(p, 'ShaftWidth', defltShaftWidth)
 addParameter(p, 'Color', defltColor)
 
 % Fill variable p with default values or input specifications:
-parse(p, varargin{1}{:})
+if ~isempty(varargin) && iscell(varargin{1})
+    parse(p, varargin{1}{:})
+else
+    parse(p, varargin{:})
+end
 
 
 %%
@@ -128,7 +132,7 @@ headlength = p.Results.HeadLength;
 headwidth  = NaN;
 headangle = 40;
 shaftwidth = 1/150;
-c = 'k';
+c = p.Results.Color;
 key = '';
 
 clip = 'on';       % except for the key
