@@ -109,6 +109,13 @@ else
 end
 
 
+%% If plotting on Axes specified, make those current
+
+if ~isempty(p.Results.Axes)
+    axes(p.Results.Axes)
+end
+
+
 %%
 
 % % % Default arrow parameters:
@@ -500,13 +507,16 @@ if strcmp(edgeclip, 'off')
     % If axes was specified, make it current. Note that in newer (>2015)
     % Matlab versions, the axes handle can be specified as the first
     % input of the plotting function (patch in this case).
+    %
+    % This would be more appropriate because changing current axes
+    % inside a loop can be problematic.
     if ~isempty(p.Results.Axes)
         axes(p.Results.Axes)
     end
     
     %
     hp = patch('Faces', Faces, 'Vertices', Vert, 'clipping', 'off');
-                                    
+	
 else
 % %   [LG,LN]=m_xy2ll(reshape(Vert(:,1),7,nvec),reshape(Vert(:,2),7,nvec)); % Converts vertices in 7 point lines (i.e. columns) in lat/long
 % %   [X,Y]=m_ll2xy(LG,LN  ,'clip','patch');                                % Converts back to x/y, but does clipping on for each column
