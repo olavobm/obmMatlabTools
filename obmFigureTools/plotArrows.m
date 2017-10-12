@@ -25,14 +25,13 @@ function hp = plotArrows(s, x, y, u, v, varargin)
 % the planes (x, y) and (u, v) differ only by a translation/stretching.
 % 
 %
-%      optional arrow parameters: keyword-value pairs, shown
-%                 here with default values:
+%   Optional arrow parameters:
 %         'headangle',60     degrees: angle of arrow tip
-%         'headwidth',NaN    points: direct specification of
+%         'HeadWidth',NaN    points: direct specification of
 %                                width, instead of headangle
-%         'headlength',5     points: length of tip; set to 0
+%         'HeadLength',5     points: length of tip; set to 0
 %                                to omit arrowhead entirely
-%         'shaftwidth',1     points: width of arrow shaft
+%         'ShaftWidth',1     points: width of arrow shaft
 %         'centered', 'no'   'yes' to make x,y the arrow
 %                                center instead of its tail
 %         'key', ''          make a labelled horizontal arrow
@@ -90,13 +89,17 @@ end
 %
 p = inputParser;
 
+%
 defltHeadLength = 200;   % have to find what is a good default
 defltShaftWidth = 1/70;  % relative to the plot dimensions
 defltColor = 'k';
+defltAxes = [];
 
+%
 addParameter(p, 'HeadLength', defltHeadLength)
 addParameter(p, 'ShaftWidth', defltShaftWidth)
 addParameter(p, 'Color', defltColor)
+addParameter(p, 'Axes', defltAxes)
 
 % Fill variable p with default values or input specifications:
 if ~isempty(varargin) && iscell(varargin{1})
@@ -494,6 +497,14 @@ Faces = Faces';
 
 if strcmp(edgeclip, 'off')
 
+    % If axes was specified, make it current. Note that in newer (>2015)
+    % Matlab versions, the axes handle can be specified as the first
+    % input of the plotting function (patch in this case).
+    if ~isempty(p.Results.Axes)
+        axes(p.Results.Axes)
+    end
+    
+    %
     hp = patch('Faces', Faces, 'Vertices', Vert, 'clipping', 'off');
                                     
 else
