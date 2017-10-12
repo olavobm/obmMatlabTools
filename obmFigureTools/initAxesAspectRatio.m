@@ -53,14 +53,14 @@ end
 
 % If there is no input for the aspect ratio, set axis equal:
 if ~exist('aspecrto', 'var') || isempty(aspecrto)
-    axis equal
+    axis(haxs, 'equal')
 
 % Otherwise, set input-specified aspect ratio:
 else
     pbaspect(haxs, [aspecrto, 1, 1])
 end
 
-axis([xlims, ylims])
+axis(haxs, [xlims, ylims])
     
     
 
