@@ -10,7 +10,6 @@ function makeArrowPlot(s, x, y, u, v, xylims, xyaxes, varargin)
 %       - xylims: 1x4 vector with the axes limits.
 %       - xyaxes: 1x2 vector with th length/height of the axes (in fact,
 %                 the only relevant quantity is the aspect ratio.
-%       - haxs:
 %       - varargin: Parameter-value pairs to customize arrows appearance.
 %
 % MAKEARROWPLOT calls the functions initAxesAspectRatio and plotArrows
@@ -57,4 +56,3 @@ vplt = uv(2, :);
 
 hp = plotArrows(s, x, y, uplt, vplt, varargin);
 
-% % % % arrowPlotTransform  % this must be called inside plotArrows
