@@ -1,14 +1,14 @@
-function subplotsTicklabels(rmlabel, hfig)
-% SUBPLOTSTICKLABELS(rmlabel, hfig)
-%
+function rmTickLabels(rmlabel, hfig)
+% RMTICKLABELS(rmlabel, hfig)
+% 
 %   inputs
 %       - rmlabel (optional): 'x', 'y' or 'xy' (which is the default).
 %       - hfig (optional): vector of figure handles
 %                          or numbers (default is gcf).
 %
-% For a set of figure handles with a a grid of subplots, remove
-% the tick labels in the "inner side" of the grid, which may
-% improve readability.
+% For a set of figure handles with a grid of subplots, remove
+% the tick labels in the "inner side" of the grid (which may
+% improve readability).
 %
 % Olavo Badaro Marques, 04/May/2017.
 
