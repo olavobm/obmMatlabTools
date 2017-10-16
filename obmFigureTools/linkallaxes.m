@@ -1,8 +1,8 @@
 function linkallaxes(axsstr, haxs)
 % LINKALLAXES(axsstr, haxs)
 %
-%   inputs:
-%       - axsstr: string in the same manner as it goes into linkaxes.m
+%   inputs
+%       - axsstr: string in the same manner as it goes into linkaxes.m.
 %       - haxs (optional): vector of axes handles (if not given search
 %                          for the axes of the current figure).
 %
@@ -10,6 +10,8 @@ function linkallaxes(axsstr, haxs)
 % figure (so you don't have to specify all axes handles).
 % You can also give the axes handles to specify which axes
 % you want to link.
+%
+% See also: linkaxesFigs.m
 %
 % Olavo Badaro Marques, 07/Mar/2017.
 

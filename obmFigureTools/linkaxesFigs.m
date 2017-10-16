@@ -3,10 +3,11 @@ function linkaxesFigs(hfigs, axsstr)
 %
 %   inputs:
 %       - hfigs: vector of figure handles (or figure numbers).
-%       - axsstr: string in the same manner as it goes into linkaxes.m
+%       - axsstr: string in the same manner as it goes into linkaxes.m.
 %
-% By using my other function (linkallaxes.m), LINKAXESFIGS links all axes
-% in figures specified by their handles (or numbers) in input hfigs.
+% By using my other function (linkallaxes.m), LINKAXESFIGS
+% links all axes in figures specified by their handles (or
+% numbers) in input hfigs.
 %
 % See also: linkallaxes.m
 %
