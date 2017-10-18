@@ -1,5 +1,5 @@
-function hp = plotArrows(s, x, y, u, v, varargin)
-% hp = PLOTARROWS(s, x, y, u, v, varargin)
+function [hp, arrPar] = plotArrows(s, x, y, u, v, varargin)
+% [hp, arrPar] = PLOTARROWS(s, x, y, u, v, varargin)
 %
 %   inputs
 %       - s: scale (should it be the same as m_map? arrows per inch?)
@@ -12,6 +12,7 @@ function hp = plotArrows(s, x, y, u, v, varargin)
 %
 %   outputs
 %       - hp: arrows handle.
+%       - arrPar: parameters of the plotted arrows.
 %
 % Function PLOTARROWS plots a two-dimensional vector field (u, v) given
 % at (x, y). The input s sets the scale of the arrows: larger values make
@@ -127,14 +128,6 @@ end
 % % c = 'k';
 % % key = '';
 
-% % % Mooring M5:
-% % centered = 0;
-% % headlength = 1/50;
-% % headwidth  = NaN;
-% % headangle = 40;
-% % shaftwidth = 1/200;
-% % c = 'k';
-% % key = '';
 
 % Mooring T7:
 centered = 0;
@@ -158,7 +151,9 @@ end
 % smaller the vector):
 UVperIn = s;     
 
-% Make sure the variables are column vectors:
+
+%% Make sure the variables are column vectors:
+
 x = x(:);
 y = y(:);
 
