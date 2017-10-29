@@ -1,15 +1,15 @@
-function yfilt = bandPassFilter(dt, x, cfreq, bndw, nord)
-% yfilt = BANDPASSFILTER(x, y, fs, nord)
+function xfilt = bandPassFilter(dt, x, cfreq, bndw, nord)
+% xfilt = BANDPASSFILTER(dt, x, cfreq, bndw, nord)
 %
 %   inputs
-%       - dt:
-%       - x:
+%       - dt: sampling interval.
+%       - x: vector with the signal.
 %       - cfreq:
-%       - bndw:
-%       - nord:
+%       - bndw: bandwidth.
+%       - nord: order of the filter.
 %
 %   outputs
-%       - yfilt:
+%       - xfilt: filtered signal
 %
 %
 %
@@ -67,22 +67,30 @@ ble = obmPSpec(x, dt, N);
 
 %%
 
-newFigDims([14, 8])
+newFigDims([14.4, 12.74])
 
-    subplot(2, 1, 1)
+    subplot(4, 1, 1)
         semilogy(xl, abs(xfft(1:(N/2))))
         ylabel('FFT magnitude')
     
-    subplot(2, 1, 2)
+	subplot(4, 1, 2)
+        semilogx(fourier(dt, N-1)./(2*pi), abs(xfft(1:(N/2))))
+        ylabel('FFT magnitude')
+        
+    subplot(4, 1, 3)
         semilogx(fourier(dt, N-1)./(2*pi), abs(Hl), 'r')
-        xlabel('Normalized frequency [\pi radians per sample]')
         ylabel('Gain [unitless]')
 
+	subplot(4, 1, 4)
+        semilogy(xl, abs(Hl), 'r')
+        xlabel('Normalized frequency [\pi radians per sample]')
+        ylabel('Gain [unitless]')
+        
 	%
 	apply2allaxes(gcf, {'FontSize', 14, 'XGrid', 'on', ...
                         'YGrid', 'on'})
     
-keyboard
+
 
 
 
