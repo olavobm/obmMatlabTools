@@ -11,7 +11,9 @@ function xfilt = bandPassFilter(dt, x, cfreq, bndw, nord)
 %   outputs
 %       - xfilt: filtered signal
 %
-%
+% BANDPASSFILTER band-pass filter the signal "x" with a bandwidth "bndw"
+% around the frequency "cfreq". A butterworth filter of order "nord"
+% is used.
 %
 %
 % Olavo Badaro Marques, 14/Sep/2017.
