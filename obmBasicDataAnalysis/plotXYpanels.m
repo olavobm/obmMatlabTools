@@ -1,4 +1,4 @@
-function plotXYpanels(t, x, y, tlims, xyaxslims, indz, haxs)
+function haxs = plotXYpanels(t, x, y, tlims, xyaxslims, indz, haxs)
 % PLOTUVPANELS(t, x, y, tlims, indz, haxs)
 %
 %   inputs
@@ -10,6 +10,8 @@ function plotXYpanels(t, x, y, tlims, xyaxslims, indz, haxs)
 %       - indz (optional):
 %       - haxs (optional):
 %
+%   outputs
+%       - haxs: axes handles (which are created if creating a new figure).
 %
 % TO DO:
 %   - fix indexing when there are multiple rows.
