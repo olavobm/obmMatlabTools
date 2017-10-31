@@ -36,8 +36,6 @@ function [xout, xstd, xn, tout] = obmBinAvg(t, x, binlen, tbin, wndhandle, lreg)
 % 
 %
 % TO DO:
-%	- t regularlt spaced included. Code needs to be improved and to allow
-%     x to be a matrix for this case.
 % 	- allow t to be a matrix?
 %   - include minimum number of points per window?
 %
@@ -71,37 +69,55 @@ end
 
 %%
 
-% Pre-allocate space for outputs:
-nr = size(x, 1);
-nc = length(tbin);
+%
+if lreg
+    
+        %
+    indtstep = dsearchn(t(:), t(1) + binlen);
+% %         indtstep = indtstep - 1;    % -1 to not include both ends
 
+    indlast = length(t) - mod(length(t), indtstep);
+
+    %
+    nc = indlast./indtstep;
+    
+    % Should be outisde of the loop
+    ti = reshape(t(1:indlast), indtstep, nc);
+    
+    %
+    tout = mean(ti, 1);
+    
+    %
+    nr = size(x, 1);
+    
+else
+    
+    %
+    nr = size(x, 1);
+    nc = length(tbin);
+    
+    %
+    tbinlims = [tbin - (binlen/2), tbin + (binlen/2)];
+    
+end
+
+% Pre-allocate space for outputs:
 xout = NaN(nr, nc);
 xstd = NaN(size(xout));
 xn = zeros(nr, nc);
 
 %
-tbinlims = [tbin - (binlen/2), tbin + (binlen/2)];
-
-%
 for i1 = 1:nr
     
     if lreg
-        
-        %
-        indtstep = dsearchn(t(:), t(1) + binlen);
-% %         indtstep = indtstep - 1;    % -1 to not include both ends
-
-        indlast = length(t) - mod(length(t), indtstep);
-
-        % Should be outisde of the loop
-        ti = reshape(t(1:indlast), indtstep, indlast./indtstep);
-        
+           
         %
         xi = reshape(x(i1, 1:indlast), indtstep, indlast./indtstep);
         
-        xout = nanmean(xi, 1);
-        xstd = nanstd(xi, 0, 1);
-        tout = mean(ti, 1);
+        %
+        xout(i1, :) = nanmean(xi, 1);
+        xstd(i1, :) = nanstd(xi, 0, 1);
+        
 
     else
     
