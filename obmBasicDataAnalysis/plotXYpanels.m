@@ -21,8 +21,10 @@ function haxs = plotXYpanels(t, x, y, tlims, xyaxslims, indz, haxs)
 
 %%
 
-if ~exist('haxs', 'var') || isempty(indz)
+if ~exist('haxs', 'var')
     lnewFig = true;
+else
+    lnewFig = false;
 end
 
 if ~exist('indz', 'var') || isempty(indz)
