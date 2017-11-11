@@ -15,7 +15,7 @@ function merror = modelparError(imf, t, dataerror)
 % Olavo Badaro Marques, 19/Apr/2017.
 
 
-%%
+%% Create error covariance matrix (with uncorrelated error)
 
 dataCovmat = dataerror .* eye(length(t));
 
@@ -23,8 +23,7 @@ G = makeG(imf, t);
 Gaux = (G'*G) \ G';
 
 
-%%
+%% Compute error on the model parameters
 
 merror = Gaux * dataCovmat * Gaux';
 
-% % merror = modelparCov(dataCovmat, G);
