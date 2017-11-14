@@ -26,7 +26,7 @@ function [errAmp, errPhase] = errMagPhase(A, B, da, db)
 % Olavo Badaro Marques, 31/May/2017.
 
 % Amplitude:
-errAmp = sqrt((1/(A.^2 + B.^2)) .* ((A.*da).^2 + (B.*db).^2));
+errAmp = sqrt((1./(A.^2 + B.^2)) .* ((A.*da).^2 + (B.*db).^2));
 
 % Phase/direction:
 errPhase = NaN;
