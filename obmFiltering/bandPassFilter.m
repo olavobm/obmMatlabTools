@@ -19,6 +19,17 @@ function xfilt = bandPassFilter(dt, x, cfreq, bndw, nord)
 % Olavo Badaro Marques, 14/Sep/2017.
 
 
+%% THINGS TO DO TO MAKE THIS FUNCTION RIGHT (Getting there)
+
+% 1 - See what should be the phase of the filter phase. When
+%     the filter magnitude is zero, the phase goes to pi/2.
+%
+% 2 - Check how to apply filter twice and how to obtain the
+%     final filter response function.
+%
+% 3 - Compare with results from filtfilt.m
+
+
 %% Making sure datain has the right dimensions:
 % % 
 % % [rdat, cdat] = size(datain);
@@ -51,21 +62,120 @@ fc2 = cfreq * (1 + (bndw/2));
 % % % Low-pass filter:
 % % [bl, al] = butter(5, 0.3, 'low');
 
-% Create frequecy response function of the desired filter. This
-% is a complex function, such that it modifies the amplitude
-% and phase of the signal.
-[Hl, ~] = freqz(b, a, floor(N/2));  % N is the length of the time series
-xl = 0 : (1/(N/2 -1)) : 1;
+[Hl, bla] = freqz(b, a, floor(N/2)+1, 1/dt);  % N is the length of the time series
+
+%  + 1 to floor() gives bla which is equal to the frequency vector, however
+%  the frequency response function looks a bit funky
+
+% % % % This might be helpful, though I would like to do it on my own
+% % % 
+% % % [H,F] = freqz(...,N,Fs) and [H,F] = freqz(...,N,'whole',Fs) return
+% % %     frequency vector F (in Hz), where Fs is the sampling frequency (in Hz).
+
+%
+% % xl = 0 : (1/(N/2 -1)) : 1;
+
+%%
+
+% Frequency vector -- from fundamental to highest:
+freqvec = (0:floor(N/2)) ./ (N*dt);
+
+% % 
+% % % Replicate and create negative frequencies:
+% % pwspec.freq = [pwspec.freq, -fliplr(pwspec.freq(pwspec.freq < nyquistFreq))];
+
+
+%% Duplicate response function (for negative
+% frequencies) to match fft of the data
+
+% % % % % if Hl is odd (x is even)
+if rem(length(x), 2) ~= 0
+    indstopA = length(Hl);
+    indstopB = indstopA;
+else
+    indstopA = length(Hl);
+    indstopB = length(Hl) - 1;
+end
+
+fRep = [flipud(Hl(2:indstopA)); Hl(1:indstopB)];
 
 
 %% Now take the fft of x
 
 xfft = fft(x);
 
-bla = fftshift(xfft);
+xfft_shifted = fftshift(xfft);
 
-%
-ble = obmPSpec(x, dt, N);
+
+%% Multiply fft by the response function
+
+keyboard
+
+filt_fft = xfft_shifted .* fRep;
+
+
+
+%%
+ 
+figure
+    subplot(2, 1, 1); plot(abs(xfft_shifted))
+	subplot(2, 1, 2); plot(abs(fRep))
+    linkallaxes('x')
+    xlim([4970, 5030])
+    apply2allaxes(gcf, {'FontSize', 14, 'XGrid', 'on', 'YGrid', 'on'})
+   
+    
+%% Plot the positive frequency part only
+
+figure
+    subplot(2, 1, 1); plot(freqvec(1:100), abs(xfft(1:100)), 'LineWidth', 2)
+	subplot(2, 1, 2); plot(bla(1:100), abs(Hl(1:100)), 'LineWidth', 2)
+%     linkallaxes('x')
+    apply2allaxes(gcf, {'FontSize', 14, 'XGrid', 'on', 'YGrid', 'on'})
+
+    
+%%
+
+N = length(x);
+N = N/2;
+newFigDims([8.2222, 6.6528])
+    subplot(2, 1, 1); semilogx(abs(xfft_shifted(N:end)), 'LineWidth', 2)
+	subplot(2, 1, 2); semilogx(abs(fRep(N:end)), 'LineWidth', 2)
+    
+    %
+    apply2allaxes(gcf, {'FontSize', 14, 'XGrid', 'on', 'YGrid', 'on'})
+    linkallaxes('x')
+    xlim([1 400])
+    titleAll({'Signal''s power spectrum', ...
+              'Filter''s frequency response function'}, ...
+              [], 'FontSize', 24, 'Interpreter', 'Latex')
+    
+% % %     
+% % % % THERE SEEMS TO BE SOMETHING WRONG! PEAKS AT NEGATIVE AND
+% % % % POSITIVE FREQUENCY ARE NOT ALIGNED WITH FILTER BY 1 POINT.
+% % % % 
+% % % % I'M PROBABLY REPLICATING THE FILTER RESPONSE FUNCTION AT
+% % % % THE 0TH FREQUENCY AND THEN I'M NOT MATCHING THE FREQUENCIES
+% % % % APPROPRIATELY.
+    
+
+%% Inverse fft the result
+
+filt_fft_unshifted = ifftshift(filt_fft);
+
+xfilt = ifft(filt_fft_unshifted, 'symmetric');
+
+
+%%
+
+figure
+    subplot(2, 1, 1); plot(x)
+    subplot(2, 1, 2); plot(xfilt)
+    %
+    apply2allaxes(gcf, {'FontSize', 14, 'XGrid', 'on', 'YGrid', 'on'})
+    linkallaxes('x')
+
+keyboard
 
 %%
 
@@ -96,11 +206,6 @@ newFigDims([14.4, 12.74])
 
 
 
-
-%% Normalize the fft by the response function
-
-
-%% Inverse fft the result
 
 
 %% Assign output variables
