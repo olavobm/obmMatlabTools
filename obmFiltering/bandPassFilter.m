@@ -1,5 +1,5 @@
-function xfilt = bandPassFilter(dt, x, cfreq, bndw, nord)
-% xfilt = BANDPASSFILTER(dt, x, cfreq, bndw, nord)
+function [xfilt, metafilt] = bandPassFilter(dt, x, cfreq, bndw, nord)
+% [xfilt, metafilt] = BANDPASSFILTER(dt, x, cfreq, bndw, nord)
 %
 %   inputs
 %       - dt: sampling interval.
@@ -10,6 +10,7 @@ function xfilt = bandPassFilter(dt, x, cfreq, bndw, nord)
 %
 %   outputs
 %       - xfilt: filtered signal
+%       - metafilt: metadata with the filter information.
 %
 % BANDPASSFILTER band-pass filter the signal "x" with a bandwidth "bndw"
 % around the frequency "cfreq". A butterworth filter of order "nord"
@@ -58,7 +59,6 @@ fc2 = cfreq * (1 + (bndw/2));
 % Compute parameters for a butterworth filter
 [b, a] = butter(nord, [fc1/nyquistfreq, fc2/nyquistfreq]);
 
-
 % % % Low-pass filter:
 % % [bl, al] = butter(5, 0.3, 'low');
 
@@ -75,14 +75,9 @@ fc2 = cfreq * (1 + (bndw/2));
 %
 % % xl = 0 : (1/(N/2 -1)) : 1;
 
-%%
+%% Frequency vector -- from fundamental to highest:
 
-% Frequency vector -- from fundamental to highest:
 freqvec = (0:floor(N/2)) ./ (N*dt);
-
-% % 
-% % % Replicate and create negative frequencies:
-% % pwspec.freq = [pwspec.freq, -fliplr(pwspec.freq(pwspec.freq < nyquistFreq))];
 
 
 %% Duplicate response function (for negative
@@ -109,7 +104,6 @@ xfft_shifted = fftshift(xfft);
 
 %% Multiply fft by the response function
 
-keyboard
 
 filt_fft = xfft_shifted .* fRep;
 
@@ -127,15 +121,17 @@ figure
     
 %% Plot the positive frequency part only
 
+% Should merge the two figures below into one
+
+%
 figure
     subplot(2, 1, 1); plot(freqvec(1:100), abs(xfft(1:100)), 'LineWidth', 2)
 	subplot(2, 1, 2); plot(bla(1:100), abs(Hl(1:100)), 'LineWidth', 2)
-%     linkallaxes('x')
+    linkallaxes('x')
     apply2allaxes(gcf, {'FontSize', 14, 'XGrid', 'on', 'YGrid', 'on'})
 
     
-%%
-
+%
 N = length(x);
 N = N/2;
 newFigDims([8.2222, 6.6528])
@@ -149,15 +145,7 @@ newFigDims([8.2222, 6.6528])
     titleAll({'Signal''s power spectrum', ...
               'Filter''s frequency response function'}, ...
               [], 'FontSize', 24, 'Interpreter', 'Latex')
-    
-% % %     
-% % % % THERE SEEMS TO BE SOMETHING WRONG! PEAKS AT NEGATIVE AND
-% % % % POSITIVE FREQUENCY ARE NOT ALIGNED WITH FILTER BY 1 POINT.
-% % % % 
-% % % % I'M PROBABLY REPLICATING THE FILTER RESPONSE FUNCTION AT
-% % % % THE 0TH FREQUENCY AND THEN I'M NOT MATCHING THE FREQUENCIES
-% % % % APPROPRIATELY.
-    
+
 
 %% Inverse fft the result
 
@@ -174,38 +162,13 @@ figure
     %
     apply2allaxes(gcf, {'FontSize', 14, 'XGrid', 'on', 'YGrid', 'on'})
     linkallaxes('x')
-
-keyboard
-
-%%
-
-newFigDims([14.4, 12.74])
-
-    subplot(4, 1, 1)
-        semilogy(xl, abs(xfft(1:(N/2))))
-        ylabel('FFT magnitude')
     
-	subplot(4, 1, 2)
-        semilogx(fourier(dt, N-1)./(2*pi), abs(xfft(1:(N/2))))
-        ylabel('FFT magnitude')
-        
-    subplot(4, 1, 3)
-        semilogx(fourier(dt, N-1)./(2*pi), abs(Hl), 'r')
-        ylabel('Gain [unitless]')
-
-	subplot(4, 1, 4)
-        semilogy(xl, abs(Hl), 'r')
-        xlabel('Normalized frequency [\pi radians per sample]')
-        ylabel('Gain [unitless]')
-        
-	%
-	apply2allaxes(gcf, {'FontSize', 14, 'XGrid', 'on', ...
-                        'YGrid', 'on'})
-    
-
-
-
-
-
 
 %% Assign output variables
+
+metafilt.freq = freqvec;
+metafilt.freq = Hl;
+
+% should also include numbers for the cut-off frequency,
+% band-width, filter order and string for type of filter
+% (see Matlab's designfilt.m)
