@@ -1,20 +1,45 @@
 function hplt = overlayline(vorh, a, varargin)
 % hplt = OVERLAYLINE(vorh, a, varargin)
 %
-%   inputs:
+%   inputs
 %       - vorch: either 'v' or 'h', for vertical or horizontal.
 %       - a: vector of x (for 'v') or y (for 'h') locations of where
 %            you want to draw vertical or horizontal lines.
 %       - varargin (optional): parameters to customize the line (these
 %                              are passed as input to the plot function).
 %
-%   outputs:
+%   outputs
 %       - hplt: name-value pair arguments acceptable by the function plot.
 %
 % Simple little function to plot horizontal or vertical line(s).
 % A vertical (horizontal) line spans the entire y (x) range.
 %
+% Just like in many Matlab plotting functions (since version v???), you
+% can also give an axis handle as the first input to use overlayline
+% on an axis that is not current.
+%
 % Olavo Badaro Marques, 02/Mar/2017.
+
+
+%% Deal with possibility that first input might be an axis handle:
+
+if isgraphics(vorh)
+
+    haxsplt = vorh;
+    vorh = a;
+    a = varargin{1};
+    
+    if length(varargin)>1
+        varargin = varargin(2:end);
+    else
+        varargin = {};
+    end
+    
+else
+    
+    haxsplt = gca;
+       
+end
 
 
 %% Check size of a and transform it in a 2xlength(a) array:
@@ -69,7 +94,7 @@ end
 
 hold on
 
-hplt_aux = plot(x, y, varargin{:});
+hplt_aux = plot(haxsplt, x, y, varargin{:});
 
 % Make sure the axis limits in the
 % direction of the line do not change:
