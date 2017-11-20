@@ -11,14 +11,14 @@ function [pwspec] = obmPSpec(x, dt, np, ovrlap)
 %   output:
 %       - pwspec: struct variable with power spectrum info. The fields
 %                 of the structure array are:
-%                       - allpsd: matrix with all power spectra,
+%                       * allpsd: matrix with all power spectra,
 %                                 that are averaged into psd.
-%                       - psd: ensemble-averaged power spectral density.
-%                       - freq: frequency vector.
-%                       - fcoef: fourier coefficients from
+%                       * psd: ensemble-averaged power spectral density.
+%                       * freq: frequency vector.
+%                       * fcoef: fourier coefficients from
 %                                which allpsd are computed.
-%                       - dof: degrees of freedom.
-%                       - err: 95% confidence interval.
+%                       * dof: degrees of freedom.
+%                       * err: 95% confidence interval.
 %
 % OBMPSPEC makes an estimate of the power spectrum using the Welch
 % method, i.e. averaging the periodogram of overlapping data subsets.
@@ -223,6 +223,9 @@ pwspec.freq = (1:floor(np/2)) ./ (np*dt);
 
 % Replicate and create negative frequencies:
 pwspec.freq = [pwspec.freq, -fliplr(pwspec.freq(pwspec.freq < nyquistFreq))];
+
+% THERE IS A COMPARISON WITH THE NYQUIST FREQUENCY, SHOULD I INCLUDE AN
+% APPROXIMATION????
 
 %
 indneg = find(pwspec.freq < 0);
