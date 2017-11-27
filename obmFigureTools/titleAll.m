@@ -1,16 +1,16 @@
 function titleAll(celltitles, axeshandles, varargin)
-% TITLEALL(celltitles, varargin)
+% TITLEALL(celltitles, axeshandles, varargin)
 %
-%   inputs:
+%   inputs
 %       - celltitles: cell array of strings to be subplot titles.
 %       - axeshandles (optional): array of axes handles referencing to
 %                                 the same axes as celltitles.
 %       - varargin (optional): parameter name-value pairs to
 %                              customize title.
 %
-% Add title to all subplots in current figure. If not specifying input
-% axeshandles, the order of celltitles should be given in the same
-% order in which the existing axes were created.
+% Add title to all subplots in current figure. If input axeshandles
+% is an empty array ([]), the order of celltitles should be given
+% in the same order in which the existing axes were created.
 %
 % Olavo Badaro Marques, 07/Mar/2017.
 
