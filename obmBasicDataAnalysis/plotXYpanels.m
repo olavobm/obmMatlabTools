@@ -1,12 +1,12 @@
 function haxs = plotXYpanels(t, x, y, tlims, xyaxslims, indz, haxs)
-% PLOTUVPANELS(t, x, y, tlims, indz, haxs)
+% haxs = PLOTXYPANELS(t, x, y, tlims, xyaxslims, indz, haxs)
 %
 %   inputs
-%       -
-%       -
-%       -
-%       -
-%       -
+%       - t: vector array of the independent variable.
+%       - x: vector or matrix with first dependent variable.
+%       - y: the other dependent variables, same size as x.
+%       - tlims: limits of t for which we want to make plots.
+%       - xyaxslims: 1x4 array specifying x and y axes limits.
 %       - indz (optional):
 %       - haxs (optional):
 %
