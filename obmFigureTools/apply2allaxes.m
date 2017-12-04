@@ -16,47 +16,77 @@ function apply2allaxes(hfig, applycell)
 % Olavo Badaro Marques, 01/Feb/2017.
 
 
+%%
+
+if isa(hfig(1), 'matlab.ui.Figure')
+    
+    Nhfigs = length(hfig);
+    lhfig = true;
+    
+elseif isa(hfig(1), 'matlab.graphics.axis.Axes')
+    
+    Nhaxs = length(hfig);
+    lhfig = false;
+else
+    
+end
+
+
+%% Parse input applycell
+
+%
+pars = applycell(1:2:end-1);
+vals = applycell(2:2:end);
+
+%
+lencell = length(applycell);
+ncustom = lencell/2;
+
+
 %% Loop over figure handles and set axes properties:
 
-for i = 1:length(hfig)
-    
-    
-    %% Find all axes handles in figure hfig(i)
+if lhfig
 
-    allAxes = findall(hfig(i), 'Type', 'axes');
-
-    onlyAxes = allAxes(~ismember(get(allAxes, 'Tag'), {'legend', 'Colobar'}));
-
-    % if there are other objects in allAxes that are not axes, legend or
-    % Colorbar, than I might have problems. I could add a check.
-    %
-    % I might want to look at the class name of the variables
-    % matlab.graphics.axis.Axes
-    
-    N = length(onlyAxes);
+    for i = 1:Nhfigs
 
 
-    %% Set axes properties
+        %% Find all axes handles in figure hfig(i)
 
-    % Pare input applycell
-    pars = applycell(1:2:end-1);
-    vals = applycell(2:2:end);
-    
-    %
-    lencell = length(applycell);
-    ncustom = lencell/2;
+        allAxes = findall(hfig(i), 'Type', 'axes');
 
-    % Loop over axes
-    for i1 = 1:N
+        onlyAxes = allAxes(~ismember(get(allAxes, 'Tag'), {'legend', 'Colobar'}));
 
-        % Loop over axes properties to set
-        for i2 = 1:ncustom
+        % if there are other objects in allAxes that are not axes, legend or
+        % Colorbar, then I might have problems. I could check for that.
+        %
+        % I might want to look at the class name of the variables
+        % matlab.graphics.axis.Axes
 
-            onlyAxes(i1).(pars{i2}) = vals{i2};
+        N = length(onlyAxes);
 
+
+        %% Set axes properties
+
+        % Loop over axes
+        for i1 = 1:N
+            % Loop over axes properties to set
+            for i2 = 1:ncustom
+                onlyAxes(i1).(pars{i2}) = vals{i2};
+            end
         end
 
     end
-     
-end
+    
+    
+else
+        %% Set axes properties
 
+        % Loop over axes
+        for i1 = 1:Nhaxs
+            % Loop over axes properties to set
+            for i2 = 1:ncustom
+                hfig(i1).(pars{i2}) = vals{i2};
+            end
+        end
+
+end
