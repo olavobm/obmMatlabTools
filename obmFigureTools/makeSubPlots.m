@@ -1,37 +1,33 @@
 function axshndls = makeSubPlots(mlx, mrx, mix, mty, mby, miy, nx, ny, lmake)
-% axhndls = MAKESUBPLOTS(mlx, mrx, mix, mty, mby, miy, nx, ny)
+% axhndls = MAKESUBPLOTS(mlx, mrx, mix, mty, mby, miy, nx, ny, lmake)
 %
-%   inputs:
-%       - mlx:
-%       - mrx:
-%       - mix:
-%       - mty:
-%       - mby:
-%       - miy:
-%       - nx:
-%       - ny:
+%   inputs
+%       - mlx: left margin (in normalized units).
+%       - mrx: right margin (in normalized units).
+%       - mix: x spacing between subplots.
+%       - mty: top margin.
+%       - mby: bottom margin.
+%       - miy: y spacing between subplots.
+%       - nx: number of subplot columns.
+%       - ny: number of subplot rows.
 %       - lmake (optional): logical vector with false for the subplots
 %                           you do not want to create (such that you
 %                           can make an irregular grid of sublots).
 %                           Default is true for all.
 %
-%   outputs:
-%       - axshndls:
+%   outputs
+%       - axshndls: axes handles of the created subplots.
 %
-% Open a new figure and populate it with subplots.
-%
+% Create subplot array on the current figure and return the
+% correspondent axes handles (ordered from the top and moving
+% to the right).
 %
 % The subplots are created with the function axes. If you use the
 % function subplot, it does not let you to make overlapping subplots.
 %
-% Return handles to axes of equal size.  Specify the offsets at left,
-% right, top and bottom, as well as between panes.  Also specify the
-% number of panes in x and y direction. The routine will compute the
-% correct size for each pane, and  create the axes for them in the
-% current figure. They are ordered starting at top, and moving across
-% to the right (same as MATLAB's Subplot).
-%
 % Based on MySubplot.m by Matthew H. Alford.
+%
+% See also: SYMSUBARRAY.m
 %
 % Olavo Badaro Marques, 10/Feb/2017.
 

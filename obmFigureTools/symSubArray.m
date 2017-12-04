@@ -14,10 +14,11 @@ function axshndls = symSubArray(mxy, mixy, nrc, lmake)
 %       - axshndls: subplot handles.
 %
 % SYMSUBARRAY calls makeSubPlots.m to create a new figure with an
-% array of subplots. The simplification of SYMSUBARRAY is that opposite
-% margins (or all of them) have the same length.
+% array of subplots. The simplification of SYMSUBARRAY is that
+% opposite margins (or all of them) have the same length (such
+% that the subplot array is symmetric).
 %
-% See also: MAKESUBPLOTS
+% See also: MAKESUBPLOTS.m
 %
 % Olavo Badaro Marques, 10/Feb/2017.
 
