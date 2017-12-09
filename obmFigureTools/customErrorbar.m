@@ -2,7 +2,7 @@ function customErrorbar(haxs, t, errlims, dirstr, varargin)
 % CUSTOMERRORBAR(haxs, t, errlims, dirstr, varargin)
 %
 %   inputs
-%       -
+%       - 
 %       -
 %       -
 %
@@ -21,7 +21,7 @@ defaultColor = 'k';
 defaultWidth = 1;
 defaultLen = NaN;
 
-addParameter(p, 'barLen', defaultLen)
+addParameter(p, 'BarLen', defaultLen)
 addParameter(p, 'LineWidth', defaultWidth)
 addParameter(p, 'Color', defaultColor)
 
@@ -52,7 +52,7 @@ end
 
 %%
 
-if isnan(p.Results.barLen)
+if isnan(p.Results.BarLen)
     lenVal = 0.1;
 
     if strcmp(dirstr, 'v');
@@ -64,6 +64,7 @@ if isnan(p.Results.barLen)
 else
     lenEB = p.Results.barLen;
 end
+
 
 %% Create three line (6 coordinates) segments that constitue
 % each errorbar
