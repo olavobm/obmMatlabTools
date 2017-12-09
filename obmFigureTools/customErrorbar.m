@@ -2,18 +2,21 @@ function customErrorbar(haxs, t, errlims, dirstr, varargin)
 % CUSTOMERRORBAR(haxs, t, errlims, dirstr, varargin)
 %
 %   inputs
-%       - 
-%       -
-%       -
-%
-%
-%
-%
+%       - haxs: axes handle to plot on.
+%       - t: independent variable of where to plot errorbars.
+%       - errlims: 2xlength(t) array with limits of the error bar.
+%       - dirstr (optional): 'v' (vertical) or 'h' (horizontal) for
+%                            the orientation of the errorbar (default
+%                            is vertical).
+%       - varargin: set appearance of the colorbar with following options
+%                       * BarLen
+%                       * LineWidth
+%                       * Color
 %
 % Olavo Badaro Marques, 08/Dec/2017.
 
 
-%%
+%% Parse optional inputs controlling the errorbar appearance
 
 p = inputParser;
 
@@ -28,7 +31,7 @@ addParameter(p, 'Color', defaultColor)
 parse(p, varargin{:})
 
 
-%%
+%% Check errorbar orientation
 
 if ~exist('dirstr', 'var')
     
@@ -42,7 +45,7 @@ else
 
 end
 
-%
+% Logical variable associated with the orientation
 if strcmp(dirstr, 'v')
     lvert = true;
 else
@@ -50,7 +53,8 @@ else
 end
 
 
-%%
+%% If BarLen is not given, use axis limits
+% to determine what an appropriate length
 
 if isnan(p.Results.BarLen)
     lenVal = 0.1;
@@ -66,8 +70,8 @@ else
 end
 
 
-%% Create three line (6 coordinates) segments that constitue
-% each errorbar
+%% Create three line (6 coordinates) segments
+% that constitue each errorbar
 
 % Bottom bar
 x_aux_1_a = t - 0.5.*lenEB;
@@ -99,7 +103,8 @@ y_aux = [y_aux_1_a, y_aux_2_a, y_aux_3_a ; ...
          y_aux_1_b, y_aux_2_b, y_aux_3_b];
 
      
-%%
+%% Assign vertices to the appropriate plotting
+% variables according to the orientation
 
 if lvert
     xplt = x_aux;
@@ -110,6 +115,7 @@ else
 end
 
 
-%%
+%% Plot the errorbars
 
-plot(haxs, xplt, yplt, 'Color', p.Results.Color, 'LineWidth', p.Results.LineWidth)
+plot(haxs, xplt, yplt, 'Color', p.Results.Color, ...
+                       'LineWidth', p.Results.LineWidth)
