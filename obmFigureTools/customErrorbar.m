@@ -66,7 +66,7 @@ if isnan(p.Results.BarLen)
     end
     lenEB = lenVal .* (lenEB(2)-lenEB(1));
 else
-    lenEB = p.Results.barLen;
+    lenEB = p.Results.BarLen;
 end
 
 
