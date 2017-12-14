@@ -21,7 +21,8 @@ function stackedShading(y, x, lnorm)
 % Use the standard Matlab colors as long as your version is at least
 % 2014b. For additional colors, STACKEDSHADING calls brewermap.m. If
 % you want to specify your colors, you have to edit this function (for
-% example, by defining a colorsets.set0).
+% example, by defining a colorsets.set0). The matlab command to get
+% its default colors is get(groot,'DefaultAxesColorOrder').
 %
 % No NaNs are allowed in y! Would be awesome to leave gap on the plot
 % (but kind of time consuming to implement that).
