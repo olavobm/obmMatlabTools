@@ -2,17 +2,25 @@ function [cmap] = callCbrewer(colorscheme, haxs, n)
 % [cmap] = CALLCBREWER(clrschm, haxs, n)
 %
 %   inputs
-%       - colorscheme: string
-%       - haxs:
+%       - colorscheme: string specifying a color scheme. It can be
+%                      either a string from the ones that I have
+%                      defined or from brewermap.m (read below).
+%       - haxs: array of axes or figure handles to
+%               apply the colormap onto.
 %       - n: number of colors (later change this function such that
-%            the number of colors is equal to a user specified resolution
-%            and data range).
+%            the number of colors is equal to a user specified
+%            resolution and data range).
 %
 %   outputs
-%       - cmap:
+%       - cmap: colormap array (with the 3 columns, correspondent to RGB).
 %
 % CALLCBREWER.m creates a colormap with the brewermap function
 % (https://github.com/DrosteEffect/BrewerMap).
+%
+% Type callCbrewer('options') to see the strings that I have
+% defined to call the color schemes from brewermap that I
+% usually use. Type help brewermap to see all the color schemes
+% provided by this function.
 %
 % The default color scheme is the divergent red/blue.
 % The color schemes provided by brewermap are gorgeous.
