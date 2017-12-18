@@ -1,5 +1,5 @@
 function [cmap] = callCbrewer(colorscheme, haxs, n)
-% [cmap] = CALLCBREWER(clrschm, haxs, n)
+% [cmap] = CALLCBREWER(colorscheme, haxs, n)
 %
 %   inputs
 %       - colorscheme: string specifying a color scheme. It can be
