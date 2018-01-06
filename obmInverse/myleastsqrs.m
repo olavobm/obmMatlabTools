@@ -56,15 +56,8 @@ function [xfit, m, G, err] = myleastsqrs(t, x, imf)
 %  1 - I don't like this name for this function.
 %  2 - How to easily add models without the need of concatenating?
 %  3 - Include constraints in the model.
-%  4 - Make some major change such that this code can be extended or used
-%      to make least squares fit in 2D/3D.
 %
-% Olavo Badaro Marques:
-%    Log -- 12/07/2015: created on this day
-%           01/19/2016: option for the output be a function of a 
-%                       specified independent variable in "imf"
-%           09/02/2016: included an option to fit a model specified
-%                       by user (e.g. vertical modes).
+% Olavo Badaro Marques, 07/Dec/2015.
 
 
 %% We first check if the input "imf" specifies a domain where the fit will
