@@ -22,13 +22,27 @@ function [cmap] = callCbrewer(colorscheme, haxs, n)
 % usually use. Type help brewermap to see all the color schemes
 % provided by this function.
 %
-% The default color scheme is the divergent red/blue.
+% The default color scheme is the divergent blue/red.
 % The color schemes provided by brewermap are gorgeous.
 % 
 % Olavo Badaro Marques, 07/Dec/2017.
 
 
-%%
+%% If "haxs" and "n" inputs are not
+% given, choose default values:
+
+if ~exist('haxs', 'var')
+    haxs = gcf;
+end
+
+if ~exist('n', 'var')
+    n = 64;
+end
+
+
+%% Define an array of "easy names" of colormaps,
+% which can be called and are mapped to the actual
+% names of colormaps in brewermap:
 
 listEZColorSchemes = {'divRB', 'seqOR', ...
                       'YlGnBu', 'Blues'};
@@ -37,12 +51,14 @@ listCBColorSchemes = {'*RdBu', 'OrRd', ...
                       'YlGnBu', 'Blues'};
 
 
-%% Map color schemes
+%% Map color scheme names
 
 mapColors = containers.Map(listEZColorSchemes, listCBColorSchemes);
 
 
-%%
+%% If the only input is the string 'options',
+% then print to the screen the easy names
+% available to use
 
 if nargin==1 && strcmp(colorscheme, 'options')
     
@@ -52,7 +68,8 @@ if nargin==1 && strcmp(colorscheme, 'options')
 end
 
 
-%%
+%% Define the colorscheme (with a string accepted
+% by brewermap) that will define the colormap created:
 
 if ~exist('colorscheme', 'var') || isempty(colorscheme)
     colorscheme = '*RdBu';    % * reverses colormap (red for higher values)
@@ -63,17 +80,6 @@ else
         % in this case, colorscheme must be a valid color
         % scheme code that is accepted by brewermap
     end
-end
-
-
-%%
-
-if ~exist('haxs', 'var')
-    haxs = gcf;
-end
-
-if ~exist('n', 'var')
-    n = 64;
 end
 
 
