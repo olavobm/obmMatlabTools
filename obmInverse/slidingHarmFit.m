@@ -2,12 +2,15 @@ function [dfit, mfit, errfit] = slidingHarmFit(x, d, xfit, wnd, imf, lpartfit, m
 % [dfit, mfit] = SLIDINGHARMFIT(x, d, xfit, wnd, imf, lpartfit, minptsfit, lprogmsg)
 %
 %   inputs
-%       - x: vector or matrix consistent with the columns of d
-%       - d:
-%       - xfit: must be a vector.
-%       - wnd:
-%       - imf:
-%       - lpartfit:
+%       - x: vector or matrix consistent with
+%            the number of columns of d.
+%       - d: data array for calculating least-squares fit.
+%       - xfit: vector of x-points on which to
+%               make a least-squares estimate.
+%       - wnd: window length (in units of x).
+%       - imf: input-model-fit structure with info for the
+%              fit to be computed (see myleastsqrs.m).
+%       - lpartfit (optional):
 %       - minptsfit (optional): default is 0, but you may have problems
 %                               (such as little data to make a fit).
 %       - lprogmsg (optional): logical variable to display partial progress
