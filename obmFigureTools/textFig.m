@@ -28,4 +28,9 @@ haxs = axes('Position', [0 0 1 1], 'Visible', 'off');
 % axes(haxs)    % it already is the current axes
 
 %
-htxt = text(x0, y0, s, varargin{:});
+htxt_aux = text(x0, y0, s, varargin{:});
+
+%
+if nargout==1
+    htxt = htxt_aux;
+end
