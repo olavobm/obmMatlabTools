@@ -1,5 +1,5 @@
-function structout = subsetStruct(indvarcell, indvarlims, structvar, varcell, lrm)
-% structout = SUBSETSTRUCT(indvarcell, indvarlims, structvar, varcell, lrm)
+function [structout, lsubStruct] = subsetStruct(indvarcell, indvarlims, structvar, varcell, lrm)
+% [structout, lsubStruct] = SUBSETSTRUCT(indvarcell, indvarlims, structvar, varcell, lrm)
 %
 %   inputs
 %       - indvarcell: cell array with independent variable names.
@@ -14,6 +14,8 @@ function structout = subsetStruct(indvarcell, indvarlims, structvar, varcell, lr
 %
 %   outputs
 %       - structout: subsetted structure variable.
+%       - lsubStruct: struct array of logical arrays indicating
+%                     which rows and columns fall within indvarlims.
 %
 % SUBSETSTRUCT subsets multiple fields of structvar. Suppose you have
 % lots of variables (fields of the structure structvar) that are
@@ -273,3 +275,18 @@ if lrm
     
 end
 
+
+%%
+
+if nargout==2
+    
+    %
+    lsubStruct = createEmptyStruct(indvarcell);
+    
+    %
+    for i = 1:length(lsubsetcell)
+        lsubStruct.(indvarcell{i}) = lsubsetcell{i};
+    end
+    
+    
+end
