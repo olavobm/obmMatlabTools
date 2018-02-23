@@ -97,12 +97,15 @@ defltHeadLength = 200;   % have to find what is a good default
 defltShaftWidth = 1/70;  % relative to the plot dimensions
 defltColor = 'k';
 defltAxes = [];
+defltStep = 1;
 
 %
 addParameter(p, 'HeadLength', defltHeadLength)
 addParameter(p, 'ShaftWidth', defltShaftWidth)
 addParameter(p, 'Color', defltColor)
 addParameter(p, 'Axes', defltAxes)
+addParameter(p, 'Xstep', defltStep)
+addParameter(p, 'Ystep', defltStep)
 
 % Fill variable p with default values or input specifications:
 if ~isempty(varargin) && iscell(varargin{1})
@@ -164,6 +167,19 @@ if isvector(x) && isvector(y) && ~isvector(u)
     x = xg;
     y = yg;
     
+    %
+    x = x(1:p.Results.Ystep:end, 1:p.Results.Xstep:end);
+    y = y(1:p.Results.Ystep:end, 1:p.Results.Xstep:end);
+    
+    u = u(1:p.Results.Ystep:end, 1:p.Results.Xstep:end);
+    v = v(1:p.Results.Ystep:end, 1:p.Results.Xstep:end);
+    
+    lstepped = true;
+    
+else
+    
+    lstepped = false;
+    
 end
 
 
@@ -174,6 +190,20 @@ y = y(:);
 
 u = u(:);
 v = v(:);
+
+
+%% In case variables have not been subsetted
+% (i.e. in the case where x/y are vectors of a
+% regular grid), then subset them now
+
+if ~lstepped
+    
+    x = x(1:p.Results.Xstep:end);
+    y = y(1:p.Results.Xstep:end);
+    u = u(1:p.Results.Xstep:end);
+    v = v(1:p.Results.Xstep:end);
+    
+end
 
 
 %% Begin the slightly complicated parsing of arguments.
