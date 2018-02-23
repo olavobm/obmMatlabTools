@@ -66,6 +66,8 @@ function [hp, arrPar] = plotArrows(s, x, y, u, v, varargin)
 % toolbox m_map by Rich Pawlowicz (https://www.eoas.ubc.ca/~rich/map.html),
 % allowing it to be used outside of m_map plots.
 %
+% See also: makeArrowPlot.m.
+%
 % Olavo Badaro Marques, 12/Dec/2016.
 
 

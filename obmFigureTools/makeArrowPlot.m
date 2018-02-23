@@ -16,6 +16,8 @@ function makeArrowPlot(s, x, y, u, v, xylims, xyaxes, varargin)
 % to plot arrows on a figure, whose axes have a fixed aspect ratio
 % (derived from xyaxes) and have limits given by xylims.
 %
+% See also: plotArrows.m
+%
 % Olavo Badaro Marques, 14/Dec/2016.
 
 
