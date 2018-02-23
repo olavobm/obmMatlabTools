@@ -154,6 +154,19 @@ end
 UVperIn = s;     
 
 
+%% If x/y are vectors of a regular grid, then create all (x, y)
+% points of the grid to have arrays the same size as (u, v)
+
+if isvector(x) && isvector(y) && ~isvector(u)
+    
+    [xg, yg] = meshgrid(x, y);
+    
+    x = xg;
+    y = yg;
+    
+end
+
+
 %% Make sure the variables are column vectors:
 
 x = x(:);
