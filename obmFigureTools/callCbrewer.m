@@ -90,8 +90,12 @@ cmap = brewermap(n, colorscheme);
 
 %% Only update the colormap if the output was
 % NOT specified. Otherwise just return the output:
+
 if nargout == 0
     for i = 1:length(haxs)
         colormap(haxs(i), cmap)
     end
+    
+    % So that it doesn't print to the screen
+    clear cmap
 end
