@@ -45,16 +45,7 @@ aspecrto = xyaxes(1) / xyaxes(2);
 initAxesAspectRatio(xylims(1:2), xylims(3:4), aspecrto, haxs);
 
 
-%%
+%% Now call plotArrows.m to plot the vector field
 
-% uv is a 2xN array, first (second) row is u (v):
-uv = [u'; v'];
-
-
-%%
-
-uplt = uv(1, :);
-vplt = uv(2, :);
-
-hp = plotArrows(s, x, y, uplt, vplt, varargin);
+hp = plotArrows(s, x, y, u, v, varargin);
 
