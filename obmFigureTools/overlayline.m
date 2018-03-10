@@ -12,7 +12,8 @@ function hplt = overlayline(vorh, a, varargin)
 %       - hplt: name-value pair arguments acceptable by the function plot.
 %
 % Simple little function to plot horizontal or vertical line(s).
-% A vertical (horizontal) line spans the entire y (x) range.
+% A vertical (horizontal) line spans the entire y (x) range of
+% the current axis limit..
 %
 % Just like in many Matlab plotting functions (since version v???), you
 % can also give an axis handle as the first input to use overlayline
@@ -68,7 +69,7 @@ if strcmp(vorh, 'v')
     
     x = a;
     
-    linerange = ylim;
+    linerange = ylim(haxsplt);
     
     y = linerange;
     y = y(:);
@@ -76,7 +77,7 @@ if strcmp(vorh, 'v')
     
 elseif strcmp(vorh, 'h')
    
-    linerange = xlim;
+    linerange = xlim(haxsplt);
     
     x = linerange;
     x = x(:);
