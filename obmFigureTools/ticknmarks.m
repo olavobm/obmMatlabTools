@@ -1,21 +1,37 @@
-function ticknmarks(xyzstr, nticks, haxs)
-% TICKNMARKS(xyzstr, nticks, haxs)
+function ticknmarks(xyzstr, nticks, varargin)
+% TICKNMARKS(xyzstr, nticks, varargin)
 %
 %   inputs
 %       - xyzstr:
 %       - nticks:
-%       - haxs (optional):
+%       - varargin (optional):
 %
 %
-%
+% TO DO:
+%   - select decimal place
+%   - convert datenum to datestr
 %
 % Olavo Badaro Marques, 11/Mar/2018.
 
 
-%%
+%% Deal with possibility that first input might be an axis handle:
 
-if ~exist('', 'var')
+if isgraphics(xyzstr)
+
+    haxs = xyzstr;
+    xyzstr = nticks;
+    nticks = varargin{1};
+    
+    if length(varargin)>1
+        varargin = varargin(2:end);
+    else
+        varargin = {};
+    end
+    
+else
+    
     haxs = gca;
+       
 end
 
 
@@ -38,7 +54,7 @@ if ~isempty(strfind(xyzstr, 'z'))
 end
 
 %
-% % tickaxsStr = tickaxsstr(~isempty(tickaxsstr));
+tickaxsStr = tickaxsStr(~cellfun(@isempty, tickaxsStr));
 
 
 %%
