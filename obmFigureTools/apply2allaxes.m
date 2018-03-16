@@ -2,11 +2,13 @@ function apply2allaxes(hfig, applycell)
 % APPLY2ALLAXES(hfig, applycell)
 %
 %   inputs
-%       - hfig: vector of figure handles (or figure numbers).
+%       - hfig: vector of figure OR axes handles (or figure numbers).
 %       - applycell: cell array with axes properties name-value pairs.
 %
 % Use APPLY2ALLAXES if you want all of your axes (subplots)
-% in a figure(s) to have the same property values.
+% in a figure(s) to have the same property values. Input
+% hfig can also be just a vector of the axes handles you
+% to format.
 %
 % Example:
 %   Let's say want to set fontsize and axis limits to be
@@ -43,13 +45,13 @@ lencell = length(applycell);
 ncustom = lencell/2;
 
 
-%% Loop over figure handles and set axes properties:
+%% Now format the appropriate axes:
 
+% If input is figure handle(s)
 if lhfig
 
+    % Loop over figures
     for i = 1:Nhfigs
-
-
         %% Find all axes handles in figure hfig(i)
 
         allAxes = findall(hfig(i), 'Type', 'axes');
@@ -77,7 +79,7 @@ if lhfig
 
     end
     
-    
+% If input is axes handle(s)
 else
         %% Set axes properties
 
