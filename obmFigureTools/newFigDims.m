@@ -1,13 +1,13 @@
 function hfig = newFigDims(lenhei, lnew)
-% hfig = NEWFIGDIMS(lenhei)
+% hfig = NEWFIGDIMS(lenhei, lnew)
 %
-%   inputs:
+%   inputs
 %       - lenhei: vector with 2 elements, length and height, in this order.
 %       - lnew (optional): logical variable, true for creating new figure
 %                          (default) or false for acting on the current
 %                          figure.
 %
-%   outputs:
+%   outputs
 %       - hfig: figure handle.
 %
 % Units are inches, (but should implement giving input for different units).
