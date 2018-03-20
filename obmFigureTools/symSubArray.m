@@ -2,8 +2,8 @@ function axshndls = symSubArray(mxy, mixy, nrc, lmake)
 % axshndls = SYMSUBARRAY(mxy, mixy, nrc, lmake)
 %
 %   inputs
-%       - mxy: 1x1 or 1x2 array.
-%       - mixy: 1x1 or 1x2 array.
+%       - mxy: 1x1 or 1x2 array (external margins).
+%       - mixy: 1x1 or 1x2 array (internal margins).
 %       - nrc: 1x2 array with number of subplots in rows and columns.
 %       - lmake (optional): logical vector with false for the subplots
 %                           you do not want to create (such that you
@@ -11,7 +11,7 @@ function axshndls = symSubArray(mxy, mixy, nrc, lmake)
 %                           Default is true for all.
 %
 %   output
-%       - axshndls: subplot handles.
+%       - axshndls: axes handles.
 %
 % SYMSUBARRAY calls makeSubPlots.m to create a new figure with an
 % array of subplots. The simplification of SYMSUBARRAY is that
