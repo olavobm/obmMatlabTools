@@ -36,13 +36,26 @@ end
 
 %% Parse input applycell
 
-%
-pars = applycell(1:2:end-1);
-vals = applycell(2:2:end);
+if isstruct(applycell)
+    
+    %
+    pars = fieldnames(applycell);
+    vals = struct2cell(applycell);
+    
+else
+
+    %
+    pars = applycell(1:2:end-1);
+    vals = applycell(2:2:end);
+
+end
+    
+% % %
+% % lencell = length(applycell);
+% % ncustom = lencell/2;
 
 %
-lencell = length(applycell);
-ncustom = lencell/2;
+ncustom = length(pars);
 
 
 %% Now format the appropriate axes:
