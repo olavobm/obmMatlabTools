@@ -86,8 +86,8 @@ for i1 = 1:nr
     for i2 = 1:nsegs
         
         %
-        linseg = (t(indr4t(i1), :) >= binlims(i1, 1)) & ...
-                 (t(indr4t(i1), :) <  binlims(i1, 2));
+        linseg = (t(indr4t(i1), :) >= binlims(i2, 1)) & ...
+                 (t(indr4t(i1), :) <  binlims(i2, 2));
         
         %
         nptsperseg.npts(i1, i2) = length(find(linseg));
