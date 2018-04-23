@@ -62,6 +62,17 @@ nptsperseg.meanbin = mean(binlims, 2);
 nr = size(x, 1);
 nsegs = size(binlims, 1);
 
+%
+if nr==1
+    
+else
+    if size(t, 1)==1
+        indr4t = ones(1, nr);
+    else
+        indr4t = 1:nr;
+    end
+end
+
 
 %%
 
@@ -75,8 +86,8 @@ for i1 = 1:nr
     for i2 = 1:nsegs
         
         %
-        linseg = (t(i1, :) >= binlims(i1, 1)) & ...
-                 (t(i1, :) <  binlims(i1, 2));
+        linseg = (t(indr4t(i1), :) >= binlims(i1, 1)) & ...
+                 (t(indr4t(i1), :) <  binlims(i1, 2));
         
         %
         nptsperseg.npts(i1, i2) = length(find(linseg));
