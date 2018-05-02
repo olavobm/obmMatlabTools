@@ -2,13 +2,19 @@ function [nptsperseg] = countPtsSegs(tlims, t, x)
 % [nptsperseg] = COUNTPTSSEGS(tlims, t, x)
 %
 %   inputs
-%       - tlims:
-%       - t:
-%       - x:
+%       - tlims: limits of the windows in t to count the number of x.
+%       - t: independent variable associated with x (vector or matrix).
+%       - x: array that is a function of t. In the case where x is a
+%            a matrix, then the function does the count for each
+%            row of x.
 %
 %   outputs
-%       - nptsperseg:
+%       - nptsperseg: struct array with two fields (npts and nptsok).
+%                     Each of these has the same number of rows of x
+%                     while the number of columns is the same as the
+%                     the number of windows defined by tlims.
 %
+% This function is very similar to histc, but it counts the non-NaN in x.
 %
 % Output: number, mean tlim, (in seg and in seg no-NaN)
 %
@@ -30,8 +36,8 @@ if isvector(tlims)
     binlims(:, 2) = tlims(2:end);
     
 else
-    
-    
+
+    % use makeSegs.m
 end
 
 
