@@ -93,7 +93,7 @@ end
 
 %% Plot the lines:
 
-hold on
+hold(haxsplt, 'on')
 
 hplt_aux = plot(haxsplt, x, y, varargin{:});
 
