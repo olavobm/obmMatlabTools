@@ -18,6 +18,9 @@ function [nptsperseg] = countPtsSegs(tlims, t, x)
 %
 % Output: number, mean tlim, (in seg and in seg no-NaN)
 %
+% TO DO:
+%   - I can optimize the last loop depending on the case.
+%
 % See also: makeSegs.m
 %
 % Olavo Badaro Marques, 23/Apr/2018.
@@ -41,7 +44,7 @@ else
 end
 
 
-%%
+%% Make sure that if t and x are vectors, they are row vectors
 
 if iscolumn(t)
 	t = t.';
@@ -53,17 +56,17 @@ if iscolumn(x)
 end
 
 
-%%
+%% Create an empty structure for the output variable
 
 nptsperseg = createEmptyStruct({'meanbin', 'npts', 'nptsok'});
 
 
-%%
+%% Take the mean position of the bins
 
 nptsperseg.meanbin = mean(binlims, 2);
 
 
-%%
+%% Take the parameters and indices used in the next block
 
 nr = size(x, 1);
 nsegs = size(binlims, 1);
@@ -80,15 +83,16 @@ else
 end
 
 
-%%
+%% Now count the number of non-NaN values in each bin
 
 %
 nptsperseg.npts = NaN(nr, nsegs);
 nptsperseg.nptsok = NaN(nr, nsegs);
 
-%
+% Loop over the rows of x
 for i1 = 1:nr
     
+    % Loop over the segments
     for i2 = 1:nsegs
         
         %
