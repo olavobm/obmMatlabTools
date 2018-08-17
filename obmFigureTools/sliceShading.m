@@ -20,6 +20,13 @@ function sliceShading(ts, clrs, tjoin)
 % Olavo Badaro Marques, 08/Dec/2016.
 
 
+%%
+
+if isvector(clrs)
+	clrs = repmat(clrs, size(ts, 1), 1);
+end
+
+
 %% Create vector of the y coordinates of the 
 
 ylimsplt = ylim;
