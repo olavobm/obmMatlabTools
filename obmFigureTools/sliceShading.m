@@ -1,11 +1,11 @@
 function sliceShading(ts, clrs, tjoin)
-% SLICESHADING(x, ts, clrs)
+% SLICESHADING(ts, clrs, tjoin)
 %
 %   inputs:
 %       - ts: Nx2, 
 %       - clrs: Nx3, N colors.
 %
-% Function TIMESERIESSHADING adds shading to the current time series plot.
+% Function SLICESHADING.m adds shading to the current time series plot.
 %
 % Include tjoin (the time limit which would join two time intervals
 % in one shading if the intervals are separated at most by tjoin).
