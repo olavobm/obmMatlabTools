@@ -100,9 +100,9 @@ hplt_aux = plot(haxsplt, x, y, varargin{:});
 % Make sure the axis limits in the
 % direction of the line do not change:
 if strcmp(vorh, 'v')
-    ylim(linerange)
+    ylim(haxsplt, linerange)
 elseif strcmp(vorh, 'h')
-    xlim(linerange)
+    xlim(haxsplt, linerange)
 end
 
 
