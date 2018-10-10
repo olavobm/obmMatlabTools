@@ -7,12 +7,12 @@ function [x, h, dhdx] = tanhprofile(Xmax, Hright, Hleft, WidthR, WidthSlope, nx)
 %       - Hmax:
 %       - WidthHmin:
 %       - WidthHmax:
-%       - nx:
+%       - nx: number of points in the x grid.
 %
 %   outputs
-%       - x:
-%       - h:
-%       - dhdx:
+%       - x: x grid.
+%       - h: hyperbolic tangent profile.
+%       - dhdx: derivative of h.
 %
 % Olavo Badaro Marques, 10/Oct/2018.
 
@@ -35,9 +35,16 @@ if nargin==0
 end
 
 
+%% Make this variable negative
+
+if nargin~=0
+	WidthR = - WidthR;
+end
+
 
 %% Define the x-grid
 
+%
 dx = Xmax/nx;
 x = dx*(0:1:nx-1);
 x = x - max(x);
@@ -46,6 +53,7 @@ x = x - max(x);
 h = Hleft - 0.5 * (Hleft - Hright) * (1 + tanh((x - WidthR)/WidthSlope)) ;
 
 % Bottom slope
-% dhdx = -(0.5*(H0-Hsh)/DXsl)*sech((x-Xsh)/DXsl).^2 ;
+dhdx = -(0.5 * (Hleft - Hright)/WidthSlope) * sech((x - WidthR)/WidthSlope).^2 ;
 
-% % h = 
+
+
