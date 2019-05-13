@@ -78,7 +78,7 @@ all_x4loop = cumsum(xdiff_aux, 1);
 all_yg = NaN(ndpts, length(allx0));
 
 %
-for i = 1:ndpts
+for i = 1:length(allx0)
 	all_yg(:, i) = interp1(xg, yg, all_x4loop(:, i));
 end
 
@@ -95,7 +95,10 @@ yddev = ydmatrix - repmat(nanmean(ydmatrix, 1), ndpts, 1);
 ygdev = all_yg - repmat(nanmean(all_yg, 1), ndpts, 1);
 
 %
-all_rms = sqrt(mean((yddev - ygdev).^2, 1));
+all_misfits = yddev - ygdev;
+
+%
+all_rms = sqrt(mean(all_misfits.^2, 1));
 
 
 %% Get index and the x with min rms
@@ -117,7 +120,9 @@ minrmsoutstrct.allrms = all_rms;
 minrmsoutstrct.ind_minrms = ind_minrms;
 minrmsoutstrct.minrms = minrms;
 
-%
+% If it is NOT sorted at the beginning, then flip
+% output so it has the same corresponding sequence
+% as the input
 if (~lsorted)
 	minrmsoutstrct.xdcorr = flipud(minrmsoutstrct.xdcorr);
 end
