@@ -31,8 +31,8 @@ function yinterp = extrap1overnans(x, y, exmethod, xgrid)
 % transpose it and update the size of it:
 if ry == 1 && cy > 1
     y = y(:);
-%     ry = cy;   % ry is not used anymore, so it does not matter -- NOT IN
-                                            %     THIS FUNCTION ANYMORE!!!
+
+    %
 	ry = cy;
     cy = 1;
     
