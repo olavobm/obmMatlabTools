@@ -42,39 +42,47 @@ N = nr*nc;
 xfilt = x;
 
 
-%%
+%% Calculate the medians ove nlen segments for the interior of x
 %
-% % % if nr==1
-% % % 	x = x(:);
-% % % %     lxinrow = true;
-% % %     N = nc;
-% % % else
-% % % %     lxinrow = false;
-% % %     N = nr;
-% % % end
-
-
-%%
-%
-% Does it matter whether it is copied or a loop is used?
-% For large nlen that would make a huge differentce.
-
-% % xrep = NaN(, );
+% It is Create 
 
 %
 midptlen = ceil(nlen/2);
 wdtptlen = floor(nlen/2);
 
 %
-allmed = NaN([nr, nc]);
+xrep = NaN(N, nlen);
 
 %
-for i = midptlen : (N-wdtptlen)
-    
-	%
-    allmed(i) = nanmedian(x((i-wdtptlen):(i+wdtptlen)));
-    
+for i = 1:nlen
+   
+    %
+    xrep(midptlen:(N-wdtptlen), i) = x(i:(N - nlen + i));
 end
+
+%
+allmed = nanmedian(xrep, 2);
+allmed = reshape(allmed, [nr, nc]);
+
+
+% ------------------------------------------------
+% % % Bad loop (though it works) -- actually, not so bad
+% % for i = midptlen : (N-wdtptlen)    
+% % 	xrep(i, :) = x((i-wdtptlen):(i+wdtptlen));
+% % end
+
+% ------------------------------------------------
+% % % % A less efficient alternative
+% % %
+% % allmed = NaN([nr, nc]);
+% % 
+% % %
+% % for i = midptlen : (N-wdtptlen)
+% % 	%
+% %     allmed(i) = nanmedian(x((i-wdtptlen):(i+wdtptlen)));
+% % end
+
+
 
 
 %% Calculate the median deviation
