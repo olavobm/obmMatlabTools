@@ -31,7 +31,7 @@ function [cmap] = callCbrewer(colorscheme, haxs, n)
 %% If "haxs" and "n" inputs are not
 % given, choose default values:
 
-if ~exist('haxs', 'var')
+if ~exist('haxs', 'var') || isempty(haxs)
     haxs = gcf;
 end
 
