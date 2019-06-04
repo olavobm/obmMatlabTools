@@ -2,10 +2,12 @@ function totalsum = addnonan(varargin)
 % totalsum = ADDNONAN(varargin)
 %
 %   inputs
-%       - varargin:
+%       - varargin: double arrays with arbitrary dimensions
+%                   (at least 2 inputs). All arrays must
+%                   have the same dimensions.
 %
 %   outputs
-%       - totalsum:
+%       - totalsum: sum of all inputs, ignoring NaNs.
 %
 %
 % ADDNONAN.m adds all arrays given as inputs (varargin)
@@ -16,7 +18,22 @@ function totalsum = addnonan(varargin)
 % concatenate all arrays into a single one and then use
 % nansum.m.
 %
+% One situation where you could use this function (or
+% at least the one I had in mind when I wrote this) is
+% when you have data from different sources (such as
+% different instruments) on a regular grid (see
+% basicgridding.m), but each data source is in a
+% different region of the grid (they do NOT overlap).
+% Then use ADDNONAN.m to put all gridded variables
+% in a single array.
 %
+% This combined use of basicgridding.m/ADDNONAN.m is
+% not very elegant and could be very inneficient with
+% a lot of data. It would also give wrong results for
+% overlapping data. However, it is a very simple approach
+% and works just fine for several applications.
+%
+% See also: basicgridding.m.
 %
 % Olavo Badaro Marques, 04/Jun/2019
 
