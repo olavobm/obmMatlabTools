@@ -2,9 +2,9 @@ function [x_extrap, zextrap_grid, deltax_gridded, bcstrct] = extrap1fromgrad(z, 
 % [x_extrap, zextrap_grid, deltax_gridded, bcstrct] = EXTRAP1FROMGRAD(z, x, zgrad, dxdz, dzgrid, zextrplims)
 %
 %   inputs
-%       - zx: a vector
+%       - z: a vector
 %       - x:
-%       - zd: vector with the coordinate of dxdz.
+%       - zgrad: vector with the coordinate of dxdz.
 %       - dxdz: vector or matrix.
 %       - dzgrid:
 %       - zextrplims:
