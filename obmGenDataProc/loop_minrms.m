@@ -21,7 +21,7 @@ function minrmsoutstrct = loop_minrms(xg, yg, xd, yd, x0xendxn)
 %           * allyg:
 %           * allrms:
 %           * ind_minrms:
-%           * minrmsoutstrct.minrms
+%           * minrms:
 %
 % 
 %
