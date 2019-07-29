@@ -79,7 +79,6 @@ allx0 = x0xendxn(1) : x0xendxn(3) : x0xendxn(2);
 % % allx0 = linspace(x0xendxn(1), x0xendxn(2), x0xendxn(3));
 
 
-
 %%
 %
 xdiff_aux = repmat(xdiff_vec, 1, length(allx0));
